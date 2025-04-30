@@ -1,0 +1,60 @@
+const db = require('../config/db')
+
+const feedBackCreate = (feedbackData) => {
+    const { feedback, rating, clientId } = feedbackData
+
+    const sql = `insert into feedback (feedback, rating, client_id) values (?, ?, ?)`
+
+    return new Promise((resolve, reject) => {
+        db.query(sql, [ feedback, rating, clientId ], 
+            (err, result) => {
+                if(err) reject(err)
+                    else resolve(result)
+            }
+        )
+    })
+}   
+
+const fetchFeedBacks = () => {
+    const sql = `select * from feedback`
+
+    return new Promise((resolve, reject) => {
+        db.query(sql, 
+            (err, result) => {
+                if(err) reject(err)
+                    else resolve(result)
+            }
+        )
+    })
+}   
+
+const deleteFeedback = (id) => {
+    const sql = `delete from feedback where id = ?`
+
+    return new Promise((resolve, reject) => {
+        db.query(sql, [id], 
+            (err, result) => {
+                if(err) reject(err)
+                    else resolve(result)
+            }
+        )
+    })
+}   
+
+const giveReply = (id, replyMsg) => {
+    const sql = `update feedback set reply_msg = ? where id = ?`
+
+    return new Promise((resolve, reject) => {
+        db.query(sql, [replyMsg, id], 
+            (err, result) => {
+                if(err) reject(err)
+                    else resolve(result)
+            }
+        )
+    })
+}   
+
+
+
+
+module.exports = { feedBackCreate, fetchFeedBacks, deleteFeedback, giveReply }
