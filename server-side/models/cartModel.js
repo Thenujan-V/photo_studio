@@ -80,6 +80,20 @@ const findAllByClientId = (id) => {
     })
 }
 
+const findCart = (cartDetails) => {
+    const { clientId, categoryId, serviceId } = cartDetails
+    const sql = `select * from cart where client_id = ? and service_category_id = ? and service_id = ?`
+
+    return new Promise((resolve, reject) => {
+        db.query(sql, [clientId, categoryId, serviceId], 
+            (err, result) => {
+            if(err) reject(err)
+                else resolve(result)
+            }
+        )
+    })
+}
+
 const editQuantity = (id, quantity) => {
     const sql = `update cart set quantity = ? where id = ?`
 
@@ -106,4 +120,18 @@ const cartDetelet = (id) => {
     })
 } 
 
-module.exports = {findByCartId, cartCreate, findByCategoryId, findByClientId, findByServiceId, findAllByClientId, editQuantity, cartDetelet}
+const cartDeleteByClientId = (id) => {
+    const sql = `delete from cart where client_id = ?`
+
+    return new Promise((resolve, reject) => {
+        db.query(sql, [id], 
+            (err, result) => {
+            if(err) reject(err)
+                else resolve(result)
+            }
+        )
+    })
+} 
+
+
+module.exports = {findByCartId, cartCreate, findByCategoryId, findByClientId, findCart, findByServiceId, findAllByClientId, editQuantity, cartDetelet, cartDeleteByClientId}

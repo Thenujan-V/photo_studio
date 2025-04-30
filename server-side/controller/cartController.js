@@ -4,11 +4,14 @@ const addToCart = async(req, res) => {
     try{
         const { clientId, categoryId, serviceId } = req.params
 
-        const checkClient = await cartModel.findByClientId(clientId)
-        const checkCategory = await cartModel.findByCategoryId(categoryId)
-        const checkService = await cartModel.findByServiceId(serviceId)
+        const checkCartExist = await cartModel.findCart({clientId, categoryId, serviceId})
+        // const checkCategory = await cartModel.findByCategoryId(categoryId)
+        // const checkService = await cartModel.findByServiceId(serviceId)
 
-        if(checkClient.length !== 0 && checkCategory.length !== 0 && checkService.length !== 0){
+        // if(checkClient.length !== 0 && checkCategory.length !== 0 && checkService.length !== 0){
+        //     return res.status(400).json({message :'Already this item added into cart.'})
+        // }
+        if(checkCartExist.length !== 0 ){
             return res.status(400).json({message :'Already this item added into cart.'})
         }
     
