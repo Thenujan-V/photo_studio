@@ -1,0 +1,197 @@
+.about-hero{
+    background: linear-gradient(to bottom, rgba(20, 20, 20, 0.4), rgba(0, 0, 0, 0.4)), url('../assets/about-first.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 80vh;
+    color: white;
+    border-bottom-right-radius: 20%;
+    border-bottom-left-radius: 20%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    h1{
+        color: rgb(241, 238, 238);
+        font-family: 'Mulish', sans-serif;
+        font-size: 5vw;
+        font-weight: bolder;
+        padding: 0 100px;
+        text-align: center;
+    }
+    p{
+        color: white;
+        font-family: 'Mulish', sans-serif;
+        font-size: 16px;
+        width: 50%;
+        text-align: center;
+    }
+    button{
+        background-color: var(--background-color);
+        color: var(--primary-color);
+        font-weight: 700;
+    }
+    button:hover{
+        background-color: var(--secondary-color);
+        color: var(--background-color);
+    }
+}
+
+#business-overview{
+    max-height: 100vh;
+    h1{
+        color:var(--primary-color);
+        font-family: 'Mulish', sans-serif;
+        font-weight: bolder;
+        font-size: 48px;
+        font-weight: 900;
+        padding-top: 20px;
+        padding-bottom: 10px;
+        text-align: center;
+    }
+    #about-image img{
+        border-radius: 20px;
+        object-fit: fill;
+    }
+    #overview p{
+        font-family: 'Mulish', sans-serif;
+        text-align: start;
+        font-size: 20px;
+        font-weight: 400;
+    }
+}
+
+#mission{
+    h1{
+        color:var(--primary-color);
+        font-family: 'Mulish', sans-serif;
+        font-weight: bolder;
+        font-size: 48px;
+        font-weight: 900;
+        padding-top: 20px;
+        padding-bottom: 10px;
+        text-align: center;
+    }
+    #mission-content{
+        h3{
+            color:var(--primary-color);
+            font-family: 'Mulish', sans-serif;
+            font-weight: bolder;
+            font-size: 24px;
+            font-weight: 800;
+            text-align: start;
+        }
+        p{
+            font-family: 'Mulish', sans-serif;
+            text-align: start;
+            font-size: 16px;
+            font-weight: 400;
+        }  
+    }
+
+    #mission-image{
+            img{
+                border-radius: 20px;
+                object-fit: fill;
+            }
+        }
+}
+
+#core-values{
+    h1{
+        color:var(--primary-color);
+        font-family: 'Mulish', sans-serif;
+        font-weight: bolder;
+        font-size: 48px;
+        font-weight: 900;
+        padding-top: 20px;
+        padding-bottom: 10px;
+        text-align: center;
+    }
+    #values{
+       display: flex;
+       justify-content: center;
+       gap: 60px;
+       padding: 20px;
+
+        .value{
+            width: 30%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        img{
+            width: 20%;
+        }
+        h2{
+            color:var(--primary-color);
+            font-family: 'Mulish', sans-serif;
+            font-weight: bolder;
+            font-size: 24px;
+            font-weight: 800;
+            text-align: start;
+            padding-top: 20px;
+        }
+        p{
+            font-family: 'Mulish', sans-serif;
+            text-align: center;
+            font-size: 16px;
+            font-weight: 400;
+        }
+    }
+}
+
+@media (max-width: 779px){
+    .about-hero{
+        p{
+            width: 80%;
+            font-size: 2vw;
+        }
+    }
+    #business-overview{
+        #overview p{
+            text-align: center;
+            margin-top: 15px;
+            font-size: 2.4vw;
+        }
+    }
+    #mission{
+        // margin-top: 80px;
+    }
+}
+@media (max-width: 427px){
+    .about-hero{
+        h1{
+            padding:0 30px;
+            font-size: 7vw;
+        }
+        p{
+            width: 80%;
+            font-size: 3vw;
+        }
+    }
+    #business-overview{
+        #overview p{
+            text-align: center;
+            margin-top: 15px;
+            font-size: 4vw;
+        }
+    }
+    #mission{
+        margin-top: 80px;
+    }
+    #core-values{
+        #values{
+            .value{
+                width: 100%;
+            }
+            img{
+                width: 70%;
+            }
+        }
+        
+    }
+
+}

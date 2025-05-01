@@ -51,14 +51,14 @@ const addClientsPhotosForOrders = (photosData) => {
 
 const orderFetchByClientId = (clientId) => {
     const sql = `select 
-                    o.id as order_id,
-                    o.client_id as client_id,
-                    od.id as order_details_id,
-                    od.service_category_id,
-                    od.service_id,
+                    o.id as orderId,
+                    o.client_id as clientId,
+                    od.id as orderDetailsId,
+                    od.serviceCategoryId,
+                    od.serviceId,
                     od.quantity,
                     od.status,
-                    od.created_at,
+                    od.createdAt,
                     JSON_ARRAYAGG(p.file_path) As photosPaths
                     from orders o 
                     join order_details od on o.id = od.order_id 
@@ -76,6 +76,72 @@ const orderFetchByClientId = (clientId) => {
     })
 }
 
+const deliveryDetailsCreate = (deliveryDetails, orderId) => {
+    const { senderPhoneNumber, receiverName, receiverPhoneNumber, receiverDistrict, receiverCity, receiverStreet } = deliveryDetails
+
+    const sql = 'insert into order_delivery_details ( order_id, sender_phone_number, receiver_phone_number, receiver_name, receiver_district, receiver_city, receiver_street ) values ( ?, ?, ?, ?, ?, ?, ? )'
+
+    return new Promise((resolve, reject) => {
+        db.query(sql, [orderId, senderPhoneNumber, receiverPhoneNumber, receiverName, receiverDistrict, receiverCity, receiverStreet],
+            (err, result) => {
+                if(err) reject(err)
+                    else resolve(result)
+            }
+        )
+    })
+}
+
+const fetchDetailsForDelivery = (orderId) => {
+    const sql = `select o.id as orderId,
+                        o.client_id as clientId,
+                        c.username as senderName,
+                        c.mail as senderMail,
+                        c.phone_number as clientPhoneNumber,
+                        c.city as senderCity,
+                        od.sender_phone_number as senderPhoneNumber,
+                        od.receiver_phone_number as receiverPhoneNumber,
+                        od.receiver_name as receiverName,
+                        od.receiver_district as receiverDistrict,
+                        od.receiver_city as receiverCity,
+                        od.receiver_street as receiverStreet,
+                        od.created_at as orderdDate
+                 from order_delivery_details od right join orders o on od.order_id = o.id join client c on o.client_id = c.id where o.id = ?`
+
+    return new Promise((resolve, reject) => {
+        db.query(sql, [orderId],
+            (err, result) => {
+                if(err) reject(err)
+                    else resolve(result)
+            }
+        )
+    })
+}
+
+const fetchOrderDeailsById = (orderDetailsId) => {
+    const sql = 'select * from order_details where id = ?'
+
+    return new Promise((resolve, reject) => {
+        db.query(sql, [orderDetailsId],
+            (err, result) => {
+                if(err) reject(err)
+                    else resolve(result)
+            }
+        )
+    })
+}
+
+const editStatus = (status, id) => {
+    const sql = `update order_details set status = ? where id = ?`
+
+    return new Promise((resolve, reject) => {
+        db.query(sql, [status, id],
+            (err, result) => {
+                if(err) reject(err)
+                    else resolve(result)
+            }
+        )
+    })
+}
 
 
 
@@ -84,12 +150,12 @@ const orderFetchByClientId = (clientId) => {
 
 
 
-
-
-
-
-
-
-
-
-module.exports = { createOrder, createOrderDetails, addClientsPhotosForOrders, orderFetchByClientId }
+module.exports = {  createOrder, 
+                    createOrderDetails, 
+                    addClientsPhotosForOrders, 
+                    orderFetchByClientId, 
+                    deliveryDetailsCreate, 
+                    fetchDetailsForDelivery, 
+                    editStatus, 
+                    fetchOrderDeailsById 
+                }
