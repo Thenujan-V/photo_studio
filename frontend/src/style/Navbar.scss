@@ -1,0 +1,54 @@
+.custom-navbar {
+    background-color: #1b1c20;
+    font-family: "Tagesschrift", system-ui;
+    font-weight: 400;
+    font-style: normal;
+  
+    .center-links {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+      gap: 2rem;
+
+      a {
+        color: #fdfcfe !important;
+        text-decoration: none;
+  
+        &:hover {
+          color: #f90348 !important;
+        }
+      }
+   
+      @media (max-width: 991px) {
+        display: flex;
+        align-items: start;
+        flex-direction: column;     
+        gap: 0rem;                
+        padding-left: 1rem;
+      }
+    }
+  
+    .logo {
+      font-weight: bold;
+      font-size: 1.5rem;
+    }
+  
+    .login-link {
+      color: #fdfcfe !important;
+      font-weight: 500;
+      text-decoration: none;
+    
+      &:hover {
+        color: #f90348 !important;
+      }
+
+      @media (max-width: 991px) {
+        display: flex;
+        align-items: start;
+        flex-direction: column;     
+        gap: 0rem;                
+        padding-left: 1rem;
+      }
+    }
+  }
+  
