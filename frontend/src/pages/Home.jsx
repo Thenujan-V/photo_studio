@@ -2,6 +2,7 @@ import React from 'react'
 import AppNavbar from '../components/Navbar'
 import '../style/Home.scss'
 import wedding from '../assets/wedding.webp'
+import AppFooter from '../components/footer'
 
 const Home = () => {
   return (
@@ -12,6 +13,7 @@ const Home = () => {
           
         </section>
         </div>
+        <AppFooter />
     </div>
   )
 }
