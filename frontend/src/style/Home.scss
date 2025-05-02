@@ -1,12 +1,262 @@
 .home {
-    // width: 100%;
-    // height: 100vh;
-
+    min-width: 320px;
     .imgSec {
-        background-image: url('https://banuphotography.com/wp-content/uploads/2021/06/mannar-wedding-77.jpg');
+        overflow: auto;
+        h1 {
+            font-family: 'Mulish', sans-serif;
+            position: relative;
+            top: 35%;
+            color: rgb(241, 238, 238);
+            font-family: 'Mulish', sans-serif;
+            font-size: 5vw;
+            font-weight: bolder;
+            padding: 0 100px;
+            text-align: center;
+        }
+        .image1 {
+            background: linear-gradient(to bottom, rgba(20, 20, 20 ,0.5), rgba(0, 0, 0,0.6)), url('../assets/img1.jpg');
+            height: 90vh;
+            background-size:cover;
+            background-position: center;
+            object-fit: fill;
+            background-repeat: no-repeat;
+        }
+        .image2 {
+            background-image: linear-gradient(to bottom, rgba(20, 20, 20 ,0.5), rgba(0, 0, 0,0.6)), url('https://i.ytimg.com/vi/_g7n2SxP3-I/maxresdefault.jpg');
+            height: 90vh;
+            background-size:cover;
+            background-position:top;
+            object-fit: fill;
+            background-repeat: no-repeat;
+        }
+        .image3 {
+            background-image: linear-gradient(to bottom, rgba(20, 20, 20 ,0.5), rgba(0, 0, 0,0.6)), url('https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=1920,fit=crop/Y4LEV1G5zvcJyBjX/6-1-Y4L85DMzvyhJRQqJ.jpg');
+            height: 90vh;
+            background-size:cover;
+            background-position: center;
+            object-fit: fill;
+            background-repeat: no-repeat;
+        }
+        .image4 {
+            background-image: linear-gradient(to bottom, rgba(20, 20, 20 ,0.5), rgba(0, 0, 0,0.6)), url('https://www.callmepetit.com/wp-content/uploads/2021/06/Outdoor-wedding-photo-ideas.jpg');
+            height: 90vh;
+            background-size:cover;
+            background-position: center;
+            object-fit: fill;
+            background-repeat: no-repeat;
+        }
+        .image5 {
+            background-image: linear-gradient(to bottom, rgba(20, 20, 20 ,0.5), rgba(0, 0, 0,0.6)), url('https://img.freepik.com/free-photo/groom-putting-ring-bride-s-finger_1157-338.jpg?semt=ais_hybrid&w=740');
+            height: 90vh;
+            background-size:cover;
+            background-position: center;
+            object-fit: fill;
+            background-repeat: no-repeat;
+        }
+
+        @media (max-width: 427px){
+                h1{
+                    padding:0 30px;
+                    font-size: 7vw;
+                }
+            }
+    }
+
+    .aboutSec {
+        margin-top: 5%; 
+        h1 {
+            color:var(--primary-color);
+            font-family: 'Mulish', sans-serif;
+            font-size: 4vw;
+            font-weight: bolder;
+            position: relative;
+            bottom: 40px;
+        }
+
+        p{
+            font-family: 'Mulish', sans-serif;
+            text-align: start;
+            font-size: 16px;
+            font-weight: 400;
+            padding: 0 20px;
+        }
+
+        h4{
+            color:var(--primary-color);
+            font-family: 'Mulish', sans-serif;
+            font-size: 2vw;
+            font-weight: bolder;
+            text-align: center;
+            text-shadow: 1.5px 1px #333232;
+        }
+
+        .aboutRow{
+            // margin-top: 5px;
+
+            .aboutImg{
+                // width: 100vw;
+                // height: 100vh;
+                background-image: url('../assets/about.svg');
+                background-position: top;
+                object-fit: fill;
+                background-repeat: no-repeat;   
+            }
+
+            .aboutBody{
+                padding: 4%;
+            }
+
+            .aboutLink{
+                outline: none !important;
+                width: 350px;
+                height: 90px;
+                background-color: var(--primary-color);
+                color: rgb(241, 238, 238);
+                cursor: pointer;
+                border-radius: 5px;
+                padding: 5px;
+                text-decoration: none;
+                font-weight: 700;
+                letter-spacing: 1px;
+                word-spacing: 2px;
+            }
+            .aboutLink:hover{
+                background-color: var(--secondary-color);
+                color: var(--primary-color);
+                font-weight: 700;
+            }
+        }
+
+        @media (max-width: 900px){
+            h1{
+                font-size: 5vw;
+            }
+            h4{
+                padding:0 30px;
+                font-size: 2vw;
+            }
+        }
+        @media (max-width: 767px){
+            h1{
+                font-size: 40px;
+                position: relative;
+                bottom: 20px;
+            }
+            h4{
+                padding:0 30px;
+                font-size: 4vw;
+            }
+            .aboutRow{
+                margin-top: 10px;
+                .aboutImg{
+                    width: 100vw;
+                    min-width: 320px;
+                    height: 50vh;
+                }
+                .aboutBody{
+                    padding: 0;
+                }
+            }
+        }
+          
+    } 
+  }
+
+
+  .studio-services {
+    padding: 1rem 2rem;
+    background-color: #f7f7f7;
+    text-align: center;
+  
+    .section-title {
+        color:var(--primary-color);
+        font-family: 'Mulish', sans-serif;
+        font-weight: bolder;
+        font-size: 48px;
+        font-weight: 900;
+        padding-bottom: 30px;
+        text-align: center;
+    }
+    p{
+        font-family: 'Mulish', sans-serif;
+        text-align: center;
+        font-size: 16px;
+        font-weight: 400;
+    }
+  
+    .service-container {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-auto-rows: 120px;
+      gap: 10px;
+      max-width: 800px;
+      margin: 0 auto;
+    //   aspect-ratio: 1 / 1;
+    margin-bottom: 40px;
+    }
+  
+    .service-item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 600;
+      border-radius: 8px;
+      padding: 1rem;
+      font-size: 1.1rem;
+      transition: transform 0.3s ease;
+
+      &:hover {
+        transform: scale(1.05);
+      }
+  
+      &.large {
+        grid-column: span 2;
+        grid-row: span 2;
+        background: linear-gradient(to bottom, rgba(20, 20, 20, 0.7), rgba(0, 0, 0, 0.6)), url('https://www.signupgenius.com/cms/images/business/appointment-scheduling-tips-photographers-article-600x400.jpg');
         background-size: cover;
         background-position: center;
-        object-fit: cover;
-        height: 80vh;
+        background-repeat: no-repeat;
+    }
+  
+      &.tall {
+        grid-row: span 2;
+        background: linear-gradient(to bottom, rgba(20, 20, 20, 0.7), rgba(0, 0, 0, 0.6)), url('https://petapixel.com/assets/uploads/2022/06/Why-Videography-May-Bring-an-End-to-Event-Photography-800x420.jpg');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+      }
+  
+      &.wide {
+        grid-column: span 1;
+        grid-row: span 3;
+        background: linear-gradient(to bottom, rgba(20, 20, 20, 0.7), rgba(0, 0, 0, 0.6)), url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSS3ocqTs0HChQyE8WtlWn5I6ODBr_sz178hw&s');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+
+      }
+  
+      &.small {
+        grid-column: span 2;
+        background: linear-gradient(to bottom, rgba(20, 20, 20, 0.7), rgba(0, 0, 0, 0.6)), url('https://5.imimg.com/data5/SELLER/Default/2021/3/TP/JU/HZ/91909092/customised-printed-mugs-500x500.jpg');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+
+      }
+  
+      &.medium {
+        grid-column: span 1;
+        grid-row: span 1;
+        background: linear-gradient(to bottom, rgba(20, 20, 20, 0.7), rgba(0, 0, 0, 0.6)), url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQQI9m_kDX2xiccyQWj0QmOrwLi3wPN9XjXug&s');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+      }
     }
 }
+
+
+
+   
