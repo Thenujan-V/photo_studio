@@ -55,7 +55,6 @@ const Home = () => {
             </div>
           </div>
         </section>
-
         <section className="studio-services">
           <h2 className="section-title">Explore Our Studio Services</h2>
           <p>Discover a vibrant range of services tailored to capture and preserve your most cherished moments. From stunning photography and cinematic videography to expert frame making, premium printing, and personalized in-studio sessions — our studio offers everything you need under one creative roof.</p>
@@ -66,6 +65,7 @@ const Home = () => {
             <Link to="/services/printing" className="service-item small">Printing</Link>
             <Link to="/services/in-studio" className="service-item medium">In-Studio Shots</Link>
           </div>
+
         </section>
         </div>
         <AppFooter />
