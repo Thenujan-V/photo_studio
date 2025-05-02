@@ -5,7 +5,7 @@ import '../style/Navbar.scss';
 
 function AppNavbar() {
   return (
-    <Navbar expand="lg" className="custom-navbar">
+    <Navbar expand="lg" className="custom-navbar fixed-top">
       <Container>
         <Navbar.Brand as={NavLink} to="/" className="logo">
           MyLogo
@@ -14,11 +14,11 @@ function AppNavbar() {
         <Navbar.Toggle aria-controls="navbar-content" />
         <Navbar.Collapse id="navbar-content">
           <Nav className="mx-auto center-links">
+            <Nav.Link as={NavLink} to="/">Home</Nav.Link>
             <Nav.Link as={NavLink} to="/about">About</Nav.Link>
             <Nav.Link as={NavLink} to="/services">Services</Nav.Link>
             <Nav.Link as={NavLink} to="/contact">Contact</Nav.Link>
           </Nav>
-
           <Nav className="ms-auto">
             <Nav.Link as={NavLink} to="/login" className="login-link">Login</Nav.Link>
           </Nav>

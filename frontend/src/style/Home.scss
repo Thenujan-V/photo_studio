@@ -1,12 +1,168 @@
 .home {
-    // width: 100%;
-    // height: 100vh;
-
+    min-width: 320px;
     .imgSec {
-        background-image: url('https://banuphotography.com/wp-content/uploads/2021/06/mannar-wedding-77.jpg');
-        background-size: cover;
-        background-position: center;
-        object-fit: cover;
-        height: 80vh;
+        overflow: auto;
+        h1 {
+            font-family: 'Mulish', sans-serif;
+            position: relative;
+            top: 35%;
+            color: rgb(241, 238, 238);
+            font-family: 'Mulish', sans-serif;
+            font-size: 5vw;
+            font-weight: bolder;
+            padding: 0 100px;
+            text-align: center;
+        }
+        .image1 {
+            background: linear-gradient(to bottom, rgba(20, 20, 20 ,0.5), rgba(0, 0, 0,0.6)), url('../assets/img1.jpg');
+            height: 90vh;
+            background-size:cover;
+            background-position: center;
+            object-fit: fill;
+            background-repeat: no-repeat;
+        }
+        .image2 {
+            background-image: linear-gradient(to bottom, rgba(20, 20, 20 ,0.5), rgba(0, 0, 0,0.6)), url('https://i.ytimg.com/vi/_g7n2SxP3-I/maxresdefault.jpg');
+            height: 90vh;
+            background-size:cover;
+            background-position:top;
+            object-fit: fill;
+            background-repeat: no-repeat;
+        }
+        .image3 {
+            background-image: linear-gradient(to bottom, rgba(20, 20, 20 ,0.5), rgba(0, 0, 0,0.6)), url('https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=1920,fit=crop/Y4LEV1G5zvcJyBjX/6-1-Y4L85DMzvyhJRQqJ.jpg');
+            height: 90vh;
+            background-size:cover;
+            background-position: center;
+            object-fit: fill;
+            background-repeat: no-repeat;
+        }
+        .image4 {
+            background-image: linear-gradient(to bottom, rgba(20, 20, 20 ,0.5), rgba(0, 0, 0,0.6)), url('https://www.callmepetit.com/wp-content/uploads/2021/06/Outdoor-wedding-photo-ideas.jpg');
+            height: 90vh;
+            background-size:cover;
+            background-position: center;
+            object-fit: fill;
+            background-repeat: no-repeat;
+        }
+        .image5 {
+            background-image: linear-gradient(to bottom, rgba(20, 20, 20 ,0.5), rgba(0, 0, 0,0.6)), url('https://img.freepik.com/free-photo/groom-putting-ring-bride-s-finger_1157-338.jpg?semt=ais_hybrid&w=740');
+            height: 90vh;
+            background-size:cover;
+            background-position: center;
+            object-fit: fill;
+            background-repeat: no-repeat;
+        }
+
+        @media (max-width: 427px){
+                h1{
+                    padding:0 30px;
+                    font-size: 7vw;
+                }
+            }
     }
-}
+
+    .aboutSec {
+        margin-top: 5%; 
+        h1 {
+            color:var(--primary-color);
+            font-family: 'Mulish', sans-serif;
+            font-size: 4vw;
+            font-weight: bolder;
+            position: relative;
+            bottom: 40px;
+        }
+
+        p{
+            font-family: 'Mulish', sans-serif;
+            text-align: start;
+            font-size: 16px;
+            font-weight: 400;
+            padding: 0 20px;
+        }
+
+        h4{
+            color:var(--primary-color);
+            font-family: 'Mulish', sans-serif;
+            font-size: 2vw;
+            font-weight: bolder;
+            text-align: center;
+            text-shadow: 1.5px 1px #333232;
+        }
+
+        .aboutRow{
+            // margin-top: 5px;
+
+            .aboutImg{
+                // width: 100vw;
+                // height: 100vh;
+                background-image: url('../assets/about.svg');
+                background-position: top;
+                object-fit: fill;
+                background-repeat: no-repeat;   
+            }
+
+            .aboutBody{
+                padding: 4%;
+            }
+
+            .aboutLink{
+                outline: none !important;
+                width: 350px;
+                height: 90px;
+                background-color: var(--primary-color);
+                color: rgb(241, 238, 238);
+                cursor: pointer;
+                border-radius: 5px;
+                padding: 5px;
+                text-decoration: none;
+                font-weight: 700;
+                letter-spacing: 1px;
+                word-spacing: 2px;
+            }
+            .aboutLink:hover{
+                background-color: var(--secondary-color);
+                color: var(--primary-color);
+                font-weight: 700;
+            }
+        }
+
+        @media (max-width: 900px){
+            h1{
+                font-size: 5vw;
+            }
+            h4{
+                padding:0 30px;
+                font-size: 2vw;
+            }
+        }
+        @media (max-width: 767px){
+            h1{
+                font-size: 40px;
+                position: relative;
+                bottom: 20px;
+            }
+            h4{
+                padding:0 30px;
+                font-size: 4vw;
+            }
+            .aboutRow{
+                margin-top: 10px;
+                .aboutImg{
+                    width: 100vw;
+                    min-width: 320px;
+                    height: 50vh;
+                }
+                .aboutBody{
+                    padding: 0;
+                }
+            }
+        }
+          
+    } 
+  }
+
+
+
+
+   
