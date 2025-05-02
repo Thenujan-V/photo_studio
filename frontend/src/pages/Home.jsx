@@ -2,11 +2,7 @@ import React from 'react'
 import AppNavbar from '../components/Navbar'
 import Carousel from 'react-bootstrap/Carousel'
 import '../style/Home.scss'
-// import img1 from '../assets/img1.jpg';
-// import img2 from '../assets/img2.jpg';
-// import img3 from '../assets/img3.jpg';
-// import img4 from '../assets/img4.jpg';
-import img5 from '../assets/img5.jpg';
+import AppFooter from '../components/footer'
 import { Link } from 'react-router-dom';
 
 const Home = () => {
@@ -44,22 +40,35 @@ const Home = () => {
           </Carousel>
         </section>
         <section className='aboutSec'>
-        <div className='container-fluid'>
-          <div className='row aboutRow'> 
-            <div className='col-12 col-md-6 aboutImg'>
-              <h1>About</h1>
-            </div>
-            <div className='col-12 col-md-6 aboutBody'>
-              <h4>"Your Story. Your Moments. Captured with Passion, Framed with Perfection"</h4>
-              <p>
-                Welcome to our photo studio, where every moment is turned into a lasting memory. With a passion for storytelling through the lens, we specialize in capturing the most cherished occasions of your life—be it weddings, graduations, birthdays, or professional portraits. Step into our studio and let us turn your moments into art you’ll treasure forever.
-              </p>
-              <Link to='/about' className='aboutLink'>See more</Link>
+          <div className='container-fluid'>
+            <div className='row aboutRow'> 
+              <div className='col-12 col-md-6 aboutImg'>
+                <h1>About Us</h1>
+              </div>
+              <div className='col-12 col-md-6 aboutBody'>
+                <h4>"Your Story. Your Moments. Captured with Passion, Framed with Perfection"</h4>
+                <p>
+                  Welcome to our photo studio, where every moment is turned into a lasting memory. With a passion for storytelling through the lens, we specialize in capturing the most cherished occasions of your life—be it weddings, graduations, birthdays, or professional portraits. Step into our studio and let us turn your moments into art you’ll treasure forever.
+                </p>
+                <Link to='/about' className='aboutLink'>See more</Link>
+              </div>
             </div>
           </div>
-        </div>
+        </section>
+        <section className="studio-services">
+          <h2 className="section-title">Explore Our Studio Services</h2>
+          <p>Discover a vibrant range of services tailored to capture and preserve your most cherished moments. From stunning photography and cinematic videography to expert frame making, premium printing, and personalized in-studio sessions — our studio offers everything you need under one creative roof.</p>
+          <div className="service-container">
+            <Link to="/services/photography" className="service-item large">Photography</Link>
+            <Link to="/services/videography" className="service-item tall">Videography</Link>
+            <Link to="/services/frames" className="service-item wide">Frame Making</Link>
+            <Link to="/services/printing" className="service-item small">Printing</Link>
+            <Link to="/services/in-studio" className="service-item medium">In-Studio Shots</Link>
+          </div>
+
         </section>
         </div>
+        <AppFooter />
     </div>
   )
 }
