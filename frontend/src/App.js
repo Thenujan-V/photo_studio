@@ -2,11 +2,11 @@ import './App.css';
 import {BrowserRouter ,  Routes, Route, useNavigate } from "react-router-dom";
 import Logout from './pages/Logout';
 import Home from './pages/Home';
-import Navbar from './components/Navbar';
 import About from './pages/About';
 import Services from './pages/Services';
 import Contact from './pages/Contact';
 import Login from './pages/Login';
+import SignUp from './pages/SignUp';
 
 const Unauthorized = () => <div><h2>Unauthorized - You do not have permission to access this page.</h2></div>;
 
@@ -22,6 +22,7 @@ function App() {
         <Route path="/services" element={<Services />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<SignUp />} />
 
         {/* Protected route for logged-in users */}
         {/* <Route
