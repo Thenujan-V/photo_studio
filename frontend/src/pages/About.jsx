@@ -8,6 +8,7 @@ import passion from '../assets/passion.png'
 import reliability from '../assets/reliablity.png'
 import satisfaction from '../assets/satisfaction.png'
 import precision from '../assets/precision.png'
+import AppFooter from '../components/footer'
 
 
 const About = () => {
@@ -118,6 +119,7 @@ const About = () => {
         </div>
       </div>
     </>
+    < AppFooter />
     </div>
   )
 }

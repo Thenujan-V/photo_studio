@@ -163,6 +163,102 @@
   }
 
 
+  .studio-services {
+    padding: 1rem 2rem;
+    background-color: #f7f7f7;
+    text-align: center;
+  
+    .section-title {
+        color:var(--primary-color);
+        font-family: 'Mulish', sans-serif;
+        font-weight: bolder;
+        font-size: 48px;
+        font-weight: 900;
+        padding-bottom: 30px;
+        text-align: center;
+    }
+    p{
+        font-family: 'Mulish', sans-serif;
+        text-align: center;
+        font-size: 16px;
+        font-weight: 400;
+    }
+  
+    .service-container {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-auto-rows: 120px;
+      gap: 10px;
+      max-width: 800px;
+      margin: 0 auto;
+    //   aspect-ratio: 1 / 1;
+    margin-bottom: 40px;
+    }
+  
+    .service-item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 600;
+      border-radius: 8px;
+      padding: 1rem;
+      font-size: 1.1rem;
+      transition: transform 0.3s ease;
+
+      &:hover {
+        transform: scale(1.05);
+      }
+  
+      &.large {
+        grid-column: span 2;
+        grid-row: span 2;
+        background: linear-gradient(to bottom, rgba(20, 20, 20, 0.7), rgba(0, 0, 0, 0.6)), url('https://www.signupgenius.com/cms/images/business/appointment-scheduling-tips-photographers-article-600x400.jpg');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+  
+      &.tall {
+        grid-row: span 2;
+        background: linear-gradient(to bottom, rgba(20, 20, 20, 0.7), rgba(0, 0, 0, 0.6)), url('https://petapixel.com/assets/uploads/2022/06/Why-Videography-May-Bring-an-End-to-Event-Photography-800x420.jpg');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+      }
+  
+      &.wide {
+        grid-column: span 1;
+        grid-row: span 3;
+        background: linear-gradient(to bottom, rgba(20, 20, 20, 0.7), rgba(0, 0, 0, 0.6)), url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSS3ocqTs0HChQyE8WtlWn5I6ODBr_sz178hw&s');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+
+      }
+  
+      &.small {
+        grid-column: span 2;
+        background: linear-gradient(to bottom, rgba(20, 20, 20, 0.7), rgba(0, 0, 0, 0.6)), url('https://5.imimg.com/data5/SELLER/Default/2021/3/TP/JU/HZ/91909092/customised-printed-mugs-500x500.jpg');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+
+      }
+  
+      &.medium {
+        grid-column: span 1;
+        grid-row: span 1;
+        background: linear-gradient(to bottom, rgba(20, 20, 20, 0.7), rgba(0, 0, 0, 0.6)), url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQQI9m_kDX2xiccyQWj0QmOrwLi3wPN9XjXug&s');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+      }
+    }
+}
+    
+
+  
 
 
    

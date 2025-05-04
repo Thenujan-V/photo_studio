@@ -7,6 +7,10 @@ import Services from './pages/Services';
 import Contact from './pages/Contact';
 import Login from './pages/Login';
 import SignUp from './pages/SignUp';
+import { ServiceDetails } from './pages/ServiceDetails';
+import AddToCard from './pages/user/AddToCard';
+import ProtectedRoute from './components/ProtectedRoute';
+import ConfirmOrder from './pages/user/ConfirmOrder';
 
 const Unauthorized = () => <div><h2>Unauthorized - You do not have permission to access this page.</h2></div>;
 
@@ -20,19 +24,28 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/services" element={<Services />} />
+        <Route path="/services/:category" element={<ServiceDetails />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
 
         {/* Protected route for logged-in users */}
-        {/* <Route
-          path="/user-profile"
+        <Route
+          path="/add-to-card"
           element={
-            <ProtectedRoute allowedRoles={['user', 'admin']}>
-              <UserProfile />
-            </ProtectedRoute>
+            // <ProtectedRoute allowedRoles={['user']}>
+              <AddToCard />
+            // </ProtectedRoute>
           }
-        /> */}
+        />
+        <Route
+          path="//confirmOrder"
+          element={
+            // <ProtectedRoute allowedRoles={['user']}>
+              <ConfirmOrder />
+            // </ProtectedRoute>
+          }
+        />
 
         {/* Protected route for Admins */}
         {/* <Route

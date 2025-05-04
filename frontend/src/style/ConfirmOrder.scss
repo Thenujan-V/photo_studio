@@ -1,0 +1,123 @@
+.confirm-order-container {
+    margin-top: 50px;
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    flex-wrap: wrap;
+  
+    .left-section,
+    .right-section {
+      flex: 1;
+      min-width: 300px;
+      padding: 20px;
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+      border-radius: 12px;
+      background: #fff;
+    }
+    
+      .selected-items-scroll {
+        max-height: 500px; /* Adjust height as needed */
+        overflow-y: auto;
+        padding-right: 10px; /* space for scrollbar */
+      }
+      
+      /* Optional: make scrollbar nicer */
+      .selected-items-scroll::-webkit-scrollbar {
+        width: 6px;
+      }
+      .selected-items-scroll::-webkit-scrollbar-thumb {
+        background-color: #ccc;
+        border-radius: 4px;
+      }
+    .selected-item {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+      background-color: #f5f2f2;
+      padding: 20px;
+      border-radius: 10px;
+  
+      img {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 8px;
+      }
+  
+      div {
+        p {
+          margin: 4px 0;
+        }
+      }
+    }
+
+    h5{
+        margin-top: 20px;
+        text-align: right;
+    }
+  
+    .upload-section {
+      margin-top: 20px;
+      background-color: #ece0e0;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px  8px rgba(15, 15, 15, 0.1);
+      margin-right: 15%;
+    }
+  
+    .delivery-form {
+      display: flex;
+      flex-direction: column;
+  
+      input {
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+      }
+    }
+  
+    .payment-options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin: 20px 0;
+    }
+  
+    .submit-btn {
+        outline: none !important;
+        width: 150px;
+        height: 30px;
+        background-color: var(--primary-color);
+        color: rgb(241, 238, 238);
+        cursor: pointer;
+        border-radius: 5px;
+        text-decoration: none;
+        font-weight: 700;
+        letter-spacing: 1px;
+        word-spacing: 2px;
+        text-align: center;
+        border: none;
+
+      &:hover{
+        background-color: var(--secondary-color);
+        color: var(--primary-color);
+        font-weight: 700;
+    }
+    }
+  }
+  
+  @media screen and (max-width: 768px) {
+    .confirm-order-container {
+      flex-direction: column;
+  
+      .left-section {
+        order: 1;
+      }
+  
+      .right-section {
+        order: 2;
+      }
+    }
+  }
+  
