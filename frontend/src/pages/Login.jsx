@@ -32,7 +32,7 @@ const Login = () => {
 
     if (!email.trim()) {
       error.email = 'Email is required';
-    } else if ( /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test(email)) {
+    } else if ( !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test(email)) {
       error.email = 'Invalid email address';
     }
     if (!password.trim()) {
