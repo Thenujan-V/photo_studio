@@ -29,21 +29,16 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
 
-        {/* Protected route for logged-in users */}
         <Route
-          path="/add-to-card"
+          path="/add-to-cart"
           element={
-            // <ProtectedRoute allowedRoles={['user']}>
               <AddToCard />
-            // </ProtectedRoute>
           }
         />
         <Route
-          path="//confirmOrder"
+          path="/confirmOrder"
           element={
-            // <ProtectedRoute allowedRoles={['user']}>
               <ConfirmOrder />
-            // </ProtectedRoute>
           }
         />
 

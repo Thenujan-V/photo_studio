@@ -11,7 +11,9 @@ import { retrieveId } from '../Services/getToken ';
 
 const Login = () => {
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [password, setPassword] = useState('')
+  const [errors, setErrors] = useState({});
+  
   const [apiResponse, setApiResponse] = useState('')
 
   const navigate = useNavigate();
@@ -25,8 +27,25 @@ const Login = () => {
     setPassword(e.target.value);
   };
 
+  const validations = () => {
+    const error = {}
+
+    if (!email.trim()) {
+      error.email = 'Email is required';
+    } else if ( /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test(email)) {
+      error.email = 'Invalid email address';
+    }
+    if (!password.trim()) {
+      error.password = 'Password is required';
+    }
+
+    setErrors(error)
+  }
+
   const handleSubmit = async (e) => {
-    // e.preventDefault();
+    e.preventDefault();
+
+    validations()
 
     // try{
     //   const response = await signinService(email, password)
@@ -72,12 +91,12 @@ const Login = () => {
             <h1>Login here</h1>
             <form onSubmit={handleSubmit} className=''>
               <div className="form-group">
-                {/* <label htmlFor="email" className="form-label">Email</label> */}
-                <input className="form-control" type="email" id='email' placeholder='Example@gmail.com' value={email} onChange={handleEmailChange} required />
+                <input className="form-control" type="email" id='email' placeholder='Example@gmail.com' value={email} onChange={handleEmailChange} />
+                <p>{errors.email}</p>
               </div>
               <div className="form-group mt-2">
-                {/* <label   htmlFor="password" className="form-label">Password</label> */}
-                <input className="form-control" type="password" id='password' placeholder='Password' value={password} onChange={handlePasswordChange} required />
+                <input className="form-control" type="password" id='password' placeholder='Password' value={password} onChange={handlePasswordChange} />
+                <p>{errors.password}</p>
               </div>
               <div className="form-group mt-1 pb-4" id='btnTag'>
                 <a href="#">Forgot password?</a>

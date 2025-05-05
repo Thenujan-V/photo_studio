@@ -129,7 +129,7 @@ const AddToCard = () => {
         <>
         <AppNavbar />
           <div className="cart-container">
-            <h2>Your Card Items - {items.length}</h2>
+            <h2>Your Cart Items - {items.length}</h2>
             {items.length === 0 ? (
               <p className="no-items">No items in your cart.</p>
             ) : (
@@ -178,7 +178,7 @@ const AddToCard = () => {
               />
               <label>All</label>
               </div>
-              <div className="cart-summarys">
+              <div className="cart-summary">
               {selectedItems.length > 0 && (
                 <h3>Total Value: LKR {getSelectedTotal().toLocaleString()}</h3>
               )}

@@ -26,12 +26,15 @@ const SignUp = () => {
     if (!formData.first_name.trim()) {
       errors.first_name = 'First name is required';
     }
+    if (formData.first_name && !formData.first_name.length < 4) {
+      errors.first_name = 'First name must be atleast 4 characters';
+    }
     if (!formData.last_name.trim()) {
       errors.last_name = 'Last name is required';
     }
     if (!formData.email.trim()) {
       errors.email = 'Email is required';
-    } else if (!/^\S+@\S+\.\S+$/.test(formData.email)) {
+    } else if ( /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test(formData.email)) {
       errors.email = 'Invalid email address';
     }
     if (!formData.password.trim()) {

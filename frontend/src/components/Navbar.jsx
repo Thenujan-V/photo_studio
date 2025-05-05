@@ -2,6 +2,8 @@ import React from 'react';
 import { Navbar, Nav, Container } from 'react-bootstrap';
 import { NavLink } from 'react-router-dom';
 import '../style/Navbar.scss';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCartShopping } from '@fortawesome/free-solid-svg-icons';
 
 function AppNavbar() {
   return (
@@ -20,6 +22,12 @@ function AppNavbar() {
             <Nav.Link as={NavLink} to="/contact">Contact</Nav.Link>
           </Nav>
           <Nav className="ms-auto">
+            <Nav.Link as={NavLink} to="/add-to-cart" className="cart">
+              <FontAwesomeIcon 
+                icon={faCartShopping}
+                color='white'
+              />
+            </Nav.Link>
             <Nav.Link as={NavLink} to="/login" className="login-link">Login</Nav.Link>
           </Nav>
         </Navbar.Collapse>

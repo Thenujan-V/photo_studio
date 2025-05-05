@@ -19,8 +19,18 @@ const ConfirmOrder = () => {
   });
   const [paymentMethod, setPaymentMethod] = useState('cash');
 
+  const districts = [
+    'Ampara', 'Anuradhapura', 'Badulla', 'Batticaloa', 'Colombo',
+    'Galle', 'Gampaha', 'Hambantota', 'Jaffna', 'Kalutara',
+    'Kandy', 'Kegalle', 'Kilinochchi', 'Kurunegala', 'Mannar',
+    'Matale', 'Matara', 'Monaragala', 'Mullaitivu', 'Nuwara Eliya',
+    'Polonnaruwa', 'Puttalam', 'Ratnapura', 'Trincomalee', 'Vavuniya'
+  ];
+
   const handleUpload = async (index) => {
     const filesToUpload = uploadedPhotos[index];
+    // const [selectedDistrict, setSelectedDistrict] = useState('');
+
   
     if (!filesToUpload || filesToUpload.length === 0) {
       alert("No files selected to upload.");
@@ -63,7 +73,7 @@ const ConfirmOrder = () => {
 
   const handleDeliveryChange = (e) => {
     const { name, value } = e.target;
-    setDeliveryInfo((prev) => ({ ...prev, [name]: value }));
+      setDeliveryInfo((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = () => {
@@ -82,7 +92,17 @@ const ConfirmOrder = () => {
         alert("Please fill in all delivery details before placing the order.");
         return;
       }
-    // Submit logic here
+      if(!isDeliveryInfoIncomplete){
+        if(deliveryInfo.sender_phone_number.length < 10 || deliveryInfo.receiver_phone_number.length < 10 ){
+          alert("Phone number must be atleast 10 characters.");
+          return;
+        }
+        if(deliveryInfo.reciver_name.length < 4 ){
+          alert("Reciever name must be atleast 4 characters.");
+          return;
+        }
+      }
+
     console.log({ selectedItems, uploadedPhotos, deliveryInfo, paymentMethod });
     alert("Order submitted successfully!");
   };
@@ -138,12 +158,25 @@ const ConfirmOrder = () => {
       <div className="right-section">
         <h2>Delivery Details</h2>
         <form className="delivery-form">
-          <input name="sender_phone_number" placeholder="Sender Phone Number" onChange={handleDeliveryChange} />
-          <input name="receiver_phone_number" placeholder="Receiver Phone Number" onChange={handleDeliveryChange} />
-          <input name="reciver_name" placeholder="Receiver Name" onChange={handleDeliveryChange} />
-          <input name="reciver_address_district" placeholder="District" onChange={handleDeliveryChange} />
-          <input name="receiver_address_city" placeholder="City" onChange={handleDeliveryChange} />
-          <input name="receiver_address_street" placeholder="Street" onChange={handleDeliveryChange} />
+          <input name="sender_phone_number" placeholder="Sender Phone Number" onChange={handleDeliveryChange} required/>
+          <input name="receiver_phone_number" placeholder="Receiver Phone Number" onChange={handleDeliveryChange} required/>
+          <input name="reciver_name" placeholder="Receiver Name" onChange={handleDeliveryChange} required/>
+          {/* <input name="reciver_address_district" placeholder="District" onChange={handleDeliveryChange} required /> */}
+          <select
+              name="reciver_address_district"
+              onChange={handleDeliveryChange}
+              value={deliveryInfo.reciver_address_district}
+              required
+            >
+              <option value="" disabled selected hidden>Receiver District</option>
+              {districts.map((district, index) => (
+                <option key={index} value={district}>
+                  {district}
+                </option>
+              ))}
+          </select>
+          <input name="receiver_address_city" placeholder="City" onChange={handleDeliveryChange} required/>
+          <input name="receiver_address_street" placeholder="Street" onChange={handleDeliveryChange} required/>
         </form>
 
         <h2>Payment</h2>
