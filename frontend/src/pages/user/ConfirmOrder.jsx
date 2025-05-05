@@ -3,10 +3,12 @@ import { useLocation } from 'react-router-dom';
 import '../../style/ConfirmOrder.scss';
 import AppNavbar from '../../components/Navbar';
 import AppFooter from '../../components/footer';
+import Payment from '../../components/Payment';
 
 const ConfirmOrder = () => {
   const location = useLocation();
   const { selectedItems } = location.state || { selectedItems: [] };
+  const [isPayment , setIsPayment] = useState(false);
 
   const [uploadedPhotos, setUploadedPhotos] = useState([]);
   const [deliveryInfo, setDeliveryInfo] = useState({
@@ -82,7 +84,7 @@ const ConfirmOrder = () => {
         alert("Please fill in all delivery details before placing the order.");
         return;
       }
-    // Submit logic here
+    
     console.log({ selectedItems, uploadedPhotos, deliveryInfo, paymentMethod });
     alert("Order submitted successfully!");
   };
@@ -153,7 +155,10 @@ const ConfirmOrder = () => {
             Cash on Delivery
           </label>
           <label>
-            <input type="radio" name="payment" value="online" checked={paymentMethod === 'online'} onChange={() => setPaymentMethod('online')} />
+            <input type="radio" name="payment" value="online" checked={paymentMethod === 'online'} onChange={() => {
+              setPaymentMethod('online');
+              setIsPayment(true); 
+            }} />
             Online Payment
           </label>
         </div>
@@ -162,6 +167,15 @@ const ConfirmOrder = () => {
       </div>
     </div>
     <AppFooter />
+
+    {isPayment && (
+      <div className="custom-modal-overlay">
+        <div className="custom-modal-box">
+          <button className="close-button" onClick={() => setIsPayment(false)}>✖</button>
+          <Payment />
+        </div>
+      </div>
+    )}
     </>
   );
 };

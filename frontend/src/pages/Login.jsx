@@ -8,14 +8,27 @@ import {signinService} from '../Services/userService'
 import { useNavigate } from 'react-router-dom';
 import { adminSignin } from '../Services/adminService';
 import { retrieveId } from '../Services/getToken ';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Login = () => {
-  const [email, setEmail] = useState('');
+  const [mail, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [apiResponse, setApiResponse] = useState('')
 
   const navigate = useNavigate();
 
+  const triggerNotification = (message, type = "info") => {
+    if (type === "success") {
+      toast.success(message,{
+        autoClose: 3000,
+      });
+    } else if (type === "error") {
+      toast.error(message);
+    } else {
+      toast(message);
+    }
+  };
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
@@ -26,43 +39,47 @@ const Login = () => {
   };
 
   const handleSubmit = async (e) => {
-    // e.preventDefault();
+    e.preventDefault();
 
-    // try{
-    //   const response = await signinService(email, password)
-    //     if(response == false){
-    //       const workerResponse = await adminSignin(email, password)
-    //       if(workerResponse == false){
-    //         alert('username or password is not valid')
-    //         setApiResponse('signin faild...!')
-    //       }
-    //       else{
-    //         localStorage.setItem('authToken', workerResponse.token);
-    //         setApiResponse("signin success")
-    //         const decoded = retrieveId()
-    //         if(decoded.role === 'admin'){
-    //           navigate('/adminpanel')
-    //         }
-    //         else if(decoded.role === 'instructor'){
-    //           navigate('/instracterpanel')
-    //         }
-    //       }
+    try{
+      const response = await signinService(mail, password)
+        if(response == false){
+          const workerResponse = await adminSignin(mail, password)
+          if(workerResponse == false){
+            alert('username or password is not valid')
+            setApiResponse('signin faild...!')
+          }
+          else{
+            localStorage.setItem('authToken', workerResponse.token);
+            setApiResponse("signin success")
+            const decoded = retrieveId()
+            if(decoded.role === 'ADMIN'){
+              setTimeout(() => {
+                navigate('/adminpanel');
+              }, 3000);
+            }
+          }
 
-    //     }
-    //     else{
-    //       localStorage.setItem('authToken', response.token);
-    //       setApiResponse("signin success")
-    //       const decoded = retrieveId()
-    //         if(decoded.role === 'user'){
-    //           navigate('/')
-    //         }
-    //     }
+        }
+        else{
+          localStorage.setItem('authToken', response.token);
+          setApiResponse("signin success")
+          triggerNotification("you are login successfully", "success");
+          const decoded = retrieveId()
+          console.log("id", decoded);
+            if(decoded.role === 'USER'){
+              setTimeout(() => {
+                navigate('/');
+              }, 3000);
+            }
+        }
 
-    // }
-    // catch(error){
-    //   setApiResponse('signin faild...!')
-    //   console.log('Error: ', error)
-    // }
+    }
+    catch(error){
+      setApiResponse('signin faild...!')
+      triggerNotification(error.response.data.message, "error");
+      console.log('Error: ', error)
+    }
   };
   return (
     <>
@@ -73,7 +90,7 @@ const Login = () => {
             <form onSubmit={handleSubmit} className=''>
               <div className="form-group">
                 {/* <label htmlFor="email" className="form-label">Email</label> */}
-                <input className="form-control" type="email" id='email' placeholder='Example@gmail.com' value={email} onChange={handleEmailChange} required />
+                <input className="form-control" type="email" id='mail' placeholder='Example@gmail.com' value={mail} onChange={handleEmailChange} required />
               </div>
               <div className="form-group mt-2">
                 {/* <label   htmlFor="password" className="form-label">Password</label> */}

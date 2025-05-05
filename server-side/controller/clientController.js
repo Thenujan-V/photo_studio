@@ -48,8 +48,8 @@ const registerClient = async (req, res) => {
 
 const loginClient = async (req, res) => {
     try{
-        const {userName, password} = req.body
-        const existingUser = await clientModel.findByUserName(userName)
+        const {mail, password} = req.body
+        const existingUser = await clientModel.findByMail(mail)
 
         if(existingUser.length === 0){
             return res.status(400).json({message: 'Invalid username or password.'})
@@ -62,8 +62,11 @@ const loginClient = async (req, res) => {
         }
 
         const role = await roleModel.getRoleById(existingUser[0].role_id)
-
-        const token = await tokenUtil.jwttoken(existingUser[0].id, existingUser[0].userName, role)
+        const token =await tokenUtil.jwttoken({
+            id: existingUser[0].id,
+            username: existingUser[0].username,
+            role: role.role
+        });
 
         return res.status(200).json({message: "login successful.", token})
 
