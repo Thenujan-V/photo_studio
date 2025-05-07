@@ -2,8 +2,12 @@ import React from 'react';
 import { Navbar, Nav, Container } from 'react-bootstrap';
 import { NavLink } from 'react-router-dom';
 import '../style/Navbar.scss';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faShoppingCart, faUser } from '@fortawesome/free-solid-svg-icons';
+import { useNavigate } from 'react-router-dom';
 
 function AppNavbar() {
+  const navigate = useNavigate();
   return (
     <Navbar expand="lg" className="custom-navbar fixed-top">
       <Container>
@@ -21,6 +25,10 @@ function AppNavbar() {
           </Nav>
           <Nav className="ms-auto">
             <Nav.Link as={NavLink} to="/login" className="login-link">Login</Nav.Link>
+            <div style={{ display: 'flex', gap: '25px', alignItems:'center', marginLeft:'15px' }}>
+              <FontAwesomeIcon icon={faShoppingCart} size="x" color="#f90348" title="Add to Cart"  onClick={() => navigate('/add-to-card')}/>
+              <FontAwesomeIcon icon={faUser} size="x" color="#f90348" title="User Profile"  onClick={() => navigate('/useraccount')}/>
+            </div>
           </Nav>
         </Navbar.Collapse>
       </Container>
