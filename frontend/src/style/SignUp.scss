@@ -4,10 +4,10 @@
     max-width: 100vw;
     font-family: "Ubuntu", sans-serif;
     font-weight: 400;
-    padding: 50px;
     min-width: 320px;
 
     #img{
+
         background-image: url('../assets/Signup.png');
         background-position: center;
         background-repeat: no-repeat;
@@ -15,17 +15,16 @@
     }
 
     #form{
-        background-color:var(--green);
+        background-color:var(--primary-color);
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        position: relative;
-        margin-bottom: -40px;
+
         
 
         form{
-            max-height: 100vh;
+            // max-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -33,6 +32,7 @@
             background-color: rgb(243, 239, 239);
             padding:45px;
             border-radius: 20px;
+            margin-bottom: 12px;
     
             .form-group{
                 width: 350px; 

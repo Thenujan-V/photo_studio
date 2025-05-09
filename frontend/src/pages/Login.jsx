@@ -7,17 +7,29 @@ import { Link } from 'react-router-dom';
 import {signinService} from '../Services/userService'
 import { useNavigate } from 'react-router-dom';
 import { adminSignin } from '../Services/adminService';
-import { retrieveId } from '../Services/getToken ';
+import { decodedToken } from '../Services/getToken ';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Login = () => {
-  const [email, setEmail] = useState('');
+  const [mail, setEmail] = useState('');
   const [password, setPassword] = useState('')
   const [errors, setErrors] = useState({});
-  
   const [apiResponse, setApiResponse] = useState('')
 
   const navigate = useNavigate();
 
+  const triggerNotification = (message, type = "info") => {
+    if (type === "success") {
+      toast.success(message,{
+        autoClose: 3000,
+      });
+    } else if (type === "error") {
+      toast.error(message);
+    } else {
+      toast(message);
+    }
+  };
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
@@ -30,15 +42,16 @@ const Login = () => {
   const validations = () => {
     const error = {}
 
-    if (!email.trim()) {
-      error.email = 'Email is required';
-    } else if ( !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test(email)) {
-      error.email = 'Invalid email address';
+    if (!mail.trim()) {
+      error.mail = 'Email is required';
+    } else if ( !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test(mail)) {
+      error.mail = 'Invalid email address';
     }
     if (!password.trim()) {
       error.password = 'Password is required';
+    } else if(password.length < 4){
+      error.password = "minimum length 4 letters"
     }
-
     setErrors(error)
   }
 
@@ -47,41 +60,45 @@ const Login = () => {
 
     validations()
 
-    // try{
-    //   const response = await signinService(email, password)
-    //     if(response == false){
-    //       const workerResponse = await adminSignin(email, password)
-    //       if(workerResponse == false){
-    //         alert('username or password is not valid')
-    //         setApiResponse('signin faild...!')
-    //       }
-    //       else{
-    //         localStorage.setItem('authToken', workerResponse.token);
-    //         setApiResponse("signin success")
-    //         const decoded = retrieveId()
-    //         if(decoded.role === 'admin'){
-    //           navigate('/adminpanel')
-    //         }
-    //         else if(decoded.role === 'instructor'){
-    //           navigate('/instracterpanel')
-    //         }
-    //       }
+    try{
+      const response = await signinService(mail, password)
+        if(response == false){
+          const workerResponse = await adminSignin(mail, password)
+          if(workerResponse == false){
+            alert('username or password is not valid')
+            setApiResponse('signin faild...!')
+          }
+          else{
+            localStorage.setItem('authToken', workerResponse.token);
+            setApiResponse("signin success")
+            const decoded = decodedToken()
+            if(decoded.role === 'ADMIN'){
+              setTimeout(() => {
+                navigate('/adminpanel');
+              }, 3000);
+            }
+          }
 
-    //     }
-    //     else{
-    //       localStorage.setItem('authToken', response.token);
-    //       setApiResponse("signin success")
-    //       const decoded = retrieveId()
-    //         if(decoded.role === 'user'){
-    //           navigate('/')
-    //         }
-    //     }
+        }
+        else{
+          localStorage.setItem('authToken', response.token);
+          setApiResponse("signin success")
+          triggerNotification("you are login successfully", "success");
+          const decoded = decodedToken()
+          console.log("id", decoded);
+            if(decoded.role === 'USER'){
+              setTimeout(() => {
+                navigate('/');
+              }, 3000);
+            }
+        }
 
-    // }
-    // catch(error){
-    //   setApiResponse('signin faild...!')
-    //   console.log('Error: ', error)
-    // }
+    }
+    catch(error){
+      setApiResponse('signin faild...!')
+      triggerNotification(error.response.data.message, "error");
+      console.log('Error: ', error)
+    }
   };
   return (
     <>
@@ -91,8 +108,8 @@ const Login = () => {
             <h1>Login here</h1>
             <form onSubmit={handleSubmit} className=''>
               <div className="form-group">
-                <input className="form-control" type="email" id='email' placeholder='Example@gmail.com' value={email} onChange={handleEmailChange} />
-                <p>{errors.email}</p>
+                <input className="form-control" type="email" id='mail' placeholder='Example@gmail.com' value={mail} onChange={handleEmailChange} required />
+                <p>{errors.mail}</p>
               </div>
               <div className="form-group mt-2">
                 <input className="form-control" type="password" id='password' placeholder='Password' value={password} onChange={handlePasswordChange} />

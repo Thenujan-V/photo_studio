@@ -2,19 +2,34 @@ import React, { useState } from 'react'
 import {signupService} from '../Services/userService'
 import { Link, useNavigate } from 'react-router-dom'
 import '../style/SignUp.scss';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const SignUp = () => {
 
   const navigate = useNavigate()
   const [formData, setFormData] = useState({
-    first_name: '',
-    last_name: '',
-    email: '',
+    username: '',
+    mail: '',
+    phone_number: '',
+    city: '',
     password: '',
     confirmPassword: '',
   });
   const [errors, setErrors] = useState({});
   const [apiResponse, setApiResponse] = useState('');
+
+  const triggerNotification = (message, type = "info") => {
+    if (type === "success") {
+      toast.success(message,{
+        autoClose: 3000,
+      });
+    } else if (type === "error") {
+      toast.error(message);
+    } else {
+      toast(message);
+    }
+  };
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -24,52 +39,70 @@ const SignUp = () => {
     e.preventDefault();
     console.log("fd :", formData)
     const errors = {};
-    if (!formData.first_name.trim()) {
-      errors.first_name = 'First name is required';
+
+    if (!formData.username?.trim()) {
+      errors.username = 'Username is required';
+    } else if (!formData.username?.length > 5) {
+      errors.username = 'Username minimum lenth atleast 4 characters.';
     }
-    if (formData.first_name && formData.first_name.length < 4) {
-      errors.first_name = 'First name must be atleast 4 characters';
+
+    if (!formData.mail?.trim()) {
+      errors.mail = 'Email is required';
+    } else if (!/^\S+@\S+\.\S+$/.test(formData.mail)) {
+      errors.mail = 'Invalid email address';
     }
-    if (!formData.last_name.trim()) {
-      errors.last_name = 'Last name is required';
+
+    if (!formData.phone_number?.trim()) {
+      errors.phone_number = 'Phone number is required';
+    } else if (!/^\d{10}$/.test(formData.phone_number)) {
+      errors.phone_number = 'Invalid phone number (must be 10 digits)';
     }
-    if (!formData.email.trim()) {
-      errors.email = 'Email is required';
-    } else if ( !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test(formData.email)) {
-      errors.email = 'Invalid email address';
+
+    if (!formData.city?.trim()) {
+      errors.city = 'City is required';
     }
-    if (!formData.password.trim()) {
+
+    if (!formData.password?.trim()) {
       errors.password = 'Password is required';
     } else if (formData.password.length < 6) {
       errors.password = 'Password must be at least 6 characters';
     }
+
     if (formData.password !== formData.confirmPassword) {
       errors.confirmPassword = 'Passwords do not match';
     }
+
     setErrors(errors);
-    // api call throw signup service function
-    // try{
-    //   if(Object.keys(errors).length === 0){
-    //     const response = await signupService(formData)
-    //   setApiResponse('signup successfully...!')
-    //     navigate('/signin')
-    //   }
-    //   else{
-    //     alert('Give correct details')
-    //   }
-      
-    // }
-    // catch(error){
-    //   setApiResponse('Sign up failed.');
-    //   console.log('Response : ',error.response.data)
-    //   if(error.response.data == 'exsisting email'){
-    //     alert('email is already used please use different email')
-    //   }
-    //   console.error('Error:', error);
-    // }
 
-
+    if (Object.keys(errors).length === 0) {
+      try {
+        const { username, mail, phone_number, city, password } = formData;
+        const payload = {
+          username,
+          mail: mail,
+          phone_number,
+          city,
+          password
+        };
+        console.log("payload: ",payload);
+        await signupService(payload);
+        triggerNotification("Signup Successful", "success");
+        // setApiResponse('Signup successful!');
+        setTimeout(() => {
+          navigate('/login');
+        }, 3000); 
+      } catch (error) {
+        setApiResponse('Sign up failed.');
+        if (error.response?.data.message) {
+          const errorMessage =
+            error.response?.data?.message || 'Something went wrong. Please try again.';
+            triggerNotification(errorMessage, "error");
+        }
+        console.error('Error:', error.response.data.message);
+      }
+    }
   };
+
   return (
     <>
       <div className="row m-0" id='signupPage'>
@@ -77,39 +110,37 @@ const SignUp = () => {
           <div className="col-xl-6 col-lg-6  col-12 p-0" id='form'>
             <h1>Signup here</h1>
             <form onSubmit={handleSubmit} className=''>
-                <div className="form-group">
-                  {/* <label htmlFor="first_name" className="form-label">First Name</label> */}
-                  <input className="form-control" type="text" id='first_name' name='first_name' placeholder='First Name' value={formData.first_name} onChange={handleChange}   />
-                  <p>{errors.first_name}</p>
-                </div>
-                <div className="form-group">
-                  {/* <label htmlFor="last_name" className="form-label">Last Name</label> */}
-                  <input className="form-control" type="text" id='last_name' name='last_name' placeholder='Last Name' value={formData.last_name} onChange={handleChange} />
-                  <p>{errors.last_name}</p>
-                </div>
               <div className="form-group">
-                {/* <label htmlFor="email" className="form-label">Email</label> */}
-                <input className="form-control" type="email" id='email' name='email' placeholder='Example@gmail.com' value={formData.email} onChange={handleChange}  />
-                <p>{errors.email}</p>
+                <input className="form-control" type="text" name="username" placeholder="Username" value={formData.username} onChange={handleChange} />
+                <p>{errors.username}</p>
               </div>
               <div className="form-group">
-                {/* <label htmlFor="password" className="form-label">Password</label> */}
-                <input className="form-control" type="password" id='password' name='password' placeholder='password' value={formData.password} onChange={handleChange} />
+                <input className="form-control" type="email" name="mail" placeholder="Example@gmail.com" value={formData.mail} onChange={handleChange} />
+                <p>{errors.mail}</p>
+              </div>
+              <div className="form-group">
+                <input className="form-control" type="text" name="phone_number" placeholder="Phone Number" value={formData.phone_number} onChange={handleChange} />
+                <p>{errors.phone_number}</p>
+              </div>
+              <div className="form-group">
+                <input className="form-control" type="text" name="city" placeholder="City" value={formData.city} onChange={handleChange} />
+                <p>{errors.city}</p>
+              </div>
+              <div className="form-group">
+                <input className="form-control" type="password" name="password" placeholder="Password" value={formData.password} onChange={handleChange} />
                 <p>{errors.password}</p>
               </div>
               <div className="form-group">
-                {/* <label htmlFor="confirmPassword" className="form-label">Confirm Password</label> */}
-                <input className="form-control" type="password" id='confirmPassword' name='confirmPassword' placeholder='Re-Enter Paswword' value={formData.confirmPassword} onChange={handleChange}/>
+                <input className="form-control" type="password" name="confirmPassword" placeholder="Re-Enter Password" value={formData.confirmPassword} onChange={handleChange} />
                 <p>{errors.confirmPassword}</p>
               </div>
-              <div className="form-group mt-1 pb-4" id='btnTag'>
-                <button className='mt-3' type="submit">SignUp</button>
+              <div className="form-group mt-1 pb-4" id="btnTag">
+                <button className="mt-3" type="submit">SignUp</button>
               </div>
               <Link to='/login' className='link' >Already have an account?</Link>
             </form>
-            
           </div>
-        </div>
+      </div>
     </>
   )
 }

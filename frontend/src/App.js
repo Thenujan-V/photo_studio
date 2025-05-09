@@ -11,6 +11,8 @@ import { ServiceDetails } from './pages/ServiceDetails';
 import AddToCard from './pages/user/AddToCard';
 import ProtectedRoute from './components/ProtectedRoute';
 import ConfirmOrder from './pages/user/ConfirmOrder';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Unauthorized = () => <div><h2>Unauthorized - You do not have permission to access this page.</h2></div>;
 
@@ -18,13 +20,13 @@ function App() {
   return (
     <BrowserRouter>
     <div className="App">
-
+    <ToastContainer />
       <Routes>
         {/* Public routes */}
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/services" element={<Services />} />
-        <Route path="/services/:category" element={<ServiceDetails />} />
+        <Route path="/services/:categoryId" element={<ServiceDetails />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />

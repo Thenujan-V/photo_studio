@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { data, useLocation } from 'react-router-dom';
 import '../../style/ConfirmOrder.scss';
 import AppNavbar from '../../components/Navbar';
 import AppFooter from '../../components/footer';
+import Payment from '../../components/Payment';
 
 const ConfirmOrder = () => {
   const location = useLocation();
-  const { selectedItems } = location.state || { selectedItems: [] };
-
+  const selectedItems = location.state || []
+  const [isPayment , setIsPayment] = useState(false);
   const [uploadedPhotos, setUploadedPhotos] = useState([]);
   const [deliveryInfo, setDeliveryInfo] = useState({
     sender_phone_number: '',
@@ -26,6 +27,22 @@ const ConfirmOrder = () => {
     'Matale', 'Matara', 'Monaragala', 'Mullaitivu', 'Nuwara Eliya',
     'Polonnaruwa', 'Puttalam', 'Ratnapura', 'Trincomalee', 'Vavuniya'
   ];
+  
+console.log("items : ", selectedItems)
+
+  // useEffect(() => {
+  //   fetchServiceDetails = async () => {
+  //     selectedItems.map( item => {
+  //       await fetchServiceDetails()
+  //     })
+  //   }
+
+  //   if(selectedItems){
+  //     fetchServiceDetails()
+  //   }
+  // }, [selectedItems])
+
+  
 
   const handleUpload = async (index) => {
     const filesToUpload = uploadedPhotos[index];
@@ -65,8 +82,8 @@ const ConfirmOrder = () => {
   };
 
   const getTotalAmount = () => {
-    return selectedItems.reduce((total, item) => {
-      const numericPrice = parseInt(item.price.replace(/[^\d]/g, ''), 10);
+    return selectedItems?.reduce((total, item) => {
+      const numericPrice = parseInt(item.servicePrice.replace(/[^\d]/g, ''), 10);
       return total + numericPrice * item.quantity;
     }, 0);
   };
@@ -103,6 +120,7 @@ const ConfirmOrder = () => {
         }
       }
 
+    
     console.log({ selectedItems, uploadedPhotos, deliveryInfo, paymentMethod });
     alert("Order submitted successfully!");
   };
@@ -114,18 +132,18 @@ const ConfirmOrder = () => {
       <div className="left-section">
         <h2>Selected Items</h2>
         <div className="selected-items-scroll">
-        {selectedItems.map((item, index) => (
+        {selectedItems && selectedItems.map((item, index) => (
           <div className="selected-item" key={item.id}>
-            <img src={item.image} alt={item.name} />
+            <img src={item.photoPath} alt={item.serviceName} />
             <div>
-              <p><strong>{item.name}</strong></p>
+              <p><strong>{item.serviceName}</strong></p>
               <p>{item.description}</p>
               {item.color && <p className="cart-color">Color: {item.color}</p>}
               {item.size && <p className="cart-size">Size: {item.size}</p>}
               <p>Qty: {item.quantity}</p>
-              <p>Price: {item.price}</p>
-              {item.category === 'printing' || item.category === 'frames'}
-              {(item.category === 'printing' || item.category === 'frames') && (
+              <p>Price: {item.servicePrice}</p>
+              {item.serviceCategory === 'printings' || item.serviceCategory === 'frame making'} 
+              {(item.serviceCategory === 'printings' || item.serviceCategory === 'frame making') && (
                     <div className="upload-section">
                     <h4>Upload (Max 5 images)</h4>
                     <input
@@ -151,7 +169,7 @@ const ConfirmOrder = () => {
           </div>
         ))}
         </div>
-        <h5>Total: LKR {getTotalAmount().toLocaleString()}</h5>
+        <h5>Total: LKR {getTotalAmount()?.toLocaleString()}</h5>
 
       </div>
 
@@ -186,7 +204,10 @@ const ConfirmOrder = () => {
             Cash on Delivery
           </label>
           <label>
-            <input type="radio" name="payment" value="online" checked={paymentMethod === 'online'} onChange={() => setPaymentMethod('online')} />
+            <input type="radio" name="payment" value="online" checked={paymentMethod === 'online'} onChange={() => {
+              setPaymentMethod('online');
+              setIsPayment(true); 
+            }} />
             Online Payment
           </label>
         </div>
@@ -195,6 +216,15 @@ const ConfirmOrder = () => {
       </div>
     </div>
     <AppFooter />
+
+    {isPayment && (
+      <div className="custom-modal-overlay">
+        <div className="custom-modal-box">
+          <button className="close-button" onClick={() => setIsPayment(false)}>✖</button>
+          <Payment />
+        </div>
+      </div>
+    )}
     </>
   );
 };

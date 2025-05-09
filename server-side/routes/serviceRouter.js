@@ -5,7 +5,8 @@ const upload = require('../middleware/upload')
 
 router.post('/add-category', serviceController.addServiceCategory)
 router.post('/add-services', upload.array('photos', 10), serviceController.addServices)
-router.get('/fetch-services/:id', serviceController.fetchServiceDetails)
+router.get('/fetch-services/:serviceCategoryId', serviceController.fetchServiceDetails)
+router.get('/fetch-services/:serviceCategoryId/:serviceId', serviceController.fetchServiceDetails)
 router.patch('/edit-services/:id/:serviceId', serviceController.editServiceDetails)
 
 module.exports = router

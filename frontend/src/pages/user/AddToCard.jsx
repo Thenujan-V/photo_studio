@@ -6,87 +6,54 @@ import axios from 'axios';
 import AppNavbar from '../../components/Navbar';
 import AppFooter from '../../components/footer';
 import { useNavigate } from 'react-router-dom';
+import { deleteCartItem, fetchCartItems, quantityUpdate } from '../../Services/cartService';
+import { decodedToken } from '../../Services/getToken ';
+import { triggerNotification } from '../../Services/notificationService';
 
 const AddToCard = () => {
+    const token = decodedToken()
+    const clientId = token.userId
+
     const [items, setItems] = useState([]);
     const [selectedItems, setSelectedItems] = useState([]);
     const navigate = useNavigate();
+    // const { cart_id, service_category_id, service_id, quantity } = item
 
-    const fetchCartItems = () => {
-    //   axios.get('/api/cart/get-from-cart/:clientId') 
-    //     .then(res => setItems(res.data.items))
-    //     .catch(err => console.error(err));
-    const cardItems = {
-        "items": [
-            {
-              "id": 5,
-              "name": "Tamil Wedding Shoot",
-              "description": "Traditional Tamil wedding photography with candid and posed shots.",
-              "price": "LKR 60,000",
-              "quantity": 1,
-              "image" : "https://cdn0.weddingwire.in/vendor/9812/3_2/960/jpg/435930296-729066849153426-1695746735005873786-n_15_469812-172199018480648.jpeg",
-              "category": "photography",
-            },
-            {
-                "id": 15,
-                "name": "T-shirt Printing",
-                "description": "High-quality heat transfer or screen printing on T-shirts.",
-                "price": "LKR 1,200",
-                "quantity": 1,
-                "image": "https://www.weddingphotoplanet.com/admin_image/slider/13012245661647863146Beautiful-Bride-Photo-Shoot.jpg",
-                "category": "printing",
-              },
-            {
-                "id": 9,
-                "name": "Drone Videography",
-                "description": "Aerial videography for weddings and outdoor events.",
-                "price": "LKR 45,000",
-                "quantity": 1,
-                "image": "https://www.weddingphotoplanet.com/admin_image/slider/13012245661647863146Beautiful-Bride-Photo-Shoot.jpg",
-                "category": "videography",
-            },
-            {
-                "id": 24,
-                "name": "Wooden Frame - A4",
-                "description": "Handmade wooden frame, suitable for certificates and portraits.",
-                "material": "Mahogany Wood",
-                "color": "Dark Brown",
-                "size": "A4",
-                "price": "LKR 1,200",
-                "quantity": 1,
-                "image": "https://www.weddingphotoplanet.com/admin_image/slider/13012245661647863146Beautiful-Bride-Photo-Shoot.jpg",
-                "category": "frames",
-              },
-          ]
-    };
-    setItems(cardItems.items);
-    };
+    
   
     useEffect(() => {
-      fetchCartItems();
-    }, []);
+      const fetchCart = async () => {
+        await fetchCartItems(clientId) 
+          .then(res => setItems(res.data.enrichedCartDetails)  )
+          .catch(err => console.error(err));
+      };
+      
+      fetchCart();
+    }, [clientId]);
 
-    const updateQuantity = (id, newQty) => {
-        console.log("Quantity update");
-        setItems((prevItems) =>
-          prevItems.map((item) =>
-            item.id === id ? { ...item, quantity: newQty } : item
-          )
-        );
+    const updateQuantity = async(id, newQty) => {
         if (newQty < 1) return;
     
-        axios.put(`/api/cart/quantity-change/${id}`, { quantity: newQty }) 
-          .then(() => {
-            fetchCartItems();
+        await quantityUpdate(id, newQty)  
+          .then(res => {
+            if(res.status === 200){
+              triggerNotification("quantity update successfully.", "success")
+              fetchCartItems(clientId)
+              .then(res => setItems(res.data.enrichedCartDetails))
+            }
           })
-          .catch((err) => console.error(err));
+          .catch(err => console.error(err))
       };
     
-      const handleRemove = (id) => {
-        axios.delete(`/api/cart/delete-cart/${id}`)
-          .then(() => {
-            // setItems((prevItems) => prevItems.filter((item) => item.id !== id));
-            fetchCartItems();
+      const handleRemove = async (id) => {
+        await deleteCartItem(id)
+          .then(res => {
+            if(res.status === 200){
+              triggerNotification("Item deleted.", "success")
+              fetchCartItems(clientId)
+              .then(res => setItems(res.data.enrichedCartDetails))
+            }
+          
           })
           .catch((err) => console.error(err));
       };
@@ -99,28 +66,34 @@ const AddToCard = () => {
         }
       };
 
-      const handleSelectItem = (id) => {
-        setSelectedItems((prevSelected) =>
-          prevSelected.includes(id)
-            ? prevSelected.filter(itemId => itemId !== id)
-            : [...prevSelected, id]
-        );
+      const handleSelectItem = (id, serviceCategory, categoryId, serviceId, quantity, serviceName, photoPath, description, color, size, servicePrice) => {
+        setSelectedItems((prevSelected) => {
+          const isAlreadySelected = prevSelected.some(item => item.id === id);
+      
+          if (isAlreadySelected) {
+            return prevSelected.filter(item => item.id !== id);
+          } else {
+            return [...prevSelected, { id, serviceCategory, categoryId, serviceId, quantity, serviceName, photoPath, description, color, size, servicePrice }];
+          }
+        });
       };
 
       const navigateToCheckout = () => {
+        console.log("si :", selectedItems)
         if (selectedItems.length === 0) {
           alert("Please select at least one item before proceeding to checkout.");
           return;
         }
-        const selectedItemData = items.filter(item => selectedItems.includes(item.id));
-        navigate('/confirmOrder', { state: { selectedItems: selectedItemData } });
+        // const selectedItemData = items.filter(item => selectedItems.includes(item.id));
+
+        navigate('/confirmOrder', { state: selectedItems })
       };
 
       const getSelectedTotal = () => {
         return items
-          .filter(item => selectedItems.includes(item.id))
+          .filter(item => selectedItems.includes(item.cartId))
           .reduce((total, item) => {
-            const numericPrice = parseInt(item.price.replace(/[^\d]/g, ''), 10);
+            const numericPrice = parseInt(item.serviceDetails.servicePrice.replace(/[^\d]/g, ''), 10);
             return total + numericPrice * item.quantity;
           }, 0);
       };
@@ -130,40 +103,50 @@ const AddToCard = () => {
         <AppNavbar />
           <div className="cart-container">
             <h2>Your Cart Items - {items.length}</h2>
-            {items.length === 0 ? (
+            {items && items.length === 0 ? (
               <p className="no-items">No items in your cart.</p>
             ) : (
-            items.map((item) => {
-              const numericPrice = parseInt(item.price.replace(/[^\d]/g, ''), 10);
-              const totalPrice = numericPrice * item.quantity;
+            items && items.map((item) => {
+              const totalPrice = item.serviceDetails.servicePrice * item.quantity;
       
               return (
-                <div className="cart-item" key={item.id}>
+                <div className="cart-item" key={item.cartId}>
                   <input
                     type="checkbox"
                     className="cart-checkbox"
-                    checked={selectedItems.includes(item.id)}
-                    onChange={() => handleSelectItem(item.id)}
+                    checked={selectedItems.includes(item.cartId, item.serviceDetails.serviceCategoryId, item.serviceDetails.serviceId, item.quantity)}
+                    onChange={() => handleSelectItem(item.cartId, 
+                                        item.serviceCategory,
+                                        item.serviceDetails.serviceCategoryId, 
+                                        item.serviceDetails.serviceId, 
+                                        item.quantity,
+                                        item.serviceDetails.serviceName,
+                                        item.serviceDetails.photoPaths[1],
+                                        item.serviceDetails.description,
+                                        item.serviceDetails.color? item.serviceDetails.color: null,
+                                        item.serviceDetails.size? item.serviceDetails.size: null,
+                                        item.serviceDetails.servicePrice
+                                      )}
                   />
-                  <img src={item.image} alt={item.name} className="cart-img" />
+                  <img src={item.serviceDetails.photoPaths[1]} alt={item.serviceDetails.serviceName} className="cart-img" />
                   <div className="cart-details">
-                    <p className="cart-name">{item.name}</p>
-                    {item.color && <p className="cart-color">Color: {item.color}</p>}
-                    {item.size && <p className="cart-size">Size: {item.size}</p>}
-                    <p className="cart-desc">{item.description}</p>
+                    <p className="cart-name">{item.serviceDetails.serviceName}</p>
+                    {item.serviceDetails.color && <p className="cart-color">Color: {item.serviceDetails.color}</p>}
+                    {item.serviceDetails.size && <p className="cart-size">Size: {item.serviceDetails.size}</p>}
+                    <p className="cart-desc">{item.serviceDetails.description}</p>
                   </div>
                   <div className="cart-quantity">
-                    <button onClick={() => updateQuantity(item.id, item.quantity - 1)}>-</button>
+                    <button onClick={() => updateQuantity(item.cartId, item.quantity - 1)}>-</button>
                     <span>{item.quantity}</span>
-                    <button onClick={() => updateQuantity(item.id, item.quantity + 1)}>+</button>
+                    <button onClick={() => updateQuantity(item.cartId, item.quantity + 1)}>+</button>
                   </div>
-                  <p className="cart-price">{item.price}</p>
+                  <p className="cart-price">{item.serviceDetails.servicePrice}</p>
                   <p className="cart-total">LKR {totalPrice.toLocaleString()}</p>
                   <FontAwesomeIcon
                   icon={faTrashAlt}
                   className="cart-delete"
                   title="Remove"
-                  onClick={() => handleRemove(item.id)}
+                  onClick={() => handleRemove(item.cartId)}
                   />
                 </div>
               );
@@ -183,7 +166,7 @@ const AddToCard = () => {
                 <h3>Total Value: LKR {getSelectedTotal().toLocaleString()}</h3>
               )}
               </div>
-              <button className="checkout-btn" onClick={() => navigateToCheckout()}>Checkout</button>
+              <button className="checkout-btn" onClick={navigateToCheckout}>Checkout</button>
             </div>
           </div>
           < AppFooter />

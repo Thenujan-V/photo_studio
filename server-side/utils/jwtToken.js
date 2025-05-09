@@ -1,11 +1,8 @@
 const jwt = require('jsonwebtoken');
-const env = require('dotenv').config
+require('dotenv').config();
 
 const secretKey = process.env.JWT_SECRET
-
-const jwttoken = (payloads) =>  {
-    const {id, username, role} = payloads
-
+const jwttoken = ({ id, username, role }) =>  {
     return jwt.sign(
         { userId: id, username: username, role: role }, 
         secretKey, 

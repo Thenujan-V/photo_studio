@@ -35,7 +35,6 @@ const findIdByCategoryName = async (name) => {
 }
 
 const findNameById = async (id) => {
-    console.log('idd :', id)
     try{
         const sql = `select category_name from service_category where id = ?`
 
@@ -187,13 +186,15 @@ const createFramesDetails = (framesData) => {
 }
 
 const fetchPhotoShootDetails = () => {
-    const sql = `select p.id, 
-        p.photoshoot_name, 
-        p.price, p.durarion, 
-        p.description, 
-        p.created_at, 
-        p.service_category_id, 
-        s.service_id, 
+    const sql = `select 
+        p.id as serviceId, 
+        p.photoshoot_name as serviceName, 
+        p.price as servicePrice, 
+        p.durarion as duration, 
+        p.description as description, 
+        p.created_at as createdAt, 
+        p.service_category_id as serviceCategoryId, 
+        s.service_id as serviceId, 
         JSON_ARRAYAGG(s.file_path) As photoPaths  
         from photoshoot p join sample_photos s on p.id = s.service_id group by p.id`
 
@@ -208,13 +209,14 @@ const fetchPhotoShootDetails = () => {
 }
 
 const fetchPrintingDetails = () => {
-    const sql = `select p.id,
-            p.printing_name,
-            p.price,
-            p.description,
-            p.created_at,
-            p.service_category_id,
-            s.service_id, 
+    const sql = `select 
+            p.id as serviceId,
+            p.printing_name as serviceName,
+            p.price as servicePrice,
+            p.description as description,
+            p.created_at as createdAt,
+            p.service_category_id as serviceCategoryId,
+            s.service_id as serviceId, 
             JSON_ARRAYAGG(s.file_path) As photoPaths 
             from printings p join sample_photos s on p.id = s.service_id group by p.id`
 
@@ -229,16 +231,15 @@ const fetchPrintingDetails = () => {
 }
 
 const fetchFramesDetails = () => {
-    const sql = `select fs.id,
-            f.material_name,
-            f.service_category_id,
-            f.size,
-            f.color,
-            f.price,
-            f.description,
-            f.created_at,
-            f.frame_id,
-            s.service_id, 
+    const sql = `select 
+            f.id as serviceId,
+            f.material_name as serviceName,
+            f.service_category_id as serviceCategoryId,
+            f.size as frameSize,
+            f.color as framneColor,
+            f.price as servicePrice,
+            f.description as description,
+            f.created_at as createdAt, 
             JSON_ARRAYAGG(s.file_path) As photoPaths 
             from frames f join sample_photos s on f.id = s.service_id group by f.id`
 

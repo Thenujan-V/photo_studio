@@ -73,11 +73,11 @@ const Services = () => {
           <h2 className="section-title">Explore Our Studio Services</h2>
           <p>Discover a vibrant range of services tailored to capture and preserve your most cherished moments. From stunning photography and cinematic videography to expert frame making, premium printing, and personalized in-studio sessions — our studio offers everything you need under one creative roof.</p>
           <div className="service-container">
-            <Link to="/services/photography" className="service-item large">Photography</Link>
-            <Link to="/services/videography" className="service-item tall">Videography</Link>
-            <Link to="/services/frames" className="service-item wide">Frame Making</Link>
-            <Link to="/services/printing" className="service-item small">Printing</Link>
-            <Link to="/services/in-studio" className="service-item medium">In-Studio Shots</Link>
+            <Link to="/services/1" className="service-item large">Photography</Link>
+            <Link to="/services/4" className="service-item tall">Videography</Link>
+            <Link to="/services/3" className="service-item wide">Frame Making</Link>
+            <Link to="/services/2" className="service-item small">Printing</Link>
+            <Link to="/services/5" className="service-item medium">In-Studio Shots</Link>
           </div>
         </section>
 

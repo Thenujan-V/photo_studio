@@ -1,33 +1,31 @@
-// import axios from 'axios'
+import axios from 'axios'
 
-// const API_BASE_URL = 'http://localhost:4000/api'
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL
 
-// export const signupService = async (formData) => {
-//     try{
-//         const response = await axios.post(`${API_BASE_URL}/customers/register`, formData)
-//         console.log(response.data)
-//         return response.data
-//     }
-//     catch(err){
-//         throw err
-//     }
-// }
-// export const signinService = async (email, password) => {
-//     try{
-//         const requestData = {
-//             email : email,
-//             password : password
-//         }
+export const signupService = async (formData) => {
+    try{
+        const response = await axios.post(`${API_BASE_URL}/client/client-register`, formData)
+        return response.data
+    }
+    catch(err){
+        throw err
+    }
+}
+export const signinService = async (mail, password) => {
+    try{
+        const requestData = {
+            mail : mail,
+            password : password
+        }
        
-//         const response = await axios.post(`${API_BASE_URL}/customers/login`, requestData)
-//         console.log(response.data)
-//         return response.data
-//     }
-//     catch(error){
-//         throw error
+        const response = await axios.post(`${API_BASE_URL}/client/client-login`, requestData)
+        return response.data
+    }
+    catch(error){
+        throw error
         
-//     }
-// }
+    }
+}
 // export const userDetails = async (id) => {
 //     try{
 //         const response = await axios.get(`${API_BASE_URL}/customers/userdetails/${id}`)
