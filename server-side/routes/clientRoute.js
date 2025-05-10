@@ -6,7 +6,7 @@ router.post('/client-register', clientController.registerClient)
 router.post('/client-login', clientController.loginClient)
 router.get('/get-client/:id', clientController.getClientDetails)
 router.get('/get-all-client', clientController.getAllClientDetails)
-router.patch('/edit-details/:id', clientController.editClientDetails)
+router.put('/edit-details/:id', clientController.editClientDetails)
 router.delete('/delete-client/:id', clientController.deleteClient)
 
 

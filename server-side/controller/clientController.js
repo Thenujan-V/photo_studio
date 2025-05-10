@@ -118,19 +118,19 @@ const getAllClientDetails = async(req, res) => {
 
 const editClientDetails = async (req, res) => {
    try{ 
-        const { userName, mail, phone_number, city } = req.body
+        const { username, mail, phone_number, city } = req.body
         const { id } = req.params
-
+console.log(req.body)
         updatedFields = {}
 
-        if(userName) {
-            const existingUser = await clientModel.findByUserName(userName)
+        if(username) {
+            const existingUser = await clientModel.findByUserName(username)
 
             if(existingUser.length > 0){
                 return res.status(409).json({message: 'user name already exist'})
             }
 
-            updatedFields.userName = userName
+            updatedFields.username = username
         }
         if(mail) {
             const checkExistingMail = await clientModel.findByMail(mail)

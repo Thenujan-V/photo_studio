@@ -221,7 +221,9 @@ console.log("items : ", selectedItems)
       <div className="custom-modal-overlay">
         <div className="custom-modal-box">
           <button className="close-button" onClick={() => setIsPayment(false)}>✖</button>
-          <Payment />
+          <Payment 
+            onOk={() => setIsPayment(false)}
+          />
         </div>
       </div>
     )}
