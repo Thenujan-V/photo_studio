@@ -37,10 +37,13 @@ const SignUp = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("fd :", formData)
     const errors = {};
 
     if (!formData.username?.trim()) {
       errors.username = 'Username is required';
+    } else if (!formData.username?.length > 5) {
+      errors.username = 'Username minimum lenth atleast 4 characters.';
     }
 
     if (!formData.mail?.trim()) {

@@ -5,8 +5,8 @@ const upload = require('../middleware/upload')
 
 router.post("/create-order/:clientId", orderController.createOrder)
 router.post("/add-photos/:orderDetailsId", upload.array('photos', 20), orderController.addPhotosForOrders)
-router.get("/get-order-details/:clientId", orderController.getOrdersByClientId)
 router.post("/create-order-delivery/:orderId", orderController.createOrderDelivery)
+router.get("/get-order-details/:clientId", orderController.getOrdersByClientId)
 router.get("/get-delivery-details/:orderId", orderController.fetchDeliveryDetails)
 router.patch("/change-status/:orderDetailsId", orderController.changeStatus)
 

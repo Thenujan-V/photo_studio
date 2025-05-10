@@ -29,12 +29,14 @@ const Contact = () => {
 
     if (!formData.email.trim()) {
       newErrors.email = "Email is required.";
-    } else if (!/^\S+@\S+\.\S+$/.test(formData.email)) {
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       newErrors.email = "Invalid email format.";
     }
 
     if (!formData.message.trim()) {
       newErrors.message = "Inquiry message is required.";
+    } else if(formData.message.length < 20){
+      newErrors.message = "Minimum number of letters 20."
     }
 
     setErrors(newErrors);

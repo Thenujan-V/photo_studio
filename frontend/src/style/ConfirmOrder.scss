@@ -16,12 +16,11 @@
     }
     
       .selected-items-scroll {
-        max-height: 500px; /* Adjust height as needed */
+        max-height: 500px; 
         overflow-y: auto;
-        padding-right: 10px; /* space for scrollbar */
+        padding-right: 10px;
       }
-      
-      /* Optional: make scrollbar nicer */
+    
       .selected-items-scroll::-webkit-scrollbar {
         width: 6px;
       }
@@ -69,11 +68,14 @@
       display: flex;
       flex-direction: column;
   
-      input {
+      input, select {
         padding: 10px;
         margin-bottom: 10px;
         border: 1px solid #ccc;
         border-radius: 6px;
+      }
+      select:invalid{
+        color:#6e6d6d;
       }
     }
   

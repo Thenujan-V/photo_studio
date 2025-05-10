@@ -140,33 +140,45 @@ const addServices = async (req, res) => {
 
 const fetchServiceDetails = async(req, res) => {
     try{
-        const { id } = req.params
+        const { serviceCategoryId } = req.params
 
-        const categoryName = await serviceModel.findNameById(id)
+        const categoryName = await serviceModel.findNameById(serviceCategoryId)
 
         if(categoryName?.length > 0 && categoryName[0]?.category_name === 'photosoot' ){
             const services = await serviceModel.fetchPhotoShootDetails()
             if(services.length === 0){
                 return res.status(204).json({message: "there is no services."})
             }
-    
-            res.status(200).json({message: "successfully fetched.", services})
+            const servicesDetails = {
+                serviceCategory: "photoshoot",
+                services
+            }
+            
+            res.status(200).json({message: "successfully fetched.", servicesDetails})
         }
         if(categoryName?.length > 0 && categoryName[0]?.category_name === 'printings' ){
             const services = await serviceModel.fetchPrintingDetails()
             if(services.length === 0){
                 return res.status(204).json({message: "there is no services."})
             }
+            const servicesDetails = {
+                serviceCategory: "printings",
+                services
+            }
     
-            res.status(200).json({message: "successfully fetched.", services})
+            res.status(200).json({message: "successfully fetched.", servicesDetails})
         }
         if(categoryName?.length > 0 && categoryName[0]?.category_name === 'frame making' ){
             const services = await serviceModel.fetchFramesDetails()
             if(services.length === 0){
                 return res.status(204).json({message: "there is no services."})
             }
+            const servicesDetails = {
+                serviceCategory: "frame making",
+                services
+            }
     
-            res.status(200).json({message: "successfully fetched.", services})
+            res.status(200).json({message: "successfully fetched.", servicesDetails})
         }
 
         

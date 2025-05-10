@@ -1,11 +1,10 @@
 import axios from 'axios'
 
-const API_BASE_URL = 'http://localhost:3000/api'
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL
 
 export const signupService = async (formData) => {
     try{
         const response = await axios.post(`${API_BASE_URL}/client/client-register`, formData)
-        console.log(response);
         return response.data
     }
     catch(err){
@@ -20,7 +19,6 @@ export const signinService = async (mail, password) => {
         }
        
         const response = await axios.post(`${API_BASE_URL}/client/client-login`, requestData)
-        console.log(response.data)
         return response.data
     }
     catch(error){

@@ -68,7 +68,13 @@ const cartCreate = (cartData) => {
 }
 
 const findAllByClientId = (id) => {
-    const sql = `select * from cart where client_id = ?`
+    const sql = `select 
+                    c.id as cartId,
+                    c.service_category_id as serviceCategoryId,
+                    c.service_id as serviceId,
+                    c.quantity as quantity,
+                    c.client_id as clientId
+                    from cart c  where client_id = ?`
 
     return new Promise((resolve, reject) => {
         db.query(sql, [id], 

@@ -11,11 +11,11 @@ const path = require('path')
 
 
 const app = express()
-const PORT = 3000
+const PORT = process.env.PORT
 
 app.use(express.json())
 app.use(cors({
-    methods: ['GET', 'POST', 'PUT', 'DELETE']
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']
 }))
 
 app.use('/api/client', clientRoutes)

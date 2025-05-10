@@ -27,26 +27,21 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/services" element={<Services />} />
-        <Route path="/services/:category" element={<ServiceDetails />} />
+        <Route path="/services/:categoryId" element={<ServiceDetails />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
 
-        {/* Protected route for logged-in users */}
         <Route
-          path="/add-to-card"
+          path="/add-to-cart"
           element={
-            // <ProtectedRoute allowedRoles={['user']}>
               <AddToCard />
-            // </ProtectedRoute>
           }
         />
         <Route
-          path="//confirmOrder"
+          path="/confirmOrder"
           element={
-            // <ProtectedRoute allowedRoles={['user']}>
               <ConfirmOrder />
-            // </ProtectedRoute>
           }
         />
 

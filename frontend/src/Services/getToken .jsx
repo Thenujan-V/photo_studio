@@ -23,13 +23,12 @@ export const getToken = () => {
     }
 } 
 
-export const retrieveId = () => {
+export const decodedToken = () => {
     try{
         const token = localStorage.getItem("authToken")   
         if(token){
             const decodedToken = jwtDecode(token)
-            console.log(decodedToken)
-            return decodedToken 
+            return decodedToken
         }
         else{
             return null

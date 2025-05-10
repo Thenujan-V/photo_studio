@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@fortawesome/fontawesome-free-solid": "^5.0.13",
     "@fortawesome/fontawesome-svg-core": "^6.7.2",
     "@fortawesome/free-brands-svg-icons": "^6.7.2",
     "@fortawesome/free-regular-svg-icons": "^6.7.2",
@@ -15,6 +16,7 @@
     "axios": "^1.9.0",
     "bootstrap": "^5.3.5",
     "cdbreact": "^1.5.19",
+    "dotenv": "^16.5.0",
     "jwt-decode": "^4.0.0",
     "react": "^19.1.0",
     "react-bootstrap": "^2.10.9",

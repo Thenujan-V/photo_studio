@@ -105,8 +105,11 @@
   }
   
   .cart-summary {
-    margin-top: 20px;
     text-align: right;
+
+    h3{
+      font-size: 22px;
+    }
   }
   
   .select-all {

@@ -7,13 +7,14 @@ import { Link } from 'react-router-dom';
 import {signinService} from '../Services/userService'
 import { useNavigate } from 'react-router-dom';
 import { adminSignin } from '../Services/adminService';
-import { retrieveId } from '../Services/getToken ';
+import { decodedToken } from '../Services/getToken ';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const Login = () => {
   const [mail, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [password, setPassword] = useState('')
+  const [errors, setErrors] = useState({});
   const [apiResponse, setApiResponse] = useState('')
 
   const navigate = useNavigate();
@@ -38,8 +39,26 @@ const Login = () => {
     setPassword(e.target.value);
   };
 
+  const validations = () => {
+    const error = {}
+
+    if (!mail.trim()) {
+      error.mail = 'Email is required';
+    } else if ( !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test(mail)) {
+      error.mail = 'Invalid email address';
+    }
+    if (!password.trim()) {
+      error.password = 'Password is required';
+    } else if(password.length < 4){
+      error.password = "minimum length 4 letters"
+    }
+    setErrors(error)
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    validations()
 
     try{
       const response = await signinService(mail, password)
@@ -52,7 +71,7 @@ const Login = () => {
           else{
             localStorage.setItem('authToken', workerResponse.token);
             setApiResponse("signin success")
-            const decoded = retrieveId()
+            const decoded = decodedToken()
             if(decoded.role === 'ADMIN'){
               setTimeout(() => {
                 navigate('/adminpanel');
@@ -65,7 +84,7 @@ const Login = () => {
           localStorage.setItem('authToken', response.token);
           setApiResponse("signin success")
           triggerNotification("you are login successfully", "success");
-          const decoded = retrieveId()
+          const decoded = decodedToken()
           console.log("id", decoded);
             if(decoded.role === 'USER'){
               setTimeout(() => {
@@ -89,12 +108,12 @@ const Login = () => {
             <h1>Login here</h1>
             <form onSubmit={handleSubmit} className=''>
               <div className="form-group">
-                {/* <label htmlFor="email" className="form-label">Email</label> */}
                 <input className="form-control" type="email" id='mail' placeholder='Example@gmail.com' value={mail} onChange={handleEmailChange} required />
+                <p>{errors.mail}</p>
               </div>
               <div className="form-group mt-2">
-                {/* <label   htmlFor="password" className="form-label">Password</label> */}
-                <input className="form-control" type="password" id='password' placeholder='Password' value={password} onChange={handlePasswordChange} required />
+                <input className="form-control" type="password" id='password' placeholder='Password' value={password} onChange={handlePasswordChange} />
+                <p>{errors.password}</p>
               </div>
               <div className="form-group mt-1 pb-4" id='btnTag'>
                 <a href="#">Forgot password?</a>

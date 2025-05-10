@@ -1,4 +1,6 @@
 const cartModel = require('../models/cartModel')
+const axios = require('axios')
+const PORT = process.env.PORT
 
 const addToCart = async(req, res) => {
     try{
@@ -26,14 +28,24 @@ const addToCart = async(req, res) => {
 
 const getFromCart = async(req, res) => {
     try{
-        const { clientId} = req.params
+        const { clientId } = req.params
         const cartDetails = await cartModel.findAllByClientId(clientId)
 
-        if(cartDetails.length === 0){
+        if(!cartDetails){
             return res.status(204).json({message: "cart is empty."})
         }
 
-        res.status(200).json({message: "Successfully fetched.", cartDetails})
+        const cartDataWithService = cartDetails.map(async item => {
+            const fetchServiceDetails = await axios.get(`http://localhost:${PORT}/api/services/fetch-services/${item.serviceCategoryId}/${item.serviceId}`);
+            return{
+                ...item,
+                serviceCategory: fetchServiceDetails.data.servicesDetails.serviceCategory,
+                serviceDetails: fetchServiceDetails.data.servicesDetails.services[0]
+            }
+        })
+        const enrichedCartDetails = await Promise.all(cartDataWithService);
+         
+        res.status(200).json({message: "Successfully fetched.", enrichedCartDetails})
 
     }catch(err){
         console.log('error when cart creation.', err)
@@ -42,6 +54,7 @@ const getFromCart = async(req, res) => {
 }
 
 const changeQuantity = async(req, res) => {
+    console.log("change qut")
     try{
         const { cartId} = req.params
         const { quantity } = req.body
