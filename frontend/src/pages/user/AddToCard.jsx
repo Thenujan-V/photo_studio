@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { deleteCartItem, fetchCartItems, quantityUpdate } from '../../Services/cartService';
 import { decodedToken } from '../../Services/getToken ';
 import { triggerNotification } from '../../Services/notificationService';
+import { createOrder } from '../../Services/orderService';
 
 const AddToCard = () => {
     const token = decodedToken()
@@ -28,7 +29,9 @@ const AddToCard = () => {
           .catch(err => console.error(err));
       };
       
-      fetchCart();
+      if(clientId){
+        fetchCart();  
+      }
     }, [clientId]);
 
     const updateQuantity = async(id, newQty) => {
@@ -78,15 +81,25 @@ const AddToCard = () => {
         });
       };
 
-      const navigateToCheckout = () => {
-        console.log("si :", selectedItems)
+      const navigateToCheckout = async () => {
         if (selectedItems.length === 0) {
           alert("Please select at least one item before proceeding to checkout.");
           return;
         }
         // const selectedItemData = items.filter(item => selectedItems.includes(item.id));
+        const selectFiedls = selectedItems.map( item => ({
+          cartId: item.id, 
+          serviceCategoryId: item.categoryId,
+          serviceId: item.serviceId,
+          quantity: item.quantity
+        }))
 
-        navigate('/confirmOrder', { state: selectedItems })
+        const resultForCreateOrder = await createOrder(clientId, selectFiedls)
+
+        const orderId = resultForCreateOrder.data.order_id
+        console.log("od :", orderId)
+
+        navigate('/confirmOrder', { state: {selectedItems, orderId} })
       };
 
       const getSelectedTotal = () => {

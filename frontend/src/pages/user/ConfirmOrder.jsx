@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { data, useLocation } from 'react-router-dom';
+import {  useLocation } from 'react-router-dom';
 import '../../style/ConfirmOrder.scss';
 import AppNavbar from '../../components/Navbar';
 import AppFooter from '../../components/footer';
 import Payment from '../../components/Payment';
+import { clientsUploadPhotos, fetchOrdersByClientId } from '../../Services/orderService';
+import { decodedToken } from '../../Services/getToken ';
+import { triggerNotification } from '../../Services/notificationService';
 
 const ConfirmOrder = () => {
   const location = useLocation();
-  const selectedItems = location.state || []
+  const { selectedItems, orderId } = location.state || []
+  const [orderDetails, setOrderDetails] = useState([])
   const [isPayment , setIsPayment] = useState(false);
   const [uploadedPhotos, setUploadedPhotos] = useState([]);
   const [deliveryInfo, setDeliveryInfo] = useState({
@@ -20,6 +24,9 @@ const ConfirmOrder = () => {
   });
   const [paymentMethod, setPaymentMethod] = useState('cash');
 
+  const token = decodedToken()
+  const clientId = token.userId 
+
   const districts = [
     'Ampara', 'Anuradhapura', 'Badulla', 'Batticaloa', 'Colombo',
     'Galle', 'Gampaha', 'Hambantota', 'Jaffna', 'Kalutara',
@@ -28,8 +35,6 @@ const ConfirmOrder = () => {
     'Polonnaruwa', 'Puttalam', 'Ratnapura', 'Trincomalee', 'Vavuniya'
   ];
   
-console.log("items : ", selectedItems)
-
   // useEffect(() => {
   //   fetchServiceDetails = async () => {
   //     selectedItems.map( item => {
@@ -42,42 +47,60 @@ console.log("items : ", selectedItems)
   //   }
   // }, [selectedItems])
 
+  useEffect( () => {
+    const fetchOders =  async() =>{
+      await fetchOrdersByClientId(clientId)
+        .then(res => {
+          const responseData = res.data.enrichedOrderDetails
+
+          if(orderId){
+            const currentorders = responseData?.filter( item => item.orderId === orderId)
+            setOrderDetails(currentorders)
+            console.log("co :", currentorders)
+          }
+        })
+        .catch(err => console.log("error when fetch orders. ", err))
+    }
+  
+    if(clientId){
+      fetchOders()
+    }
+  }, [clientId, orderId])
   
 
-  const handleUpload = async (index) => {
+  const handleUpload = async (orderDetailsId, index) => {
+    // console.log("oid :", orderDetailsId)
     const filesToUpload = uploadedPhotos[index];
+    // console.log("inde :", filesToUpload)
+
     // const [selectedDistrict, setSelectedDistrict] = useState('');
 
   
     if (!filesToUpload || filesToUpload.length === 0) {
-      alert("No files selected to upload.");
+      triggerNotification("No files selected to upload.");
       return;
     }
   
-    if (filesToUpload.length > 5) {
-      alert("Maximum 5 images allowed.");
+    if (filesToUpload.length > 10) {
+      triggerNotification("Maximum 10 images allowed.");
       return;
     }
   
     const formData = new FormData();
     filesToUpload.forEach((file) => {
-      formData.append("images", file);
+      formData.append("photos", file);
     });
-  const orderDetailsId = 1;
+
     try {
-      const response = await fetch(`/api/cart/add-photos/${orderDetailsId}`, {
-        method: "POST",
-        body: formData,
-      });
-  
-      if (!response.ok) throw new Error("Upload failed.");
-  
-      const result = await response.json();
-      console.log("Upload successful:", result);
-      alert("Images uploaded successfully!");
+      const response = await clientsUploadPhotos(orderDetailsId, formData)
+      console.log("responnn :", response)
+      if (response.status !== 201) throw new Error("Upload failed.");
+      triggerNotification("Images uploaded successfully!", "success");
+
     } catch (error) {
       console.error("Error uploading images:", error);
-      alert("Image upload failed.");
+      triggerNotification("Image upload failed.");
+      window.location.reload()
     }
   };
 
@@ -94,35 +117,43 @@ console.log("items : ", selectedItems)
   };
 
   const handleSubmit = () => {
-    const missingUploads = selectedItems.some((item, index) => {
-        return (item.category === 'printing' || item.category === 'frames') && 
+    const missingUploads = orderDetails.some((item, index) => {
+        return (item.serviceCategory === 'printings' || item.serviceCategory === 'frame making') && 
                (!uploadedPhotos[index] || uploadedPhotos[index].length === 0);
       });
-    
+    console.log("miss :", missingUploads)
       if (missingUploads) {
-        alert("Please upload at least one image for all printing or frame items.");
+        triggerNotification("Please upload at least one image for all printing or frame items.", "error");
         return;
       }
       const isDeliveryInfoIncomplete = Object.values(deliveryInfo).some(value => value.trim() === '');
 
       if (isDeliveryInfoIncomplete) {
-        alert("Please fill in all delivery details before placing the order.");
+        triggerNotification("Please fill in all delivery details before placing the order.", "error");
         return;
       }
       if(!isDeliveryInfoIncomplete){
         if(deliveryInfo.sender_phone_number.length < 10 || deliveryInfo.receiver_phone_number.length < 10 ){
-          alert("Phone number must be atleast 10 characters.");
+          triggerNotification("Phone number must be atleast 10 characters.", "error");
+          return;
+        }
+        if(!/^\d+$/.test(deliveryInfo.sender_phone_number) || !/^\d+$/.test(deliveryInfo.receiver_phone_number) ){
+          triggerNotification("Phone number couldn't have characters.", "error");
           return;
         }
         if(deliveryInfo.reciver_name.length < 4 ){
-          alert("Reciever name must be atleast 4 characters.");
+          triggerNotification("Reciever name must be atleast 4 characters.", "error");
+          return;
+        }
+        if( !/^[A-Za-z\s]+$/.test(deliveryInfo.reciver_name) ){
+          triggerNotification("Name must contain only letters and spaces.", "error");
           return;
         }
       }
 
     
     console.log({ selectedItems, uploadedPhotos, deliveryInfo, paymentMethod });
-    alert("Order submitted successfully!");
+    triggerNotification("Order submitted successfully!", "success");
   };
 
   return (
@@ -132,37 +163,37 @@ console.log("items : ", selectedItems)
       <div className="left-section">
         <h2>Selected Items</h2>
         <div className="selected-items-scroll">
-        {selectedItems && selectedItems.map((item, index) => (
-          <div className="selected-item" key={item.id}>
-            <img src={item.photoPath} alt={item.serviceName} />
+        {orderDetails && orderDetails.map((item, index) => (
+          <div className="selected-item" key={item.orderDetailsId}>
+            <img src={item.serviceDetails.photoPaths[1]} alt={item.serviceDetails.serviceName} />
             <div>
-              <p><strong>{item.serviceName}</strong></p>
-              <p>{item.description}</p>
-              {item.color && <p className="cart-color">Color: {item.color}</p>}
-              {item.size && <p className="cart-size">Size: {item.size}</p>}
+              <p><strong>{item.serviceDetails.serviceName}</strong></p>
+              <p>{item.serviceDetails.description}</p>
+              {item.serviceDetails.color && <p className="cart-color">Color: {item.serviceDetails.color}</p>}
+              {item.serviceDetails.size && <p className="cart-size">Size: {item.serviceDetails.size}</p>}
               <p>Qty: {item.quantity}</p>
-              <p>Price: {item.servicePrice}</p>
+              <p>Price: {item.serviceDetails.servicePrice}</p>
               {item.serviceCategory === 'printings' || item.serviceCategory === 'frame making'} 
               {(item.serviceCategory === 'printings' || item.serviceCategory === 'frame making') && (
                     <div className="upload-section">
-                    <h4>Upload (Max 5 images)</h4>
-                    <input
-                        type="file"
-                        multiple
-                        accept="image/*"
-                        onChange={(e) => {
-                        const files = Array.from(e.target.files);
-                        if (files.length > 5) {
-                            alert('Maximum 5 images allowed for this item.');
-                            return;
-                        }
-                        const updatedPhotos = [...uploadedPhotos];
-                        updatedPhotos[index] = files;
-                        setUploadedPhotos(updatedPhotos);
-                        }}
-                    />
-                    <p>{uploadedPhotos[index]?.length || 0} file(s) selected</p>
-                    <button className="submit-btn" onClick={() => handleUpload(index)}>Upload</button>
+                      <h4>Upload (Max 5 images)</h4>
+                      <input
+                          type="file"
+                          multiple
+                          accept="image/*"
+                          onChange={(e) => {
+                          const files = Array.from(e.target.files);
+                          if (files.length > 5) {
+                              triggerNotification('Maximum 5 images allowed for this item.');
+                              return;
+                          }
+                          const updatedPhotos = [...uploadedPhotos];
+                          updatedPhotos[index] = files;
+                          setUploadedPhotos(updatedPhotos);
+                          }}
+                      />
+                      <p>{uploadedPhotos[index]?.length || 0} file(s) selected</p>
+                      <button className="submit-btn" onClick={() => handleUpload(item.orderDetailsId, index)}>Upload</button>
                     </div>
                 )}
             </div>
@@ -176,9 +207,9 @@ console.log("items : ", selectedItems)
       <div className="right-section">
         <h2>Delivery Details</h2>
         <form className="delivery-form">
-          <input name="sender_phone_number" placeholder="Sender Phone Number" onChange={handleDeliveryChange} required/>
-          <input name="receiver_phone_number" placeholder="Receiver Phone Number" onChange={handleDeliveryChange} required/>
-          <input name="reciver_name" placeholder="Receiver Name" onChange={handleDeliveryChange} required/>
+          <input name="sender_phone_number" type='tel' pattern="[0-9]{10}" placeholder="Sender Phone Number" onChange={handleDeliveryChange} required/>
+          <input name="receiver_phone_number" type='tel' pattern="[0-9]{10}" placeholder="Receiver Phone Number" onChange={handleDeliveryChange} required/>
+          <input name="reciver_name" type='text' placeholder="Receiver Name" onChange={handleDeliveryChange} required/>
           {/* <input name="reciver_address_district" placeholder="District" onChange={handleDeliveryChange} required /> */}
           <select
               name="reciver_address_district"

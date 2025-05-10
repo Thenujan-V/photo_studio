@@ -35,6 +35,9 @@ export const ServiceDetails = () => {
 
 
     const handleAddToCard = async(categoryId, serviceId) =>  {
+      if(categoryId === 1){
+        window.location.href = 'tel:0705054846'
+      }
       try{
         const tokenDecode = decodedToken()
         const cartItem = { clientId: tokenDecode.userId, categoryId, serviceId} 
@@ -78,16 +81,18 @@ export const ServiceDetails = () => {
                         {service.material && (
                             <p><strong>Material:</strong> {service.material}</p>
                         )}
-                        {service.frameSize && (
-                            <p><strong>Size:</strong> {service.frameSize}</p>
-                        )}
-                        {service.framneColor && (
-                            <p><strong>Color:</strong> {service.framneColor}</p>
-                        )}
+                        <div className='d-flex justify-content-center gap-3 '>
+                          {service.frameSize && (
+                              <p><strong>Size:</strong> {service.frameSize}</p>
+                          )}
+                          {service.framneColor && (
+                              <p><strong>Color:</strong> {service.framneColor}</p>
+                          )}
+                        </div>
                         <p><strong>Price:</strong> {service.servicePrice}</p>
                         <div className="service-buttons">
-                            <button className="add-cart-btn" onClick={() => handleAddToCard(service.serviceCategoryId, service.serviceId)}>Add to Cart</button>
-                            <button className="book-now-btn">Book Now</button>
+                            <button className="add-cart-btn" onClick={() => handleAddToCard(service.serviceCategoryId, service.serviceId)}>{ service.serviceCategoryId !== 1 ? 'Add to Cart' : 'Call to Inquiry'}</button>
+                            <button className="book-now-btn">View More Details</button>
                         <a href={service.image} target="_blank" rel="noreferrer" className="view-photo-btn">
                             View Photo
                         </a>

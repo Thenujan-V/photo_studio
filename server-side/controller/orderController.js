@@ -1,10 +1,13 @@
 const orderModel = require('../models/orderModel')
 const cartModel = require('../models/cartModel')
+const axios = require('axios')
+const PORT = process.env.PORT
 
 const createOrder = async(req, res) => {
     try{
         const { clientId } = req.params
         const { cartItems } = req.body
+        console.log("ci :", cartItems)
 
         if(!Array.isArray(cartItems) || cartItems.length === 0){
             return res.status(400).json({ message: "Cart is empty or not valid." });
@@ -16,8 +19,8 @@ const createOrder = async(req, res) => {
         const resultForDetails = []
 
         for(const item of cartItems){
-            const { cart_id, service_category_id, service_id, quantity } = item
-            const result = await orderModel.createOrderDetails({ order_id: orderId, service_category_id, service_id, quantity})
+            const { cartId, serviceCategoryId, serviceId, quantity } = item
+            const result = await orderModel.createOrderDetails({ orderId: orderId, serviceCategoryId, serviceId, quantity})
             resultForDetails.push(result)
         }
         await cartModel.cartDeleteByClientId(clientId)
@@ -33,7 +36,7 @@ const createOrder = async(req, res) => {
     }catch(err){
         console.log('Error when save client.', err)
         return res.status(500).json({
-            message: 'Internal server error. Faild to create client.'
+            message: 'Internal server error. Faild to create order.'
         })
     }
 
@@ -52,7 +55,7 @@ const addPhotosForOrders = async (req, res) => {
     
         const addPhotosResult = await orderModel.addClientsPhotosForOrders({ file_paths, orderDetailsId })
     
-        res.status(201).json({ message: "successfully photos added."})        
+        res.status(201).json({ message: "successfully photos added.", addPhotosResult})        
     }catch(err){
         console.log('Error when save client.', err)
         return res.status(500).json({
@@ -65,9 +68,21 @@ const getOrdersByClientId = async (req, res) => {
     try{
         const { clientId } = req.params
         
-        const getOrdersResult = await orderModel.orderFetchByClientId(clientId)
-    
-        res.status(200).json({ message: "successfully fetched.", getOrdersResult })        
+        const getOrderDetails = await orderModel.orderFetchByClientId(clientId)
+        // const getOrderDetails = res.data
+        // console.log("res :", res)
+        // console.log("get :", getOrderDetails)
+        const serviceDetails = getOrderDetails.map(async item => {
+            const fetchServiceDetails = await axios.get(`http://localhost:${PORT}/api/services/fetch-services/${item.serviceCategoryId}/${item.serviceId}`);
+            return{
+                ...item,
+                serviceCategory: fetchServiceDetails.data.servicesDetails.serviceCategory,
+                serviceDetails: fetchServiceDetails.data.servicesDetails.services[0]
+            }
+        })
+        const enrichedOrderDetails = await Promise.all(serviceDetails); 
+
+        res.status(200).json({ message: "successfully fetched.", enrichedOrderDetails })        
     }catch(err){
         console.log('Error when save client.', err)
         return res.status(500).json({

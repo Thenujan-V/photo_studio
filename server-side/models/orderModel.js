@@ -14,12 +14,12 @@ const createOrder = (client_id) => {
 }
 
 const createOrderDetails = (orderDetails) => {
-    const { order_id, service_category_id, service_id, quantity } = orderDetails
+    const { orderId, serviceCategoryId, serviceId, quantity } = orderDetails
 
     const sql = 'insert into order_details ( order_id, service_category_id, service_id, quantity ) values ( ?, ?, ?, ? )'
 
     return new Promise((resolve, reject) => {
-        db.query(sql, [order_id, service_category_id, service_id, quantity],
+        db.query(sql, [orderId, serviceCategoryId, serviceId, quantity],
             (err, result) => {
                 if(err) reject(err)
                     else resolve(result)
@@ -54,11 +54,11 @@ const orderFetchByClientId = (clientId) => {
                     o.id as orderId,
                     o.client_id as clientId,
                     od.id as orderDetailsId,
-                    od.serviceCategoryId,
-                    od.serviceId,
+                    od.service_category_id as serviceCategoryId,
+                    od.service_id as serviceId,
                     od.quantity,
                     od.status,
-                    od.createdAt,
+                    od.created_at as createdAt,
                     JSON_ARRAYAGG(p.file_path) As photosPaths
                     from orders o 
                     join order_details od on o.id = od.order_id 
