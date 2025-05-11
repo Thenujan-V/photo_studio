@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import AppNavbar from '../../components/Navbar'
-import '../../style/UserAccount.scss';
-import { retrieveId } from '../../Services/getToken ';
-import {userDetails , updateUserProfile} from '../../Services/userService';
+import AppNavbar from '../../../components/Navbar'
+import '../../../style/UserAccount.scss';
+import {userDetails , updateUserProfile} from '../../../Services/userService';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import AppFooter from '../../components/footer';
+import { decodedToken } from '../../../Services/getToken ';
 
 const UserAccount = () => {
   const [user, setUser] = useState({});
@@ -17,6 +16,10 @@ const UserAccount = () => {
   const [oldEmail, setOldEmail] = useState('');
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
+  
+  const decoded = decodedToken();
+  const userId = decoded.userId 
+
   const triggerNotification = (message, type = "info") => {
       if (type === "success") {
         toast.success(message,{
@@ -30,11 +33,9 @@ const UserAccount = () => {
     };
 
   useEffect(() => {
-    const decoded = retrieveId();
     const fetchUser = async () => {
-        const decoded = retrieveId(); 
-        try {
-          const res = await userDetails(decoded.userId); 
+        try { 
+          const res = await userDetails(userId); 
           console.log('User data:', res.existingClient[0].username);
           const userData = res.existingClient[0];  
 
@@ -51,7 +52,7 @@ const UserAccount = () => {
         }
       };
       fetchUser();
-  }, []);
+  }, [userId]);
 
   const handleChange = (e) => {
     setEditData({ ...editData, [e.target.name]: e.target.value });
@@ -66,7 +67,8 @@ const UserAccount = () => {
 
     if (Object.keys(updatedFields).length > 0) {
         try{
-            const response = await updateUserProfile(updatedFields, retrieveId().userId);
+            const response = await updateUserProfile(updatedFields, userId);
+            console.log("update profile: ", response)
             triggerNotification("Update Profile Success.", "success");
         }
         catch(err){
@@ -128,7 +130,6 @@ const UserAccount = () => {
             </div>
         </div>
         </div>
-        <AppFooter />
         </>
   );
 };

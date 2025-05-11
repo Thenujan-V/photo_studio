@@ -13,7 +13,8 @@ import ProtectedRoute from './components/ProtectedRoute';
 import ConfirmOrder from './pages/user/ConfirmOrder';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import UserAccount from './pages/user/UserAccount';
+import DashboardLayout from './pages/user/user-dashboard/DashboardLayout';
+import UserAccount from './pages/user/user-dashboard/UserAccount';
 
 const Unauthorized = () => <div><h2>Unauthorized - You do not have permission to access this page.</h2></div>;
 
@@ -31,43 +32,20 @@ function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
-
-        <Route
-          path="/add-to-cart"
-          element={
-              <AddToCard />
-          }
-        />
-        <Route
-          path="/confirmOrder"
-          element={
-              <ConfirmOrder />
-          }
-        />
-
-        <Route
-          path="/useraccount"
-          element={
-            // <ProtectedRoute allowedRoles={['user']}>
-              <UserAccount />
-            // </ProtectedRoute>
-          }
-        />
-
-        {/* Protected route for Admins */}
-        {/* <Route
-          path="/admin-dashboard"
-          element={
-            <ProtectedRoute allowedRoles={['admin']}>
-              <AdminDashboard />
-            </ProtectedRoute>
-          }
-        /> */}
-
-        {/* Unauthorized page */}
+        <Route path="/add-to-cart" element={ <AddToCard /> } />
+        <Route path="/confirmOrder" element={ <ConfirmOrder /> } />
+        {/* <Route path="/useraccount" element={ <UserAccount /> } /> */}
         <Route path="/unauthorized" element={<Unauthorized />} />
 
-        {/* Logout */}
+        <Route path="/dashboard" element={<DashboardLayout title="My Dashboard" />}>
+          <Route path="profile" element={<UserAccount title="My Profile" />} />
+          {/* <Route path="orders" element={<OrderHistory title="My Orders" />} />
+          <Route path="live-orders" element={<LiveOrders title="Live Orders" />} />
+          <Route path="notifications" element={<Notifications title="Notifications" />} />
+          <Route path="password" element={<ChangePassword title="Change Password" />} />
+          <Route path="logout" element={<Logout title="Logout" />} />  */}
+        </Route>
+
         <Route path="/logout" element={<Logout />} />
       </Routes>
     </div>
