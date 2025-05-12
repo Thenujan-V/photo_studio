@@ -2,7 +2,7 @@ import React from 'react'
 import { NavLink } from 'react-router-dom'
 import "../../../style/sidebar.scss"
 
-const sidebar = () => {
+const Sidebar = () => {
   return (
     <div className="sidebar">
       <nav className="sidebar-top">
@@ -19,7 +19,8 @@ const sidebar = () => {
         <NavLink to="/dashboard/orders" className= 'block' >Order History</NavLink>
         <NavLink to="/dashboard/live-orders" className= 'block' >Live Orders</NavLink>
         <NavLink to="/dashboard/notifications" className= 'block' >Notifications</NavLink>
-        <NavLink to="/dashboard/password" className= 'block' >Change Password</NavLink>
+        <NavLink to="/dashboard/change-mail" className= 'block' >Change E-mail</NavLink>
+        <NavLink to="/dashboard/change-password" className= 'block' >Change Password</NavLink>
         <NavLink to="/dashboard/logout" className= 'block' >Logout</NavLink>
       </nav>
       <nav className="sidebar-bottom">
@@ -30,4 +31,4 @@ const sidebar = () => {
   )
 }
 
-export default sidebar
+export default Sidebar
