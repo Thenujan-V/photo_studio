@@ -1,5 +1,5 @@
 .layout{
-    background-color:silver;
+    background-color:rgb(250, 241, 241);
     min-height: 110vh;
     .dashboard{
         display: flex;
@@ -15,9 +15,9 @@
             background-color: #f2dbe2;
             border-radius: 6px;
             box-shadow: 2px 4px 8px rgb(134, 129, 129);
-            height: 80vh;
-            // overflow-y: scroll;
-            // overflow-x:scroll;
+            height: 85vh;
+            overflow-y: scroll;
+            overflow-x:scroll;
         }
     }
 }

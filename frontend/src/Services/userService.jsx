@@ -48,22 +48,22 @@ export const updateUserProfile = async (formData, id) => {
     }
 }
 
-// export const showAllUsers = async () => {
-//     try{
-//         const response = await axios.get(`${API_BASE_URL}/customers/getusers`)
-//         return response.data
-//     }
-//     catch(error){
-//         throw error
-//     }
-// }
+export const showAllUsers = async () => {
+    try{
+        const response = await axios.get(`${API_BASE_URL}/client/get-all-client`)
+        return response.data
+    }
+    catch(error){
+        throw error
+    }
+}
 
-// export const deleteAccount = async (user_id) => {
-//     try{
-//         const response = await axios.delete(`${API_BASE_URL}/customers/deleteuser/${user_id}`)
-//         return response.data
-//     }
-//     catch(error){
-//         throw error
-//     }
-// }
+export const deleteAccount = async (id) => {
+    try{
+        const response = await axios.delete(`${API_BASE_URL}/client/delete-client/${id}`)
+        return response
+    }
+    catch(error){
+        throw error
+    }
+}

@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {faCcVisa,faCcMastercard} from '@fortawesome/free-brands-svg-icons';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { triggerNotification } from '../Services/notificationService';
 
 const Payment = ({onOk}) => {
   const [formData, setFormData] = useState({
@@ -12,18 +13,6 @@ const Payment = ({onOk}) => {
     expiry: '',
     cvv: ''
   });
-
-  const triggerNotification = (message, type = "info") => {
-    if (type === "success") {
-      toast.success(message,{
-        autoClose: 3000,
-      });
-    } else if (type === "error") {
-      toast.error(message);
-    } else {
-      toast(message);
-    }
-  };
 
   const [errors, setErrors] = useState({});
 
@@ -57,7 +46,7 @@ const Payment = ({onOk}) => {
   return (
     <>
       <div className="payment-form">
-        <h2>Payment Details</h2>
+        <h2>Card Details</h2>
         <div className="card-icons">
               <FontAwesomeIcon icon={faCcVisa} size="3x" color="#1a1f71" />
               <FontAwesomeIcon icon={faCcMastercard} size="3x" color="#eb001b" />

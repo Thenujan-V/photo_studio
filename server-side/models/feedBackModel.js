@@ -16,7 +16,14 @@ const feedBackCreate = (feedbackData) => {
 }   
 
 const fetchFeedBacks = () => {
-    const sql = `select * from feedback`
+    const sql = `select 
+                    c.username,
+                    c.mail,
+                    f.feedback,
+                    f.rating,
+                    f.reply_msg,
+                    f.id
+                    from feedback f join client c on f.client_id = c.id`
 
     return new Promise((resolve, reject) => {
         db.query(sql, 

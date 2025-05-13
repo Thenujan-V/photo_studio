@@ -17,6 +17,10 @@ import DashboardLayout from './pages/user/user-dashboard/DashboardLayout';
 import UserAccount from './pages/user/user-dashboard/UserAccount';
 import ChangePassword from './pages/user/user-dashboard/ChangePassword';
 import ChangeMail from './pages/user/user-dashboard/ChangeMail';
+import { AdminDashboardLayout } from './pages/admin/dashboard/AdminDashboardLayout';
+import ViewUsers from './pages/admin/dashboard/ViewUsers';
+import Inquiry from './pages/admin/dashboard/Inquiry';
+import Feedbacks from './pages/admin/dashboard/Feedbacks';
 
 const Unauthorized = () => <div><h2>Unauthorized - You do not have permission to access this page.</h2></div>;
 
@@ -50,7 +54,17 @@ function App() {
           <Route path="logout" element={<Logout title="Logout" />} /> 
         </Route>
 
-        <Route path="/logout" element={<Logout />} />
+        <Route path="/adminDashboard" element={<AdminDashboardLayout title="Admin Dashboard" />}>
+          <Route path="users" element={<ViewUsers title="View Users" />} />
+          {/* <Route index element={<Navigate to="profile" replace />} /> */}
+          <Route path="inquiry" element={<Inquiry title="View Inquiry" />} />
+          <Route path="feedbacks" element={<Feedbacks title="View Feddbacks" />} />
+          {/* <Route path="notifications" element={<Notifications title="Notifications" />} /> */}
+          {/* <Route path="change-mail" element={<ChangeMail title="Change E-mail" />} /> */}
+          {/* <Route path="change-password" element={<ChangePassword title="Change Password" />} /> */}
+          {/* <Route path="logout" element={<Logout title="Logout" />} />  */}
+        </Route>
+
       </Routes>
     </div>
   </BrowserRouter>
