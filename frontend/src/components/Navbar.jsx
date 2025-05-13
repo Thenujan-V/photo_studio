@@ -35,7 +35,7 @@ function AppNavbar() {
             </Nav.Link>
             <Nav.Link as={NavLink} to="/login" className="login-link">Login</Nav.Link>
             <div style={{ display: 'flex', gap: '25px', alignItems:'center', marginLeft:'15px' }}>
-              <FontAwesomeIcon icon={faUser} size="x" color="#f90348" title="User Profile"  onClick={() => navigate('/useraccount')}/>
+              <FontAwesomeIcon icon={faUser} size="x" color="#f90348" title="User Profile"  onClick={() => navigate('/dashboard/profile')}/>
             </div>
           </Nav>
         </Navbar.Collapse>
