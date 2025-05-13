@@ -38,7 +38,7 @@ function AppNavbar() {
             {userId && <Nav.Link as={NavLink} to="/add-to-cart" className="cart">
               <FontAwesomeIcon 
                 icon={faCartShopping}
-                color="#f90348" 
+                color="#f90348"
                 size='xl'
               />
             </Nav.Link>}

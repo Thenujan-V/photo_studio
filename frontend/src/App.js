@@ -15,12 +15,15 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import DashboardLayout from './pages/user/user-dashboard/DashboardLayout';
 import UserAccount from './pages/user/user-dashboard/UserAccount';
+import Notifications from './pages/user/user-dashboard/Notifications';
+import OrderHistory from './pages/user/user-dashboard/OrderHistory';
 import ChangePassword from './pages/user/user-dashboard/ChangePassword';
 import ChangeMail from './pages/user/user-dashboard/ChangeMail';
 import { AdminDashboardLayout } from './pages/admin/dashboard/AdminDashboardLayout';
 import ViewUsers from './pages/admin/dashboard/ViewUsers';
 import Inquiry from './pages/admin/dashboard/Inquiry';
 import Feedbacks from './pages/admin/dashboard/Feedbacks';
+import LiveOrders from './pages/user/user-dashboard/LiveOrders';
 
 const Unauthorized = () => <div><h2>Unauthorized - You do not have permission to access this page.</h2></div>;
 
@@ -46,12 +49,12 @@ function App() {
         <Route path="/dashboard" element={<DashboardLayout title="My Dashboard" />}>
           <Route path="profile" element={<UserAccount title="My Profile" />} />
           <Route index element={<Navigate to="profile" replace />} />
-          {/* <Route path="orders" element={<OrderHistory title="My Orders" />} /> */}
-          {/* <Route path="live-orders" element={<LiveOrders title="Live Orders" />} /> */}
-          {/* <Route path="notifications" element={<Notifications title="Notifications" />} /> */}
+          <Route path="orders" element={<OrderHistory title="My Orders" />} />
+          <Route path="notifications" element={<Notifications title="Notifications" />} />
+          <Route path="live-orders" element={<LiveOrders title="Live Orders" />} />
           <Route path="change-mail" element={<ChangeMail title="Change E-mail" />} />
           <Route path="change-password" element={<ChangePassword title="Change Password" />} />
-          <Route path="logout" element={<Logout title="Logout" />} /> 
+          <Route path="logout" element={<Logout title="Logout" />} />
         </Route>
 
         <Route path="/adminDashboard" element={<AdminDashboardLayout title="Admin Dashboard" />}>

@@ -6,6 +6,7 @@ const cartRoutes = require('./routes/cartRouter')
 const feedbackRoutes = require('./routes/feedBackRouter')
 const ordersRoutes = require('./routes/orderRouter')
 const inquiryRoutes = require('./routes/inquiryRoute')
+const paymentRoutes = require('./routes/paymentRouter')
 
 const path = require('path')
 
@@ -24,6 +25,7 @@ app.use('/api/cart', cartRoutes)
 app.use('/api/feedback', feedbackRoutes)
 app.use('/api/orders', ordersRoutes)
 app.use('/api/inquiry', inquiryRoutes)
+app.use('/api/payment', paymentRoutes)
 
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')))
 
