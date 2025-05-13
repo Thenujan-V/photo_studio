@@ -1,0 +1,89 @@
+.review-carousel {
+  padding: 2rem;
+  background: #f9f9f9;
+
+  h2 {
+        color: rgb(0, 0, 0);
+        font-family: 'Mulish', sans-serif;
+        font-size: 50px;
+        font-weight: 900;
+        padding: 0 100px;
+        text-align: center;
+  }
+  p{
+    width: 80%;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 16px;
+    font-weight: 400;
+  }
+
+  .carousel-container {
+    padding: 0 20px;
+  }
+
+  .review-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    margin: 10px;
+    transition: transform 0.3s ease;
+    height: 35vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    // align-items: center;
+
+    &:hover {
+      transform: translateY(-5px);
+    }
+    .name{
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        div{
+            font-size: 40px;
+            font-weight: 800;
+            font-style: italic;
+            font-family:Georgia, 'Times New Roman', Times, serif;
+            background-color: var(--secondary-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 60px;
+            height: 60px;
+            aspect-ratio: 1\ 1;
+            border-radius: 50%;
+            color: #efd7de;
+        }
+    }
+
+    h4 {
+      font-size: 1.1rem;
+      color:var(--secondary-color);
+    }
+
+    .feedback {
+      margin: 0;
+      font-style: italic;
+      color: #555;
+    }
+
+    .rating {
+      margin-top: 0.5rem;
+      font-weight: bold;
+      color: #f4c150;
+    }
+
+    .reply {
+        margin-top: 0.5rem;
+        font-size: 0.9rem;
+        color: #bd2752;
+        background-color: #f5c0cf;      
+        padding: 0.5rem;
+        border-radius: 8px;
+    }
+  }
+}

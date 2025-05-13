@@ -2,7 +2,7 @@
     display: flex;
     flex-direction: column;
     gap: 60px;
-    background-color:silver ;
+    // background-color:silver ;
 
     .user{
         display: flex;
@@ -14,8 +14,8 @@
         border-bottom: 1px solid rgb(134, 129, 129);
 
         .image{
-            background-color: aquamarine;
-            color: black;
+            background-color: #bd2752;
+            color: rgb(245, 222, 222);
             font-size: 52px;
             font-weight: 700;
             height: 60px;
@@ -40,8 +40,8 @@
 
     .sidebar-top, .sidebar-bottom{
         width: 100%;
-        height: 360px;
-        background-color: white;
+        height: 400px;
+        background-color: #f2dbe2;
         display: flex;
         flex-direction: column;
         border-radius: 6px;
@@ -54,11 +54,20 @@
             font-weight: 600;
             padding: 10px 0 10px 30px;
             color: rgb(76, 72, 72);
+            width: 90%;
+            margin-left: auto;
+            margin-right: auto;
             
         }
         .block:hover{
             text-decoration: underline;
-            
+            background-color: #f5c0cf;
+            color: #bd2752;
+        }
+        .block.active{
+            color: #bd2752;
+            text-decoration: underline;
+            background-color: #f5c0cf;
         }
 
         

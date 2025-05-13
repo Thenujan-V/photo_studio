@@ -4,6 +4,7 @@ import Carousel from 'react-bootstrap/Carousel'
 import '../style/Home.scss'
 import AppFooter from '../components/footer'
 import { Link } from 'react-router-dom';
+import ReviewCarousel from '../components/ReviewCarousel'
 
 const Home = () => {
   return (
@@ -42,8 +43,9 @@ const Home = () => {
         <section className='aboutSec'>
           <div className='container-fluid'>
             <div className='row aboutRow'> 
+              <h1>About Us</h1>
               <div className='col-12 col-md-6 aboutImg'>
-                <h1>About Us</h1>
+                
               </div>
               <div className='col-12 col-md-6 aboutBody'>
                 <h4>"Your Story. Your Moments. Captured with Passion, Framed with Perfection"</h4>
@@ -66,6 +68,9 @@ const Home = () => {
             <Link to="/services/in-studio" className="service-item medium">In-Studio Shots</Link>
           </div>
 
+        </section>
+        <section>
+          < ReviewCarousel />
         </section>
         </div>
         <AppFooter />

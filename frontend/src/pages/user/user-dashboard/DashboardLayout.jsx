@@ -1,6 +1,6 @@
 import React from 'react'
-import Headers from './header'
-import Sidebar from './sidebar'
+import Headers from './Header'
+import Sidebar from './Sidebar'
 import { Outlet } from 'react-router-dom'
 import Navbar from '../../../components/Navbar'
 import '../../../style/dashboardLayout.scss'
