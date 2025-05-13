@@ -47,7 +47,7 @@ const OrderHistory = () => {
           <div key={orderId} className="order-card">
             <div className="order-header">
               <span><strong>Order ID:</strong> {orderId}</span>
-              <span><strong>Date:</strong> {new Date(items[0].createdAt).toLocaleDateString()}</span>
+              <span><strong>Order Date:</strong> {new Date(items[0].createdAt).toLocaleDateString()}</span>
             </div>
 
             {items.map((item, index) => (

@@ -19,6 +19,7 @@ import Notifications from './pages/user/user-dashboard/Notifications';
 import OrderHistory from './pages/user/user-dashboard/OrderHistory';
 import ChangePassword from './pages/user/user-dashboard/ChangePassword';
 import ChangeMail from './pages/user/user-dashboard/ChangeMail';
+import LiveOrders from './pages/user/user-dashboard/LiveOrders';
 
 const Unauthorized = () => <div><h2>Unauthorized - You do not have permission to access this page.</h2></div>;
 
@@ -46,7 +47,7 @@ function App() {
           <Route index element={<Navigate to="profile" replace />} />
           <Route path="orders" element={<OrderHistory title="My Orders" />} />
           <Route path="notifications" element={<Notifications title="Notifications" />} />
-          {/* <Route path="live-orders" element={<LiveOrders title="Live Orders" />} /> */}
+          <Route path="live-orders" element={<LiveOrders title="Live Orders" />} />
           <Route path="change-mail" element={<ChangeMail title="Change E-mail" />} />
           <Route path="change-password" element={<ChangePassword title="Change Password" />} />
           <Route path="logout" element={<Logout title="Logout" />} />
