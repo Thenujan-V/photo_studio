@@ -15,9 +15,7 @@ const app = express()
 const PORT = process.env.PORT
 
 app.use(express.json())
-app.use(cors({
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']
-}))
+app.use(cors())
 
 app.use('/api/client', clientRoutes)
 app.use('/api/services', serviceRoutes)
@@ -27,15 +25,7 @@ app.use('/api/orders', ordersRoutes)
 app.use('/api/inquiry', inquiryRoutes)
 app.use('/api/payment', paymentRoutes)
 
-app.use('/uploads', express.static(path.join(__dirname, '../uploads')))
-
-
-
-
-
-
-
-
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
 
 
 

@@ -4,9 +4,12 @@ import '../../style/ConfirmOrder.scss';
 import AppNavbar from '../../components/Navbar';
 import AppFooter from '../../components/footer';
 import Payment from '../../components/Payment';
-import { clientsUploadPhotos, fetchOrdersByClientId } from '../../Services/orderService';
+import { clientsUploadPhotos, createOrderDelivery, fetchOrdersByClientId } from '../../Services/orderService';
 import { decodedToken } from '../../Services/getToken ';
 import { triggerNotification } from '../../Services/notificationService';
+import { createPayment } from '../../Services/paymentServices';
+import { useNavigate } from 'react-router-dom';
+
 
 const ConfirmOrder = () => {
   const location = useLocation();
@@ -17,12 +20,15 @@ const ConfirmOrder = () => {
   const [deliveryInfo, setDeliveryInfo] = useState({
     sender_phone_number: '',
     receiver_phone_number: '',
-    reciver_name: '',
-    reciver_address_district: '',
+    receiver_name: '',
+    receiver_address_district: '',
     receiver_address_city: '',
     receiver_address_street: '',
   });
   const [paymentMethod, setPaymentMethod] = useState('cash');
+  const [paymentData, setPaymentData] = useState('')
+  const navigate = useNavigate();
+
 
   const token = decodedToken()
   const clientId = token.userId 
@@ -34,18 +40,6 @@ const ConfirmOrder = () => {
     'Matale', 'Matara', 'Monaragala', 'Mullaitivu', 'Nuwara Eliya',
     'Polonnaruwa', 'Puttalam', 'Ratnapura', 'Trincomalee', 'Vavuniya'
   ];
-  
-  // useEffect(() => {
-  //   fetchServiceDetails = async () => {
-  //     selectedItems.map( item => {
-  //       await fetchServiceDetails()
-  //     })
-  //   }
-
-  //   if(selectedItems){
-  //     fetchServiceDetails()
-  //   }
-  // }, [selectedItems])
 
   useEffect( () => {
     const fetchOders =  async() =>{
@@ -116,12 +110,11 @@ const ConfirmOrder = () => {
       setDeliveryInfo((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = () => {
+  const validations = () => {
     const missingUploads = orderDetails.some((item, index) => {
         return (item.serviceCategory === 'printings' || item.serviceCategory === 'frame making') && 
                (!uploadedPhotos[index] || uploadedPhotos[index].length === 0);
       });
-    console.log("miss :", missingUploads)
       if (missingUploads) {
         triggerNotification("Please upload at least one image for all printing or frame items.", "error");
         return;
@@ -141,20 +134,60 @@ const ConfirmOrder = () => {
           triggerNotification("Phone number couldn't have characters.", "error");
           return;
         }
-        if(deliveryInfo.reciver_name.length < 4 ){
+        if(deliveryInfo.receiver_name.length < 4 ){
           triggerNotification("Reciever name must be atleast 4 characters.", "error");
           return;
         }
-        if( !/^[A-Za-z\s]+$/.test(deliveryInfo.reciver_name) ){
+        if( !/^[A-Za-z\s]+$/.test(deliveryInfo.receiver_name) ){
           triggerNotification("Name must contain only letters and spaces.", "error");
           return;
         }
       }
-
-    
-    console.log({ selectedItems, uploadedPhotos, deliveryInfo, paymentMethod });
-    triggerNotification("Order submitted successfully!", "success");
   };
+
+  const handleSubmit = async() => {
+    validations()
+    const deliveryDetails = { senderPhoneNumber: deliveryInfo.sender_phone_number,
+                              receiverName: deliveryInfo.receiver_name, 
+                              receiverPhoneNumber: deliveryInfo.receiver_phone_number, 
+                              receiverDistrict: deliveryInfo.receiver_address_district, 
+                              receiverCity: deliveryInfo.receiver_address_city, 
+                              receiverStreet: deliveryInfo.receiver_address_street
+                            }
+
+    const totalAmount = getTotalAmount()
+
+    try{
+      const deliveryDetailsSave = await createOrderDelivery(orderId, deliveryDetails)
+      if(deliveryDetailsSave.status === 201){
+        triggerNotification("Sccessfully saved delivery details.", "Success")
+        
+    if(paymentMethod === 'Cash'){
+      setPaymentData({ orderId, clientId, totalAmount, paymentMethod, status: 'processing'})
+      const placeOrder = await createPayment(paymentData)
+        if(placeOrder.status === 201){
+          triggerNotification("Sccessfully Place Order.", "Success")
+          navigate('/invoice', { state: {selectedItems, orderId} })
+          
+        }
+    } 
+      }
+      else{
+        triggerNotification("Something went wrong when save delivbery detailsl. Try again.", "error")
+      }
+    }catch(err){
+      console.log('error occured when place order.', err) 
+    }
+  }
+
+    const handlePaymentResult = (success) => {
+    const totalAmount = getTotalAmount()
+    if (success) {
+    } else {
+
+    } 
+    setIsPayment(false);
+    };
 
   return (
     <>
@@ -209,12 +242,12 @@ const ConfirmOrder = () => {
         <form className="delivery-form">
           <input name="sender_phone_number" type='tel' pattern="[0-9]{10}" placeholder="Sender Phone Number" onChange={handleDeliveryChange} required/>
           <input name="receiver_phone_number" type='tel' pattern="[0-9]{10}" placeholder="Receiver Phone Number" onChange={handleDeliveryChange} required/>
-          <input name="reciver_name" type='text' placeholder="Receiver Name" onChange={handleDeliveryChange} required/>
+          <input name="receiver_name" type='text' placeholder="Receiver Name" onChange={handleDeliveryChange} required/>
           {/* <input name="reciver_address_district" placeholder="District" onChange={handleDeliveryChange} required /> */}
           <select
-              name="reciver_address_district"
+              name="receiver_address_district"
               onChange={handleDeliveryChange}
-              value={deliveryInfo.reciver_address_district}
+              value={deliveryInfo.receiver_address_district}
               required
             >
               <option value="" disabled selected hidden>Receiver District</option>
@@ -231,12 +264,12 @@ const ConfirmOrder = () => {
         <h2>Payment</h2>
         <div className="payment-options">
           <label>
-            <input type="radio" name="payment" value="cash" checked={paymentMethod === 'cash'} onChange={() => setPaymentMethod('cash')} />
+            <input type="radio" name="payment" value="Cash" checked={paymentMethod === 'Cash'} onChange={() => setPaymentMethod('Cash')} />
             Cash on Delivery
           </label>
           <label>
-            <input type="radio" name="payment" value="online" checked={paymentMethod === 'online'} onChange={() => {
-              setPaymentMethod('online');
+            <input type="radio" name="payment" value="Card" checked={paymentMethod === 'Card'} onChange={() => {
+              setPaymentMethod('Card');
               setIsPayment(true); 
             }} />
             Online Payment
@@ -254,6 +287,7 @@ const ConfirmOrder = () => {
           <button className="close-button" onClick={() => setIsPayment(false)}>✖</button>
           <Payment 
             onOk={() => setIsPayment(false)}
+            paymentDetails={{orderId, clientId, totalAmount: getTotalAmount(), paymentMethod}}
           />
         </div>
       </div>

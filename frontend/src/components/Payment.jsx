@@ -2,11 +2,13 @@ import React, { useState } from 'react'
 import '../style/Payment.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {faCcVisa,faCcMastercard} from '@fortawesome/free-brands-svg-icons';
-import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { triggerNotification } from '../Services/notificationService';
+import { createPayment } from '../Services/paymentServices';
 
-const Payment = ({onOk}) => {
+const Payment = ({ onOk, paymentDetails }) => {
+  const { orderId, clientId, totalAmount, paymentMethod } = paymentDetails;
+
   const [formData, setFormData] = useState({
     name: '',
     cardNumber: '',
@@ -15,6 +17,7 @@ const Payment = ({onOk}) => {
   });
 
   const [errors, setErrors] = useState({});
+  const [paymentSuccess, setPaymentSuccess] = useState(false)
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -29,17 +32,32 @@ const Payment = ({onOk}) => {
     return newErrors;
   };
 
-  const handleSubmit = (e) => {
+  const paymentTableEntry = async (data) => {
+    const cardPaymentEntry = await createPayment(data)
+    return cardPaymentEntry
+  }
+
+  const handleSubmit = async(e) => {
     e.preventDefault();
     const validationErrors = validate();
     if (Object.keys(validationErrors).length === 0) {
-      triggerNotification("Payment Success", "success");
-      setTimeout(() => {
-        onOk();
-      }, 3000); 
+      // api for transaction gateway
+      const entryToPaymentTable = await paymentTableEntry({orderId, clientId, totalAmount, paymentMethod, status: 'complete'})
+      if(entryToPaymentTable.status === 201){
+    	  triggerNotification("Payment Success", "success");
+        setTimeout(() => {
+          setPaymentSuccess(true);
+          onOk();
+        }, 3000); 
+      }
+      else{
+        triggerNotification("paymentr failed.", "error")
+      }
+      
     } else {
       setErrors(validationErrors);
       triggerNotification("Payment failed", "error");
+      setPaymentSuccess(false)
     }
   };
 

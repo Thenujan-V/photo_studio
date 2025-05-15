@@ -76,6 +76,7 @@ const AddToCard = () => {
           if (isAlreadySelected) {
             return prevSelected.filter(item => item.id !== id);
           } else {
+
             return [...prevSelected, { id, serviceCategory, categoryId, serviceId, quantity, serviceName, photoPath, description, color, size, servicePrice }];
           }
         });
@@ -127,7 +128,7 @@ const AddToCard = () => {
                   <input
                     type="checkbox"
                     className="cart-checkbox"
-                    checked={selectedItems.includes(item.cartId, item.serviceDetails.serviceCategoryId, item.serviceDetails.serviceId, item.quantity)}
+                    checked={selectedItems.some(selected => selected.id === item.cartId)}
                     onChange={() => handleSelectItem(item.cartId, 
                                         item.serviceCategory,
                                         item.serviceDetails.serviceCategoryId, 

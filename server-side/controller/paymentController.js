@@ -2,7 +2,10 @@ const paymentModel = require('../models/paymentModel')
 
 const createPaymentDetails = async (req, res) => {
     try{
-        const { orderId, clientId, totalAmount, paymentMethod, status} = req.data
+    console.log("od :", req.body)
+
+        const { orderId, clientId, totalAmount, paymentMethod, status} = req.body
+
         const validStatusCode = ['processing', 'parcial_payment', 'complete', 'failed']
         const validPaymentMethod = ['Cash', 'Card']
 
@@ -16,13 +19,13 @@ const createPaymentDetails = async (req, res) => {
         if(!orderId || !clientId || ! totalAmount || !paymentMethod || !status){
             return res.status(400).json( {message: "bad request. something missing."})
         }
-        if(isValidPaymentMethod(paymentMethod)){
-            return res.status(400).json( {message: "bad request."})
+        if(!isValidPaymentMethod(paymentMethod)){
+            return res.status(400).json( {message: "bad request for not valid payment method."})
         }
-        if(isValidStatusCode(status)){
-            return res.status(400).json( {message: "bad request."})
+        if(!isValidStatusCode(status)){
+            return res.status(400).json( {message: "bad request for not valid status code."})
         }
-        const saveDetails = await paymentModel.paymentDetailsCreate()
+        const saveDetails = await paymentModel.paymentDetailsCreate({ orderId, clientId, totalAmount, paymentMethod, status})
         return res.status(201).json({
                 message: 'payment Details saved successfully.',
                 saveDetails

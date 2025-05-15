@@ -1,9 +1,11 @@
 import React from 'react'
-import { useState, useEffect } from 'react'; 
+import { useState } from 'react'; 
 import AppNavbar from '../components/Navbar'
 import '../style/Contact.scss'
 import studioImage from '../assets/wedding.webp'
 import AppFooter from '../components/footer'
+import { createInquiry } from '../Services/inquiryService';
+import { triggerNotification } from '../Services/notificationService';
 
 
 const Contact = () => {
@@ -49,13 +51,22 @@ const Contact = () => {
     setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (validate()) {
       console.log("Form submitted:", formData);
+      const inquiryData = { userName: formData.name, mail: formData.email, inquiryMsg: formData.message } 
+      const inquiryCreateResult = await createInquiry(inquiryData)
+      if(inquiryCreateResult.status === 201){
+        triggerNotification("Successfully added inquiry.", "success")
+      }
+      else{
+        triggerNotification("Failed to add inquiry.", "error")
+      }
       setSubmitted(true);
       setFormData({ name: "", email: "", message: "" });
     } else {
+      triggerNotification("Failed to add inquiry.", "error")
       setSubmitted(false);
     }
   };

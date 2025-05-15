@@ -57,6 +57,6 @@ const setPaymentStatus = (id, status) => {
 }
 
 
-module.exports = [ paymentDetailsCreate, getPaymentDetails, setPaymentStatus ]
+module.exports =  {paymentDetailsCreate, getPaymentDetails, setPaymentStatus}
 
 

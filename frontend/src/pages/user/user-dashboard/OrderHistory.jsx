@@ -9,6 +9,10 @@ const OrderHistory = () => {
   const [expanded, setExpanded] = useState({});
   const clientId = decodedToken()?.userId;
 
+  // const URLForPhotoPath = `E:/photo_studio/server-side/uploads`
+  const URLForPhotoPath = `http://localhost:4000/uploads`
+
+
   useEffect(() => {
     const fetchOrders = async () => {
       try {
@@ -23,7 +27,7 @@ const OrderHistory = () => {
           acc[order.orderId].push(order);
           return acc;
         }, {});
-
+console.log("ggg :", grouped)
         setGroupedOrders(grouped);
       } catch (err) {
         console.error(err);
@@ -54,7 +58,7 @@ const OrderHistory = () => {
               <div key={item.orderDetailsId} className="order-item">
                 <div className="item-left">
                   <img
-                    src={`/uploads/${item.photosPaths[0] || item.serviceDetails.photoPaths[0]}`}
+                    src={`${URLForPhotoPath}/${item.photosPaths[0] || item.serviceDetails.photoPaths[0]}`}
                     alt="Service"
                     className="service-img"
                   />

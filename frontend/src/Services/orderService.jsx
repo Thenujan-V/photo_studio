@@ -58,3 +58,23 @@ export const clientsUploadPhotos = async (orderDetailsId, formData) => {
     }
     
 }
+
+export const  createOrderDelivery = async (orderId, formData) => {
+    if (!orderId) {
+        throw new Error("Missing required cart data (orderDetailsId).");
+    }
+
+    try{
+        const response = await axios.post(`${API_BASE_URL}/orders/create-order-delivery/${orderId}`,
+           formData,
+            {
+                headers: {
+                'Content-Type': 'application/json'
+                }
+            }
+        )
+        return response
+    }catch(err){
+        throw err
+    }
+}

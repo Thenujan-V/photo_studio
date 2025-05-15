@@ -94,8 +94,8 @@ const getOrdersByClientId = async (req, res) => {
 const createOrderDelivery = async (req, res) => {
     try{
         const { orderId } = req.params
-        const { senderPhoneNumber, receiverName, receiverPhoneNumber, receiverDistrict, receiverCity, receiverStreet } = req.body
 
+        const { senderPhoneNumber, receiverName, receiverPhoneNumber, receiverDistrict, receiverCity, receiverStreet } = req.body
         const deliveryDetails = await orderModel.deliveryDetailsCreate({ senderPhoneNumber, receiverName, receiverPhoneNumber, receiverDistrict, receiverCity, receiverStreet }, orderId)
         
         res.status(201).json({ 
