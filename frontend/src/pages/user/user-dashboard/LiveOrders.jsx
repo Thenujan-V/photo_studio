@@ -13,8 +13,9 @@ const LiveOrders = () => {
         const response = await fetchOrdersByClientId(clientId);
         const data = response.data.enrichedOrderDetails || [];
 
+        const excludedStatuses = ["delivered", "cancelled"];
         const processingOrders = data.filter(
-          (order) => order.status.toLowerCase() === "processing"
+          (order) => !excludedStatuses.includes(order.status)
         );
 
         const grouped = processingOrders.reduce((acc, order) => {
