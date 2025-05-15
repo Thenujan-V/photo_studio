@@ -11,20 +11,7 @@ const AdminOrderHistory = () => {
     const [filteredGroupedOrders, setFilteredGroupedOrders] = useState({});
     const [searchTerm, setSearchTerm] = useState('');
     const [expanded, setExpanded] = useState({});
-    const [showDropdown, setShowDropdown] = useState({});
     const navigate = useNavigate();
-
-     const statusOptions = [
-    'processing',
-    'editing',
-    'awaiting_approval',
-    'reediting',
-    'approved',
-    'in_production',
-    'ready_for_delivery',
-    'delivered',
-    'cancelled',
-  ];
 
       useEffect(() => {
           fetchAllOrderHistory();
@@ -34,8 +21,7 @@ const AdminOrderHistory = () => {
           try {
             const response = await fetchAllOrders();
             const data = response.data.enrichedAllOrderDetails || [];
-    
-            // Group orders by orderId
+
             const grouped = data.reduce((acc, order) => {
               if (!acc[order.orderId]) {
                 acc[order.orderId] = [];
@@ -55,32 +41,6 @@ const AdminOrderHistory = () => {
     setExpanded((prev) => ({ ...prev, [orderId]: !prev[orderId] }));
     };
 
-  const handleStatusChange = async (orderDetailsId, newStatus) => {
-    console.log("orderdetailsId:",orderDetailsId , newStatus);
-    try {
-      await changeOrderStatus(orderDetailsId, newStatus);
-      alert(`Status changed to ${newStatus}`);
-
-      // Optional: Refetch orders or update UI directly
-      setGroupedOrders((prev) => {
-        const updated = { ...prev };
-        for (let orderId in updated) {
-          updated[orderId] = updated[orderId].map((item) =>
-            item.orderDetailsId === orderDetailsId
-              ? { ...item, status: newStatus }
-              : item
-          );
-        }
-        return updated;
-      });
-
-      setShowDropdown((prev) => ({ ...prev, [orderDetailsId]: false }));
-    } catch (error) {
-      alert('Failed to change status');
-      console.error(error);
-    }
-  };
-
   const handleKeyDown = (e) => {
   if (e.key === 'Enter') {
     handleSearch();
@@ -91,16 +51,22 @@ const handleSearch = () => {
   const term = searchTerm.trim().toLowerCase();
 
   if (!term) {
-    setFilteredGroupedOrders(groupedOrders); // Show all if search is empty
+    setFilteredGroupedOrders(groupedOrders);
     return;
   }
 
   const filtered = Object.entries(groupedOrders).reduce((acc, [orderId, items]) => {
     const username = items[0].username?.toLowerCase() || '';
     const clientId = items[0].clientId?.toString().toLowerCase() || '';
+    const hasMatchingStatus = items.some(item =>
+      item.status?.toLowerCase().includes(term)
+    );
 
-    // Check if username starts with term OR clientId matches exactly
-    if (username.startsWith(term) || clientId === term) {
+    if (
+      username.startsWith(term) ||
+      clientId === term ||
+      hasMatchingStatus
+    ) {
       acc[orderId] = items;
     }
 
@@ -108,7 +74,9 @@ const handleSearch = () => {
   }, {});
 
   setFilteredGroupedOrders(filtered);
+  setSearchTerm('');
 };
+
 
 const handleAllOrder = () => {
   fetchAllOrderHistory();
@@ -162,20 +130,6 @@ const handleAllOrder = () => {
                 <button onClick={() => toggleDetails(orderId)}>
                     {expanded[orderId] ? "Hide Details" : "Show Details"}
                 </button>
-                <div className="change-status-container">
-                  <select
-                    className="status-select"
-                    onChange={(e) => handleStatusChange(item.orderDetailsId, e.target.value)}
-                    defaultValue=""
-                  >
-                    <option value="" disabled>Change status</option>
-                    {statusOptions.map((status) => (
-                      <option key={status} value={status}>
-                        {status.replace(/_/g, ' ')}
-                      </option>
-                    ))}
-                  </select>
-                </div>
                 </div>
                 {expanded[orderId] && (
                 <div className="details">

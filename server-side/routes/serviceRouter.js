@@ -8,5 +8,6 @@ router.post('/add-services', upload.array('photos', 10), serviceController.addSe
 router.get('/fetch-services/:serviceCategoryId', serviceController.fetchServiceDetails)
 router.get('/fetch-services/:serviceCategoryId/:serviceId', serviceController.fetchServiceDetails)
 router.patch('/edit-services/:id/:serviceId', serviceController.editServiceDetails)
+router.get('/fetch-all-category', serviceController.getAllServiceCategory);
 
 module.exports = router

@@ -34,6 +34,23 @@ const findIdByCategoryName = async (name) => {
     }
 }
 
+const findAllServiceCategory = async() => {
+     try{
+        const sql = `select * from service_category`
+
+        return new Promise((resolve, reject) => {
+            db.query(sql,
+                (err, result) => {
+                    if(err) reject(err)
+                        else resolve(result)
+                }
+            )
+        })
+    }catch(err){
+        throw new Error('Database error occurred when fetching service_category.');
+    }
+}
+
 const findNameById = async (id) => {
     try{
         const sql = `select category_name from service_category where id = ?`
@@ -355,5 +372,6 @@ module.exports = {
     fetchFramesDetails,
     photoShootDetailsEditing,
     printingDetailsEditing,
-    frameDetailsEditing
+    frameDetailsEditing,
+    findAllServiceCategory
 }

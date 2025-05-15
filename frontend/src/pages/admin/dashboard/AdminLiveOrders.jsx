@@ -8,8 +8,17 @@ const AdminLiveOrders = () => {
     const [groupedOrders, setGroupedOrders] = useState({});
     const [filteredGroupedOrders, setFilteredGroupedOrders] = useState({});
     const [searchTerm, setSearchTerm] = useState('');
+    const [showDropdown, setShowDropdown] = useState({});
     const [expanded, setExpanded] = useState({});
-
+     const statusOptions = [
+    'processing',
+    'editing',
+    'awaiting_approval',
+    'in_production',
+    'ready_for_delivery',
+    'delivered',
+    'cancelled',
+  ];
       useEffect(() => {
           fetchAllOrderHistory();
       }, []);
@@ -48,6 +57,31 @@ const AdminLiveOrders = () => {
   }
 };
 
+const handleStatusChange = async (orderDetailsId, newStatus) => {
+    console.log("orderdetailsId:",orderDetailsId , newStatus);
+    try {
+      await changeOrderStatus(orderDetailsId, newStatus);
+      alert(`Status changed to ${newStatus}`);
+
+      setGroupedOrders((prev) => {
+        const updated = { ...prev };
+        for (let orderId in updated) {
+          updated[orderId] = updated[orderId].map((item) =>
+            item.orderDetailsId === orderDetailsId
+              ? { ...item, status: newStatus }
+              : item
+          );
+        }
+        return updated;
+      });
+
+      setShowDropdown((prev) => ({ ...prev, [orderDetailsId]: false }));
+    } catch (error) {
+      alert('Failed to change status');
+      console.error(error);
+    }
+  };
+
 const handleSearch = () => {
   const term = searchTerm.trim().toLowerCase();
 
@@ -59,9 +93,16 @@ const handleSearch = () => {
   const filtered = Object.entries(groupedOrders).reduce((acc, [orderId, items]) => {
     const username = items[0].username?.toLowerCase() || '';
     const clientId = items[0].clientId?.toString().toLowerCase() || '';
+    const hasMatchingStatus = items.some(item =>
+      item.status?.toLowerCase().includes(term)
+    );
 
-    // Check if username starts with term OR clientId matches exactly
-    if (username.startsWith(term) || clientId === term) {
+    // Check if username starts with term, clientId matches, or any item's status includes term
+    if (
+      username.startsWith(term) ||
+      clientId === term ||
+      hasMatchingStatus
+    ) {
       acc[orderId] = items;
     }
 
@@ -69,8 +110,9 @@ const handleSearch = () => {
   }, {});
 
   setFilteredGroupedOrders(filtered);
-  setSearchTerm(''); 
+  setSearchTerm('');
 };
+
 
 const handleAllOrder = () => {
   fetchAllOrderHistory();
@@ -114,7 +156,20 @@ const handleAllOrder = () => {
                   </p>
                 </div>
                 <div className="order-status">
-                  <button className="status-btn">{item.status}</button>
+                  <button className="status-btn">{item.status}</button><div className="change-status-container">
+                  <select
+                    className="status-select"
+                    onChange={(e) => handleStatusChange(item.orderDetailsId, e.target.value)}
+                    defaultValue=""
+                  >
+                    <option value="" disabled>Change status</option>
+                    {statusOptions.map((status) => (
+                      <option key={status} value={status}>
+                        {status.replace(/_/g, ' ')}
+                      </option>
+                    ))}
+                  </select>
+                </div>
                 </div>
               </div>))}
             </div>))}
