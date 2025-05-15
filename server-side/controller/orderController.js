@@ -91,6 +91,31 @@ const getOrdersByClientId = async (req, res) => {
     }
 } 
 
+const fetchAllOrderDetails = async(req, res) => {
+    try{
+        const getAllOrderDetails = await orderModel.fetchAllOrderDetails();
+        console.log("getAllOrderDetails:",getAllOrderDetails)
+        const serviceDetails = getAllOrderDetails.map(async item => {
+            const fetchAllServiceDetails = await axios.get(`http://localhost:${PORT}/api/services/fetch-services/${item.serviceCategoryId}/${item.serviceId}`);
+            return{
+                ...item,
+                serviceCategory: fetchAllServiceDetails.data.servicesDetails.serviceCategory,
+                serviceDetails: fetchAllServiceDetails.data.servicesDetails.services[0]
+            }
+        })
+        const enrichedAllOrderDetails = await Promise.all(serviceDetails);
+        res.status(201).json({ 
+            message: "Successfully fetched all order details.",
+            enrichedAllOrderDetails
+        })
+    }catch(err){
+        console.log('Error when fetch all details.', err)
+        return res.status(500).json({
+            message: 'Internal server error. Faild to create client.'
+        })
+    }
+}
+
 const createOrderDelivery = async (req, res) => {
     try{
         const { orderId } = req.params
@@ -169,4 +194,4 @@ const changeStatus = async (req, res) => {
     }
 } 
 
-module.exports = { createOrder, addPhotosForOrders, getOrdersByClientId, createOrderDelivery, fetchDeliveryDetails, changeStatus }
+module.exports = { createOrder, addPhotosForOrders, getOrdersByClientId, createOrderDelivery, fetchDeliveryDetails, changeStatus, fetchAllOrderDetails }

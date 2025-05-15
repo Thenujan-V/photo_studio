@@ -21,7 +21,7 @@ const AdminSidebar = () => {
         <NavLink to="/adminDashboard/customized-photos" className= 'block' >Customized Photos</NavLink>
         <NavLink to="/adminDashboard/live-orders" className= 'block' >Live Orders</NavLink>
         <NavLink to="/adminDashboard/paymentsadminDashboard" className= 'block' >Payment Details</NavLink>
-        <NavLink to="/dashboard/order-history" className= 'block' >Order History</NavLink>
+        <NavLink to="/adminDashboard/order-history" className= 'block' >Order History</NavLink>
         
       </nav>
       <nav className="sidebar-bottom">

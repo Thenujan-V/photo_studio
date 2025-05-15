@@ -33,10 +33,32 @@ export const fetchOrdersByClientId = async (clientId) => {
         return response
     }catch(err){
         throw err
+    }   
+}
+
+export const changeOrderStatus = async(orderDetailsId, newStatus) => {
+    const status = { status :newStatus}
+    if (!orderDetailsId || !newStatus) {
+        throw new Error("Missing required cart data (orderDetailsId, newStatus).");
+    }
+
+    try{
+    const response = await axios.patch(`${API_BASE_URL}/orders/change-status/${orderDetailsId}`, status)
+    return response
+    }catch(err){
+        throw err
+    }
+}
+
+export const fetchAllOrders = async () => {
+    try{
+        const response = await axios.get(`${API_BASE_URL}/orders/get-all-order-details`)
+        return response
+    }catch(err){
+        throw err
     }
     
 }
-
 
 export const clientsUploadPhotos = async (orderDetailsId, formData) => {
     if (!orderDetailsId) {
