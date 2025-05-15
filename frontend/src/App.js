@@ -26,6 +26,7 @@ import Feedbacks from './pages/admin/dashboard/Feedbacks';
 import LiveOrders from './pages/user/user-dashboard/LiveOrders';
 import AdminOrderHistory from './pages/admin/dashboard/AdminOrderHistory';
 import AdminLiveOrders from './pages/admin/dashboard/AdminLiveOrders';
+import AddServices from './pages/admin/dashboard/AddServices';
 
 const Unauthorized = () => <div><h2>Unauthorized - You do not have permission to access this page.</h2></div>;
 
@@ -66,6 +67,7 @@ function App() {
           <Route path="feedbacks" element={<Feedbacks title="View Feddbacks" />} />
           <Route path="order-history" element={<AdminOrderHistory title="All Orders" />} />
           <Route path='live-orders' element={<AdminLiveOrders title="All Live Orders" />} />
+          <Route path='add-services' element={<AddServices title="All Live Orders" />} />
           {/* <Route path="notifications" element={<Notifications title="Notifications" />} /> */}
           {/* <Route path="change-mail" element={<ChangeMail title="Change E-mail" />} /> */}
           {/* <Route path="change-password" element={<ChangePassword title="Change Password" />} /> */}

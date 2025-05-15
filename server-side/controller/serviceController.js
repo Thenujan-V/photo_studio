@@ -25,6 +25,22 @@ const addServiceCategory = async(req, res) => {
 
 }
 
+const getAllServiceCategory = async (req, res) => {
+    try{
+        const serviceCategories = await serviceModel.findAllServiceCategory();
+        console.log("service:",serviceCategories);
+        res.status(201).json({
+                message: 'Service added successfully.',
+                serviceCategories
+            });
+    }catch(err){
+        console.log('Error when fetch serviceCategory.', err)
+            return res.status(500).json({
+                message: 'Internal server error. Faild to create client.'
+            })
+    }
+}
+
 const addServices = async (req, res) => {
     try{
         const serviceCategoryId = req.body.service_category_id
@@ -346,6 +362,6 @@ const editServiceDetails = async(req, res) => {
 
 
 
-module.exports = { addServiceCategory, addServices, fetchServiceDetails, editServiceDetails}
+module.exports = { addServiceCategory, addServices, fetchServiceDetails, editServiceDetails, getAllServiceCategory}
 
 
