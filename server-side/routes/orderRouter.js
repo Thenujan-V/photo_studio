@@ -9,6 +9,7 @@ router.post("/create-order-delivery/:orderId", orderController.createOrderDelive
 router.get("/get-order-details/:clientId", orderController.getOrdersByClientId)
 router.get("/get-delivery-details/:orderId", orderController.fetchDeliveryDetails)
 router.patch("/change-status/:orderDetailsId", orderController.changeStatus)
+router.get("/get-all-order-details",orderController.fetchAllOrderDetails);
 
 
 module.exports = router

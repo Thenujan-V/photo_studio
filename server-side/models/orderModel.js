@@ -76,6 +76,34 @@ const orderFetchByClientId = (clientId) => {
     })
 }
 
+const fetchAllOrderDetails = () => {
+    const sql = `select 
+                    o.id as orderId,
+                    o.client_id as clientId,
+                    c.username,
+                    od.id as orderDetailsId,
+                    od.service_category_id as serviceCategoryId,
+                    od.service_id as serviceId,
+                    od.quantity,
+                    od.status,
+                    od.created_at as createdAt,
+                    JSON_ARRAYAGG(p.file_path) As photosPaths
+                    from orders o 
+                    join order_details od on o.id = od.order_id 
+                    left join client_photos_for_orders p on od.id = p.order_details_id 
+                    left join client c on c.id = o.client_id
+                    group by o.id, o.client_id, od.id, od.service_category_id, od.service_id, od.quantity, od.status, od.created_at, c.username`
+
+    return new Promise((resolve, reject) => {
+        db.query(sql,
+            (err, result) => {
+                if(err) reject(err)
+                    else resolve(result)
+            }
+        )
+    })
+}
+
 const deliveryDetailsCreate = (deliveryDetails, orderId) => {
     const { senderPhoneNumber, receiverName, receiverPhoneNumber, receiverDistrict, receiverCity, receiverStreet } = deliveryDetails
 
@@ -157,5 +185,6 @@ module.exports = {  createOrder,
                     deliveryDetailsCreate, 
                     fetchDetailsForDelivery, 
                     editStatus, 
-                    fetchOrderDeailsById 
+                    fetchOrderDeailsById,
+                    fetchAllOrderDetails
                 }
