@@ -77,8 +77,6 @@ const handleAllOrder = () => {
   setSearchTerm('');
 }
 
-  console.log("groupedOrders:", groupedOrders)
-
   return (
     <div className="live-orders">
       <h2>Live Orders</h2>

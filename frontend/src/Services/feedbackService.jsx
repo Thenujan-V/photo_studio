@@ -3,9 +3,9 @@ import axios from "axios";
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL
 
 
-export const createFeedbacks = async (clientId) => {
+export const createFeedbacks = async (clientId, feedBackForm) => {
     try{
-        const response = await axios.post(`${API_BASE_URL}/feedback/create-feedback/${clientId}`)
+        const response = await axios.post(`${API_BASE_URL}/feedback/create-feedback/${clientId}`, feedBackForm)
         return response
     }catch(err){
         throw err
@@ -23,9 +23,10 @@ export const showAllFeedbacks = async () => {
     
 }
 
-export const sendReplyForFeedback = async (id) => {
+export const sendReplyForFeedback = async (id, replyMsg) => {
+    const msgData = { replyMsg: replyMsg}
     try{
-        const response = await axios.patch(`${API_BASE_URL}/feedback/reply-msg/${id}`)
+        const response = await axios.patch(`${API_BASE_URL}/feedback/reply-msg/${id}`, msgData)
         return response
     }catch(err){
         throw err

@@ -49,6 +49,55 @@ const addClientsPhotosForOrders = (photosData) => {
     })
 }
 
+const addEditedPhotosForOrders = (photosData) => {
+    const { file_paths, orderDetailsId } = photosData
+
+    const values = file_paths.map(file => [orderDetailsId, file])
+
+    const placeHolder = values.map(() => '(?, ?)').join(', ')
+
+    const sql = `insert into edited_photos ( order_details_id, photo_path ) values ${placeHolder}`
+
+    const flattenedValues = values.flat();
+
+    return new Promise((resolve, reject) => {
+        db.query(sql, flattenedValues,
+            (err, result) => {
+                if(err) reject(err)
+                    else resolve(result)
+            }
+        )
+    })
+}
+
+const getEditedPhotos = (orderDetailsId) => {
+    const sql = `select 
+                    o.id as orderId,
+                    o.client_id as clientId,
+                    od.id as orderDetailsId,
+                    od.service_category_id as serviceCategoryId,
+                    od.service_id as serviceId,
+                    od.quantity,
+                    od.status,
+                    od.created_at as createdAt,
+                    JSON_ARRAYAGG(p.file_path) As photosPaths
+                    from orders o 
+                    join order_details od on o.id = od.order_id 
+                    left join client_photos_for_orders p on od.id = p.order_details_id 
+                    where o.client_id = ?
+                    group by o.id, o.client_id, od.id, od.service_category_id, od.service_id, od.quantity, od.status, od.created_at`
+
+    return new Promise((resolve, reject) => {
+        db.query(sql, [clientId],
+            (err, result) => {
+                if(err) reject(err)
+                    else resolve(result)
+            }
+        )
+    })
+}
+
+
 const orderFetchByClientId = (clientId) => {
     const sql = `select 
                     o.id as orderId,
@@ -186,5 +235,6 @@ module.exports = {  createOrder,
                     fetchDetailsForDelivery, 
                     editStatus, 
                     fetchOrderDeailsById,
-                    fetchAllOrderDetails
+                    fetchAllOrderDetails,
+                    addEditedPhotosForOrders
                 }

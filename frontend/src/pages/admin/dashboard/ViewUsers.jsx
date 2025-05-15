@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { Table, Button, Modal, Form } from 'react-bootstrap';
 import { deleteAccount, showAllUsers } from '../../../Services/userService';
 import { triggerNotification } from '../../../Services/notificationService';
+import { sendMailToClient } from '../../../Services/mailService';
 
 
 const ViewUsers = () => {
@@ -42,9 +43,16 @@ const ViewUsers = () => {
     setSelectedUser(user);
     setShowModal(true);
   };
+//   const { to, subject, message }
 
-  const handleSendEmail = () => {
-    alert(`Email sent to ${selectedUser.email}:\n\n${message}`);
+  const handleSendEmail = async (to, subject, msg) => {
+    const mailData = { to: to, subject: subject, message: msg}
+
+    alert(`Email sent to ${to}:\n${msg}`);
+    const sendMail = await sendMailToClient(mailData)
+    if(sendMail.status === 200){
+      triggerNotification("message send successfully.", "success")
+    }
     setShowModal(false);
     setMessage('');
   };
@@ -89,7 +97,7 @@ const ViewUsers = () => {
                   size="sm"
                   onClick={() => handleSendMessage(user)}
                 >
-                  Send Message
+                  Message
                 </Button>
               </td>
             </tr>
@@ -126,7 +134,7 @@ const ViewUsers = () => {
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowModal(false)}>Cancel</Button>
-          <Button variant="success" onClick={handleSendEmail}>Send</Button>
+          <Button variant="success" onClick={() => handleSendEmail(selectedUser?.mail, "genaral mail.", message)}>Send</Button>
         </Modal.Footer>
       </Modal>
     </div>

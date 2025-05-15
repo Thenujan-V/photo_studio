@@ -64,6 +64,28 @@ const addPhotosForOrders = async (req, res) => {
     }
 }
 
+const addEditedPhotos = async (req, res) => {
+    try{
+        const { orderDetailsId } = req.params
+        const files = req.files
+    
+        if (!files || files.length === 0) {
+            return res.status(400).json({ message: 'At least one photo is required.' });
+        }
+    
+        const file_paths = files.map(file => file.filename)
+    
+        const addPhotosResult = await orderModel.addEditedPhotosForOrders({ file_paths, orderDetailsId })
+    
+        res.status(201).json({ message: "successfully photos added.", addPhotosResult})        
+    }catch(err){
+        console.log('Error when save client.', err)
+        return res.status(500).json({
+            message: 'Internal server error. Faild to create client.'
+        })
+    }
+}
+
 const getOrdersByClientId = async (req, res) => {
     try{
         const { clientId } = req.params
@@ -194,4 +216,4 @@ const changeStatus = async (req, res) => {
     }
 } 
 
-module.exports = { createOrder, addPhotosForOrders, getOrdersByClientId, createOrderDelivery, fetchDeliveryDetails, changeStatus, fetchAllOrderDetails }
+module.exports = { createOrder, addPhotosForOrders, getOrdersByClientId, createOrderDelivery, fetchDeliveryDetails, changeStatus, fetchAllOrderDetails, addEditedPhotos }

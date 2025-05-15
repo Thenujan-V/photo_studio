@@ -1,6 +1,7 @@
 const db = require('../config/db')
 
 const feedBackCreate = (feedbackData) => {
+    console.log("fbd :", feedbackData)
     const { feedback, rating, clientId } = feedbackData
 
     const sql = `insert into feedback (feedback, rating, client_id) values (?, ?, ?)`

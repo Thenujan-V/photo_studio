@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import AppNavbar from '../components/Navbar'
 import '../style/Service.scss'
 import professional from "../assets/professional.png"
@@ -11,6 +11,9 @@ import { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar as faStarSolid } from '@fortawesome/free-solid-svg-icons';
 import { faStar as faStarRegular } from '@fortawesome/free-regular-svg-icons';
+import { createFeedbacks } from '../Services/feedbackService'
+import {  decodedToken } from '../Services/getToken '
+import { triggerNotification } from '../Services/notificationService'
 
 
 const Services = () => {
@@ -19,6 +22,13 @@ const Services = () => {
   const [touched, setTouched] = useState({});
   const [ratingNo, setRatingNo] = useState(0);
   const [successMessage, setSuccessMessage] = useState(false);
+  const [clientId, setClientId] = useState('')
+
+  useEffect(() => {
+    const token = decodedToken()
+    setClientId(token?.userId)
+
+  }, [])
 
   const handleChange = (e) => {
     setReview({ ...review, [e.target.name]: e.target.value });
@@ -45,14 +55,21 @@ const Services = () => {
     const errors = validate();
     const isFormValid = !Object.values(errors).some((x) => x);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
       e.preventDefault();
       if (isFormValid) {
-        console.log({ ...review, rating: ratingNo });
-        setSuccessMessage(true);
-        setReview({ name: '', mailId: '', feedback: '' });
-        setTouched({});
-        setRatingNo(0);
+        const feedBackForm = { feedback: review.feedback, rating: ratingNo }
+        const addFeedbackResult = await createFeedbacks(clientId, feedBackForm) 
+        if(addFeedbackResult.status === 201){
+          setSuccessMessage(true);
+          setReview({ name: '', mailId: '', feedback: '' });
+          setTouched({});
+          setRatingNo(0);
+        }
+        else{
+          triggerNotification("Feddback Failed.", "error")
+        }
+        
       } else {
         setTouched({ name: true, mailId: true, feedback: true });
       }
@@ -107,7 +124,7 @@ const Services = () => {
           </div>
         </div>
 
-        <div className="container" id="review">
+        {clientId && <div className="container" id="review">
           <form onSubmit={handleSubmit} className="review-form">
             <h1>Leave a Review</h1>
             {successMessage && (
@@ -174,7 +191,7 @@ const Services = () => {
 
             <button type="submit">Submit</button>
           </form>
-        </div>
+        </div>}
 
         < AppFooter />
     </div>

@@ -17,7 +17,7 @@ const AdminSidebar = () => {
         </div>
         <NavLink to="/adminDashboard/users" className= 'block' >View Users</NavLink>
         <NavLink to="/adminDashboard/inquiry" className= 'block' >Inquiries</NavLink>
-        <NavLink to="/adminDashboard/feedbacks" className= 'block' >Feddbacks</NavLink>
+        <NavLink to="/adminDashboard/feedbacks" className= 'block' >Feedbacks</NavLink>
         <NavLink to="/adminDashboard/customized-photos" className= 'block' >Customized Photos</NavLink>
         <NavLink to="/adminDashboard/live-orders" className= 'block' >Live Orders</NavLink>
         <NavLink to="/adminDashboard/paymentsadminDashboard" className= 'block' >Payment Details</NavLink>
