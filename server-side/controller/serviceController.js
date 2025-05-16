@@ -77,6 +77,7 @@ const addServices = async (req, res) => {
 
         if(categoryName[0].category_name === 'printings'){
             const {printing_name, price, description, service_category_id} = req.body
+            console.log("RES:", req.body)
 
             const existingPrintingName = await serviceModel.findByPrintingName(printing_name)
 

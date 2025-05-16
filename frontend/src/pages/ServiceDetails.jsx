@@ -8,18 +8,22 @@ import { triggerNotification } from '../Services/notificationService';
 import {  decodedToken } from '../Services/getToken ';
 import { fetchServicesByCategoryId } from '../Services/productsService';
 
+
+
 export const ServiceDetails = () => {
     const { categoryId } = useParams();
     const [ StudioServices, setStudioServices ] = useState([])
-    const [serviceCategory, setServiceCategory] = useState("");
+    const [serviceCategory, setServiceCategory] = useState("")
 
+    const REACT_APP_PHOTO_PATH_URL = process.env.REACT_APP_PHOTO_PATH_URL
+    console.log("url :", REACT_APP_PHOTO_PATH_URL)
 
     useEffect(() => {
       const fetchServices = async() => {
         try{
           const servicesResponse = await fetchServicesByCategoryId(categoryId)
-          const { serviceCategory, services } = servicesResponse.data.servicesDetails;
-
+          const { serviceCategory, services } = servicesResponse.data.servicesDetails
+          console.log('ss ', services)
           setStudioServices(services)
           setServiceCategory(serviceCategory)
 
@@ -75,8 +79,8 @@ export const ServiceDetails = () => {
             <div className="services-grid">
                 {StudioServices.map((service, index) => (
                     <div key={index} className="service-card">
-                        <img src={service.photoPaths[0]} alt={service.serviceName} className="service-image" />
-                        <h4>{service.serviceName}</h4>
+                        <img src={`${REACT_APP_PHOTO_PATH_URL}/${service.photoPaths[0]}`} alt={service.serviceName} className="service-image" />
+                        <h4 className='mt-3, fw-bold'>{service.serviceName}</h4>
                         <p>{service.description}</p>
                         {service.material && (
                             <p><strong>Material:</strong> {service.material}</p>
@@ -89,7 +93,7 @@ export const ServiceDetails = () => {
                               <p><strong>Color:</strong> {service.framneColor}</p>
                           )}
                         </div>
-                        <p><strong>Price:</strong> {service.servicePrice}</p>
+                        <p><strong>Price:</strong> LKR {service.servicePrice}</p>
                         <div className="service-buttons">
                             <button className="add-cart-btn" onClick={() => handleAddToCard(service.serviceCategoryId, service.serviceId)}>{ service.serviceCategoryId !== 1 ? 'Add to Cart' : 'Call to Inquiry'}</button>
                             <button className="book-now-btn">View More Details</button>

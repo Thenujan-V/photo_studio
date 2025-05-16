@@ -104,11 +104,14 @@ const AddToCard = () => {
       };
 
       const getSelectedTotal = () => {
+        const selectedIds = selectedItems.map(sel => String(sel.id));
+        
         return items
-          .filter(item => selectedItems.includes(item.cartId))
+          .filter(item => selectedIds.includes(String(item.cartId)))
           .reduce((total, item) => {
-            const numericPrice = parseInt(item.serviceDetails.servicePrice.replace(/[^\d]/g, ''), 10);
-            return total + numericPrice * item.quantity;
+            const priceStr = item.serviceDetails?.servicePrice || '0';
+            const numericPrice = parseInt(priceStr.replace(/[^\d]/g, ''), 10) || 0;
+            return total + numericPrice * (item.quantity || 1);
           }, 0);
       };
     
@@ -154,7 +157,7 @@ const AddToCard = () => {
                     <span>{item.quantity}</span>
                     <button onClick={() => updateQuantity(item.cartId, item.quantity + 1)}>+</button>
                   </div>
-                  <p className="cart-price">{item.serviceDetails.servicePrice}</p>
+                  <p className="cart-price fw-bold text-center">LKR {item.serviceDetails.servicePrice}</p>
                   <p className="cart-total">LKR {totalPrice.toLocaleString()}</p>
                   <FontAwesomeIcon
                   icon={faTrashAlt}

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import '../../../style/AddServices.scss';
 import { fetchserviceCategory, addServices } from '../../../Services/productsService';
+import { triggerNotification } from '../../../Services/notificationService';
 
 const AddServices = () => {
   const [serviceType, setServiceType] = useState('');
@@ -11,12 +12,11 @@ const AddServices = () => {
   useEffect(() => {
     const fetchAllServiceCategory = async () => {
         try {
-        const response = await fetchserviceCategory();
-        const data = response.data.serviceCategories || [];
-        console.log("data: ",data);
-        setServiceCategory(data);
+          const response = await fetchserviceCategory();
+          const data = response.data.serviceCategories || [];
+          setServiceCategory(data);
         }catch(err){
-        console.error(err);
+          console.error(err);
         }}
 
     fetchAllServiceCategory();
@@ -54,12 +54,15 @@ const AddServices = () => {
 
   try {
     const response = await addServices(data);
-    alert(response.data.message);
-    // setFormData('');
-    // setPhotos('');
+    if(response.status === 201){
+      setTimeout(triggerNotification("Successfully added service.", "success"), 5000)
+      window.location.reload()
+      
+    }
+    
   } catch (err) {
     console.error(err);
-    alert(err.response?.data?.message || 'Something went wrong.');
+    triggerNotification(`${err.response?.data?.message}`, "error")
   }
 };
 
