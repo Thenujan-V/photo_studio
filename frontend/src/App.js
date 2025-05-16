@@ -27,6 +27,8 @@ import LiveOrders from './pages/user/user-dashboard/LiveOrders';
 import AdminOrderHistory from './pages/admin/dashboard/AdminOrderHistory';
 import AdminLiveOrders from './pages/admin/dashboard/AdminLiveOrders';
 import AddServices from './pages/admin/dashboard/AddServices';
+import PhotosView from './pages/PhotosView';
+import DisplayInvoice from './pages/user/DisplayInvoice';
 
 const Unauthorized = () => <div><h2>Unauthorized - You do not have permission to access this page.</h2></div>;
 
@@ -41,12 +43,13 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route path="/services" element={<Services />} />
         <Route path="/services/:categoryId" element={<ServiceDetails />} />
+        <Route path="/view-service-photos" element={<PhotosView />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/add-to-cart" element={ <AddToCard /> } />
         <Route path="/confirmOrder" element={ <ConfirmOrder /> } />
-        {/* <Route path="/useraccount" element={ <UserAccount /> } /> */}
+        <Route path="/display-invoice" element={ <DisplayInvoice /> } />
         <Route path="/unauthorized" element={<Unauthorized />} />
 
         <Route path="/dashboard" element={<DashboardLayout title="My Dashboard" />}>

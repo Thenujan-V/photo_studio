@@ -19,9 +19,9 @@ const About = () => {
         <section className="about-hero">
           <h1>Capturing Moments, Creating Memories</h1>
           <p>
-          We turn moments into memories through bold, artistic photography that speaks louder than words.          </p>
+          We turn moments into memories through bold, artistic photography that speaks louder than words.</p>
           <Link to="/services">
-            <button className="btn">Discover Our Services</button>
+            <button className="btn w-100">Discover Our Services</button>
           </Link>
         </section>
 

@@ -19,6 +19,7 @@ const AddToCard = () => {
     const [selectedItems, setSelectedItems] = useState([]);
     const navigate = useNavigate();
     // const { cart_id, service_category_id, service_id, quantity } = item
+    const REACT_APP_PHOTO_PATH_URL = process.env.REACT_APP_PHOTO_PATH_URL
 
     
   
@@ -36,6 +37,10 @@ const AddToCard = () => {
 
     const updateQuantity = async(id, newQty) => {
         if (newQty < 1) return;
+        if (newQty > 3) {
+          triggerNotification("You can update quantity upto 3. If you want more than 3 items contact us via call.", "error")
+          return
+        }
     
         await quantityUpdate(id, newQty)  
           .then(res => {
@@ -114,7 +119,7 @@ const AddToCard = () => {
             return total + numericPrice * (item.quantity || 1);
           }, 0);
       };
-    
+    console.log("it :", items)
       return (
         <>
         <AppNavbar />
@@ -145,7 +150,7 @@ const AddToCard = () => {
                                         item.serviceDetails.servicePrice
                                       )}
                   />
-                  <img src={item.serviceDetails.photoPaths[1]} alt={item.serviceDetails.serviceName} className="cart-img" />
+                  <img src={`${REACT_APP_PHOTO_PATH_URL}/${item.serviceDetails.photoPaths[0]}`} alt={item.serviceDetails.serviceName} className="cart-img rounded shadow-lg" />
                   <div className="cart-details">
                     <p className="cart-name">{item.serviceDetails.serviceName}</p>
                     {item.serviceDetails.color && <p className="cart-color">Color: {item.serviceDetails.color}</p>}

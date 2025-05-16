@@ -270,6 +270,74 @@ const fetchFramesDetails = () => {
     })
 }
 
+const fetchPhotoShootDetailsById = (serviceId) => {
+    const sql = `select 
+        p.id as serviceId, 
+        p.photoshoot_name as serviceName, 
+        p.price as servicePrice, 
+        p.durarion as duration, 
+        p.description as description, 
+        p.created_at as createdAt, 
+        p.service_category_id as serviceCategoryId, 
+        s.service_id as serviceId, 
+        JSON_ARRAYAGG(s.file_path) As photoPaths  
+        from photoshoot p join sample_photos s on p.id = s.service_id where p.id = ? group by p.id`
+
+    return new Promise((resolve, reject) => {
+        db.query(sql, [serviceId],
+            (err, result) => {
+                if(err) reject(err)
+                    else resolve(result)
+            }
+        )
+    })
+}
+
+const fetchPrintingDetailsByServiceId = (serviceId) => {
+    const sql = `select 
+            p.id as serviceId,
+            p.printing_name as serviceName,
+            p.price as servicePrice,
+            p.description as description,
+            p.created_at as createdAt,
+            p.service_category_id as serviceCategoryId,
+            s.service_id as serviceId, 
+            JSON_ARRAYAGG(s.file_path) As photoPaths 
+            from printings p join sample_photos s on p.id = s.service_id where p.id = ? group by p.id`
+
+    return new Promise((resolve, reject) => {
+        db.query(sql, [serviceId],
+            (err, result) => {
+                if(err) reject(err)
+                    else resolve(result)
+            }
+        )
+    })
+}
+
+const fetchFramesDetailsByServiceId = (serviceId) => {
+    const sql = `select 
+            f.id as serviceId,
+            f.material_name as serviceName,
+            f.service_category_id as serviceCategoryId,
+            f.size as frameSize,
+            f.color as framneColor,
+            f.price as servicePrice,
+            f.description as description,
+            f.created_at as createdAt, 
+            JSON_ARRAYAGG(s.file_path) As photoPaths 
+            from frames f join sample_photos s on f.id = s.service_id where f.id = ? group by f.id`
+
+    return new Promise((resolve, reject) => {
+        db.query(sql,[serviceId],  
+            (err, result) => {
+                if(err) reject(err)
+                    else resolve(result)
+            }
+        )
+    })
+}
+
 const photoShootDetailsEditing = (id, updatedFields) => {
     const setClauses = [];
     const values = [];
@@ -373,5 +441,8 @@ module.exports = {
     photoShootDetailsEditing,
     printingDetailsEditing,
     frameDetailsEditing,
-    findAllServiceCategory
+    findAllServiceCategory,
+    fetchPhotoShootDetailsById,
+    fetchFramesDetailsByServiceId,
+    fetchPrintingDetailsByServiceId
 }

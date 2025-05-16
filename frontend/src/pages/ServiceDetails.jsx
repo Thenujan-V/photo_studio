@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import '../style/ServiceDetails.scss';
 import AppNavbar from '../components/Navbar';
 import AppFooter from '../components/footer'
@@ -14,9 +14,9 @@ export const ServiceDetails = () => {
     const { categoryId } = useParams();
     const [ StudioServices, setStudioServices ] = useState([])
     const [serviceCategory, setServiceCategory] = useState("")
+    const navigate = useNavigate()
 
     const REACT_APP_PHOTO_PATH_URL = process.env.REACT_APP_PHOTO_PATH_URL
-    console.log("url :", REACT_APP_PHOTO_PATH_URL)
 
     useEffect(() => {
       const fetchServices = async() => {
@@ -35,19 +35,20 @@ export const ServiceDetails = () => {
       if(categoryId){
         fetchServices()
       }
+      else{
+        setStudioServices([])
+        setServiceCategory("")
+
+      }
     }, [categoryId])
 
 
     const handleAddToCard = async(categoryId, serviceId) =>  {
-      if(categoryId === 1){
-        window.location.href = 'tel:0705054846'
-      }
+      console.log(categoryId, serviceId)
       try{
         const tokenDecode = decodedToken()
         const cartItem = { clientId: tokenDecode.userId, categoryId, serviceId} 
-
         const addToCart = await createCartItems(cartItem)
-        console.log("add :", addToCart)
         if(addToCart.status === 201){
           triggerNotification("successfully added into cart.", "success")
         }else if(addToCart.status === 400){
@@ -67,6 +68,11 @@ export const ServiceDetails = () => {
       }
     }
 
+    const viewPhotosOfService = (serviceName, description, photoPaths) => {
+      console.log(serviceName, description, photoPaths)
+      navigate('/view-service-photos', { state: { serviceName, description, photoPaths}})
+    }
+
   return (
     <>
         <AppNavbar />
@@ -74,14 +80,14 @@ export const ServiceDetails = () => {
             <h1>Timeless Photography & Stunning Visual Creations</h1>
             <p>We specialize in professional photography, videography, high-quality photo printing, and custom framing to bring your stories to life.</p>
         </section>
-        <div className="details-container">
-            <h1>{serviceCategory} Services</h1>
-            <div className="services-grid">
-                {StudioServices.map((service, index) => (
-                    <div key={index} className="service-card">
+        <div className="container details-container">
+            <h1>{serviceCategory? `${serviceCategory} Services` : `Services`}</h1>
+            <div className="services-grid row">
+                {StudioServices.length !== 0 ? (StudioServices.map((service, index) => (
+                    <div key={index} className="service-card col-lg-3 col-md-4 col-6">
                         <img src={`${REACT_APP_PHOTO_PATH_URL}/${service.photoPaths[0]}`} alt={service.serviceName} className="service-image" />
-                        <h4 className='mt-3, fw-bold'>{service.serviceName}</h4>
-                        <p>{service.description}</p>
+                        <h4 className='mt-3'>{service.serviceName}</h4>
+                        <p className='description'>{service.description}</p>
                         {service.material && (
                             <p><strong>Material:</strong> {service.material}</p>
                         )}
@@ -95,14 +101,20 @@ export const ServiceDetails = () => {
                         </div>
                         <p><strong>Price:</strong> LKR {service.servicePrice}</p>
                         <div className="service-buttons">
-                            <button className="add-cart-btn" onClick={() => handleAddToCard(service.serviceCategoryId, service.serviceId)}>{ service.serviceCategoryId !== 1 ? 'Add to Cart' : 'Call to Inquiry'}</button>
-                            <button className="book-now-btn">View More Details</button>
-                        <a href={service.image} target="_blank" rel="noreferrer" className="view-photo-btn">
+                            {service.serviceCategoryId !== 1 ?
+                              (<button className="add-cart-btn w-75" onClick={() => handleAddToCard(service.serviceCategoryId, service.serviceId)}>
+                                Add to Cart
+                              </button>):
+                              (<button className="add-cart-btn w-75" onClick={() => window.open('https://wa.me/1234567890', '_blank')}>
+                                Call To Inquiry
+                              </button>)
+                            }
+                        <button onClick={() => viewPhotosOfService(service.serviceName, service.description, service.photoPaths)} rel="noreferrer" className="view-photo-btn fw-bold w-75">
                             View Photo
-                        </a>
+                        </button>
                     </div>
                 </div>
-                ))}
+                ))): <p className='text-center'>There are no services available in this service category!</p> }
             </div>
         </div>
         < AppFooter />

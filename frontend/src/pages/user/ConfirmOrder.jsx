@@ -27,7 +27,9 @@ const ConfirmOrder = () => {
   });
   const [paymentMethod, setPaymentMethod] = useState('cash');
   const [paymentData, setPaymentData] = useState('')
+  const [isSubmitted, setIsSubmitted] = useState(false)
   const navigate = useNavigate();
+  const REACT_APP_PHOTO_PATH_URL = process.env.REACT_APP_PHOTO_PATH_URL
 
 
   const token = decodedToken()
@@ -63,12 +65,7 @@ const ConfirmOrder = () => {
   
 
   const handleUpload = async (orderDetailsId, index) => {
-    // console.log("oid :", orderDetailsId)
     const filesToUpload = uploadedPhotos[index];
-    // console.log("inde :", filesToUpload)
-
-    // const [selectedDistrict, setSelectedDistrict] = useState('');
-
   
     if (!filesToUpload || filesToUpload.length === 0) {
       triggerNotification("No files selected to upload.");
@@ -90,6 +87,7 @@ const ConfirmOrder = () => {
       console.log("responnn :", response)
       if (response.status !== 201) throw new Error("Upload failed.");
       triggerNotification("Images uploaded successfully!", "success");
+      setIsSubmitted(true)
 
     } catch (error) {
       console.error("Error uploading images:", error);
@@ -142,11 +140,22 @@ const ConfirmOrder = () => {
           triggerNotification("Name must contain only letters and spaces.", "error");
           return;
         }
+        if(/^\d+$/.test(deliveryInfo.receiver_address_city)){
+          triggerNotification("City cannot contain only numbers.", "error");
+          return;
+        }
+        if(/^\d+$/.test(deliveryInfo.receiver_address_street)){
+          triggerNotification("Street cannot contain only numbers.", "error");
+          return;
+        }
       }
+      return true
   };
 
-  const handleSubmit = async() => {
-    validations()
+  const handleSubmit = async(paymentData) => {
+    if(!validations()){
+      return
+    }
     const deliveryDetails = { senderPhoneNumber: deliveryInfo.sender_phone_number,
                               receiverName: deliveryInfo.receiver_name, 
                               receiverPhoneNumber: deliveryInfo.receiver_phone_number, 
@@ -155,22 +164,23 @@ const ConfirmOrder = () => {
                               receiverStreet: deliveryInfo.receiver_address_street
                             }
 
-    const totalAmount = getTotalAmount()
 
     try{
       const deliveryDetailsSave = await createOrderDelivery(orderId, deliveryDetails)
       if(deliveryDetailsSave.status === 201){
         triggerNotification("Sccessfully saved delivery details.", "Success")
-        
-    if(paymentMethod === 'Cash'){
-      setPaymentData({ orderId, clientId, totalAmount, paymentMethod, status: 'processing'})
-      const placeOrder = await createPayment(paymentData)
-        if(placeOrder.status === 201){
-          triggerNotification("Sccessfully Place Order.", "Success")
-          navigate('/invoice', { state: {selectedItems, orderId} })
-          
+        if(paymentData.paymentMethod === 'Card'){
+              navigate('/display-invoice', { state: {orderDetails, paymentMethod, deliveryDetails} })
         }
-    } 
+      
+        if(paymentData.paymentMethod === 'Cash'){
+          const placeOrder = await createPayment(paymentData)
+          console.log(placeOrder)
+            if(placeOrder.status === 201){
+              triggerNotification("Sccessfully Place Order.", "Success")
+              navigate('/display-invoice', { state: {orderDetails, paymentMethod: 'Card', deliveryDetails} })
+            }
+        } 
       }
       else{
         triggerNotification("Something went wrong when save delivbery detailsl. Try again.", "error")
@@ -180,14 +190,13 @@ const ConfirmOrder = () => {
     }
   }
 
-    const handlePaymentResult = (success) => {
+  const handlePalaceOrder = () => {
     const totalAmount = getTotalAmount()
-    if (success) {
-    } else {
+    const paymentPayload  = { orderId, clientId, totalAmount, paymentMethod, status: 'processing'}
+    setPaymentData(paymentPayload)
+    handleSubmit(paymentPayload)
 
-    } 
-    setIsPayment(false);
-    };
+  }
 
   return (
     <>
@@ -198,8 +207,8 @@ const ConfirmOrder = () => {
         <div className="selected-items-scroll">
         {orderDetails && orderDetails.map((item, index) => (
           <div className="selected-item" key={item.orderDetailsId}>
-            <img src={item.serviceDetails.photoPaths[1]} alt={item.serviceDetails.serviceName} />
-            <div>
+            <img src={`${REACT_APP_PHOTO_PATH_URL}/${item.serviceDetails.photoPaths[0]}`} alt={item.serviceDetails.serviceName} />
+            <div> 
               <p><strong>{item.serviceDetails.serviceName}</strong></p>
               <p>{item.serviceDetails.description}</p>
               {item.serviceDetails.color && <p className="cart-color">Color: {item.serviceDetails.color}</p>}
@@ -226,7 +235,7 @@ const ConfirmOrder = () => {
                           }}
                       />
                       <p>{uploadedPhotos[index]?.length || 0} file(s) selected</p>
-                      <button className="submit-btn" onClick={() => handleUpload(item.orderDetailsId, index)}>Upload</button>
+                      <button className="submit-btn" onClick={() => handleUpload(item.orderDetailsId, index)} disabled={isSubmitted}>Upload</button>
                     </div>
                 )}
             </div>
@@ -276,7 +285,11 @@ const ConfirmOrder = () => {
           </label>
         </div>
 
-        <button className="submit-btn" onClick={handleSubmit}>Place Order</button>
+        <button 
+          className="submit-btn" 
+          onClick={handlePalaceOrder}>
+          Place Order
+        </button>
       </div>
     </div>
     <AppFooter />

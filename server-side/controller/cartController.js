@@ -35,8 +35,9 @@ const getFromCart = async(req, res) => {
             return res.status(204).json({message: "cart is empty."})
         }
 
-        const cartDataWithService = cartDetails.map(async item => {
+        const cartDataWithService = cartDetails.map(async (item, index) => {
             const fetchServiceDetails = await axios.get(`http://localhost:${PORT}/api/services/fetch-services/${item.serviceCategoryId}/${item.serviceId}`);
+            // console.log(`${index}`,fetchServiceDetails.data)
             return{
                 ...item,
                 serviceCategory: fetchServiceDetails.data.servicesDetails.serviceCategory,
@@ -44,7 +45,6 @@ const getFromCart = async(req, res) => {
             }
         })
         const enrichedCartDetails = await Promise.all(cartDataWithService);
-         
         res.status(200).json({message: "Successfully fetched.", enrichedCartDetails})
 
     }catch(err){

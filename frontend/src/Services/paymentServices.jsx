@@ -4,7 +4,6 @@ const API_BASE_URL = process.env.REACT_APP_API_BASE_URL
 
 export const createPayment = async (formData) => {
     const { orderId, clientId, totalAmount, paymentMethod, status } = formData
-    
     if (!clientId || !orderId || !totalAmount || !paymentMethod || !status) {
         throw new Error("Missing required payment data.");
     }

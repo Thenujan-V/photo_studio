@@ -205,6 +205,56 @@ const fetchServiceDetails = async(req, res) => {
     }
 }
 
+const fetchServiceDetailsByServiceId = async(req, res) => {
+    try{
+        const { serviceCategoryId, serviceId } = req.params
+
+        const categoryName = await serviceModel.findNameById(serviceCategoryId)
+
+        if(categoryName?.length > 0 && categoryName[0]?.category_name === 'photosoot' ){
+            const services = await serviceModel.fetchPhotoShootDetailsByServiceId(serviceId)
+            if(services.length === 0){
+                return res.status(204).json({message: "there is no services."})
+            }
+            const servicesDetails = {
+                serviceCategory: "photoshoot",
+                services
+            }
+            
+            res.status(200).json({message: "successfully fetched.", servicesDetails})
+        }
+        if(categoryName?.length > 0 && categoryName[0]?.category_name === 'printings' ){
+            const services = await serviceModel.fetchPrintingDetailsByServiceId(serviceId)
+            if(services.length === 0){
+                return res.status(204).json({message: "there is no services."})
+            }
+            const servicesDetails = {
+                serviceCategory: "printings",
+                services
+            }
+    
+            res.status(200).json({message: "successfully fetched.", servicesDetails})
+        }
+        if(categoryName?.length > 0 && categoryName[0]?.category_name === 'frame making' ){
+            const services = await serviceModel.fetchFramesDetailsByServiceId(serviceId)
+            if(services.length === 0){
+                return res.status(204).json({message: "there is no services."})
+            }
+            const servicesDetails = {
+                serviceCategory: "frame making",
+                services
+            }
+    
+            res.status(200).json({message: "successfully fetched.", servicesDetails})
+        }
+
+        
+    }catch(err){
+        console.log("Error when fetch all services", err)
+        res.status(500).json({message: "Internal server error."})
+    }
+}
+
 const editServiceDetails = async(req, res) => {
     try{
         const { id, serviceId } = req.params
@@ -363,6 +413,6 @@ const editServiceDetails = async(req, res) => {
 
 
 
-module.exports = { addServiceCategory, addServices, fetchServiceDetails, editServiceDetails, getAllServiceCategory}
+module.exports = { addServiceCategory, addServices, fetchServiceDetails, editServiceDetails, getAllServiceCategory, fetchServiceDetailsByServiceId}
 
 
