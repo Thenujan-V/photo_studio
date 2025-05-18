@@ -1,42 +1,42 @@
-import React, { useEffect, useState } from 'react'
-import { Table, Button, Modal, Form } from 'react-bootstrap';
-import { getInquiry } from '../../../Services/inquiryService';
-import { all } from 'axios';
-import { triggerNotification } from '../../../Services/notificationService';
-import { sendMailToClient } from '../../../Services/mailService';
+import React, { useEffect, useState } from "react";
+import { Table, Button, Modal, Form } from "react-bootstrap";
+import { getInquiry } from "../../../Services/inquiryService";
+import { all } from "axios";
+import { triggerNotification } from "../../../Services/notificationService";
+import { sendMailToClient } from "../../../Services/mailService";
 
 const Inquiry = () => {
-    const [inquiry, setInquiry] = useState([]);
-    const [showModal, setShowModal] = useState(false);
-    const [selectedItem, setSelectedItem] = useState(null);
-    const [message, setMessage] = useState('');
+  const [inquiry, setInquiry] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [message, setMessage] = useState("");
 
-    useEffect(() => {
-        const fetchAllInquiry = async () => {
-            const allInquiry = await getInquiry()
-            setInquiry(allInquiry.data.fetchInquiryResult)
-            console.log("ins : ", allInquiry.data.fetchInquiryResult)
-        }
+  useEffect(() => {
+    const fetchAllInquiry = async () => {
+      const allInquiry = await getInquiry();
+      setInquiry(allInquiry.data.fetchInquiryResult);
+      console.log("ins : ", allInquiry.data.fetchInquiryResult);
+    };
 
-        fetchAllInquiry()
-    }, [])
+    fetchAllInquiry();
+  }, []);
 
-    const handleSendMessage = (user) => {
+  const handleSendMessage = (user) => {
     setSelectedItem(user);
     setShowModal(true);
-    };
+  };
 
-    const handleSendEmail = async (to, subject, msg) => {
-      const mailData = { to: to, subject: subject, message: msg}
-  
-      alert(`Email sent to ${to}:\n${msg}`);
-      const sendMail = await sendMailToClient(mailData)
-      if(sendMail.status === 200){
-        triggerNotification("message send successfully.", "success")
-      }
-      setShowModal(false);
-      setMessage('');
-    };
+  const handleSendEmail = async (to, subject, msg) => {
+    const mailData = { to: to, subject: subject, message: msg };
+
+    alert(`Email sent to ${to}:\n${msg}`);
+    const sendMail = await sendMailToClient(mailData);
+    if (sendMail.status === 200) {
+      triggerNotification("message send successfully.", "success");
+    }
+    setShowModal(false);
+    setMessage("");
+  };
 
   return (
     <div className="container mt-1">
@@ -53,8 +53,7 @@ const Inquiry = () => {
           </tr>
         </thead>
         <tbody>
-          {inquiry
-            .map(item => (
+          {inquiry.map((item) => (
             <tr key={item.id}>
               <td>{item.id}</td>
               <td>{item.user_name}</td>
@@ -88,27 +87,39 @@ const Inquiry = () => {
                 rows={4}
                 value={selectedItem?.mail}
                 readOnly
-                style={{ height: '40px' }}
+                style={{ height: "40px" }}
               />
-              <Form.Label style={{marginTop: '10px'}}>Message</Form.Label>
+              <Form.Label style={{ marginTop: "10px" }}>Message</Form.Label>
               <Form.Control
                 as="textarea"
                 rows={4}
                 value={message}
-                onChange={e => setMessage(e.target.value)}
+                onChange={(e) => setMessage(e.target.value)}
                 placeholder="Type your message here..."
-                
               />
             </Form.Group>
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowModal(false)}>Cancel</Button>
-          <Button variant="success" onClick={() => handleSendEmail(selectedItem?.mail, "Reply for your inquiry.", message)}>Send</Button>
+          <Button variant="secondary" onClick={() => setShowModal(false)}>
+            Cancel
+          </Button>
+          <Button
+            variant="success"
+            onClick={() =>
+              handleSendEmail(
+                selectedItem?.mail,
+                "Reply for your inquiry.",
+                message
+              )
+            }
+          >
+            Send
+          </Button>
         </Modal.Footer>
       </Modal>
     </div>
-  )
-}
+  );
+};
 
-export default Inquiry
+export default Inquiry;

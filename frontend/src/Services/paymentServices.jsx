@@ -39,9 +39,10 @@ export const getAllPayments = async () => {
     
 }
 
-export const updateStatus = async (paymentId, status) => {
+export const updateStatus = async (paymentId, newStatus) => {
+    const status = {status: newStatus}
     try{
-        const response = await axios.post(`${API_BASE_URL}/payment//status-update/${paymentId}`, status,
+        const response = await axios.patch(`${API_BASE_URL}/payment/status-update/${paymentId}`, status,
             {
                 headers: {
                     'Content-Type': 'application/json'

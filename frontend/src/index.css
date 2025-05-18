@@ -27,11 +27,11 @@ code {
 }
 .editing{
   width: auto !important;
-  background-color: rgb(83, 188, 153) !important;
+  background-color: rgb(24, 107, 124) !important;
 }
 .awaiting_approval{
   width: auto !important;
-  background-color: rgb(10, 190, 187) !important;
+  background-color: rgb(119, 15, 171) !important;
 }
 .reediting{
   width: auto !important;
@@ -56,4 +56,52 @@ code {
 .cancelled{
   width: auto !important;
   background-color: rgb(225, 37, 37) !important;
+}
+
+
+.status-tag-processing{
+  width: auto !important;
+  color: rgb(83, 188, 153) !important;
+}
+.status-tag-editing{
+  width: auto !important;
+  color: rgb(24, 107, 124) !important;
+}
+.status-tag-awaiting_approval{
+  width: auto !important;
+  color: rgb(119, 15, 171) !important;
+}
+.status-tag-reediting{
+  width: auto !important;
+  color: rgb(16, 6, 97) !important;
+}
+.status-tag-approved{
+  width: auto !important;
+  color: rgb(200, 239, 27) !important;
+}
+.status-tag-in_production{
+  width: auto !important;
+  color: rgb(194, 48, 148) !important;
+}
+.status-tag-ready_for_delivery{
+  width: auto !important;
+  color: rgb(226, 220, 49) !important;
+}
+.status-tag-delivered{
+  width: auto !important;
+  color: rgb(30, 200, 47) !important;
+}
+.status-tag-cancelled{
+  width: auto !important;
+  color: rgb(225, 37, 37) !important;
+}
+
+.payment-status-tag-processing{
+  width: auto !important;
+  color: rgb(188, 83, 125) !important;
+}
+
+.payment-status-tag-complete{
+  width: auto !important;
+  color: rgb(1, 255, 145) !important;
 }

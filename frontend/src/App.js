@@ -30,6 +30,7 @@ import AddServices from './pages/admin/dashboard/AddServices';
 import PhotosView from './pages/PhotosView';
 import DisplayInvoice from './pages/user/DisplayInvoice';
 import EditServices from './pages/admin/dashboard/EditServices';
+import PaymentDetails from './pages/admin/dashboard/PaymentDetails';
 
 const Unauthorized = () => <div><h2>Unauthorized - You do not have permission to access this page.</h2></div>;
 
@@ -66,13 +67,14 @@ function App() {
 
         <Route path="/adminDashboard" element={<AdminDashboardLayout title="Admin Dashboard" />}>
           <Route path="users" element={<ViewUsers title="View Users" />} />
-          {/* <Route index element={<Navigate to="profile" replace />} /> */}
+          <Route index element={<Navigate to="users" replace />} />
           <Route path="inquiry" element={<Inquiry title="View Inquiry" />} />
           <Route path="feedbacks" element={<Feedbacks title="View Feddbacks" />} />
           <Route path="order-history" element={<AdminOrderHistory title="All Orders" />} />
           <Route path='live-orders' element={<AdminLiveOrders title="All Live Orders" />} />
           <Route path='add-services' element={<AddServices title="All Live Orders" />} />
           <Route path="edit-services" element={<EditServices title="Edit Services" />} />
+          <Route path="payments-details" element={<PaymentDetails title="Payments Details" />} />
           {/* <Route path="logout" element={<Logout title="Logout" />} />  */}
         </Route>
 

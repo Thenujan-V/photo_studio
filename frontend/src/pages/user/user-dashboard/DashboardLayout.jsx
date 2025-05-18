@@ -1,31 +1,30 @@
-import React from 'react'
-import Headers from './Header'
-import Sidebar from './Sidebar'
-import { Outlet } from 'react-router-dom'
-import Navbar from '../../../components/Navbar'
-import '../../../style/dashboardLayout.scss'
-import AppFooter from "../../../components/footer"
+import React from "react";
+import Headers from "./Header";
+import Sidebar from "./Sidebar";
+import { Outlet } from "react-router-dom";
+import Navbar from "../../../components/Navbar";
+import "../../../style/dashboardLayout.scss";
+import AppFooter from "../../../components/footer";
 
 const DashboardLayout = ({ title }) => {
   return (
     <div className="layout">
-        <Navbar />
-        <Headers title={title}/>
+      <Navbar />
+      <Headers title={title} />
 
-        <div className="dashboard">
-            <div className="side">
-                <Sidebar />
-            </div>
-
-            <div className="content">
-                <Outlet />
-            </div>
+      <div className="dashboard">
+        <div className="side">
+          <Sidebar />
         </div>
 
-        <AppFooter />
+        <div className="content">
+          <Outlet />
+        </div>
+      </div>
 
+      <AppFooter />
     </div>
-  )
-}
+  );
+};
 
-export default DashboardLayout
+export default DashboardLayout;

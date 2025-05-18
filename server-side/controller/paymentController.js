@@ -60,22 +60,21 @@ const fetchAllDetails = (req, res) => {
 
 const updateStatus = async(req, res) => {
     try{
-        const {status} = req.data
+        const {status} = req.body
+        const { paymentId } = req.params
         const validStatusCode = ['processing', 'parcial_payment', 'complete', 'failed']
         const isValidStatusCode = (method) => {
             return validStatusCode.includes(method)
         }
-        if(isValidStatusCode(status)){
+        if(!isValidStatusCode(status)){
             return res.status(400).json( {message: "bad request."})
         }
 
-        const paymentDetails = await paymentModel.getPaymentDetails()
-        if(paymentDetails === null){
-            return res.status(404).json({message: "There are no datails."})
-        }
+        const updatedResult = await paymentModel.setPaymentStatus(paymentId, status)
+        
         return res.status(200).json({
                 message: 'Status update successfully.',
-                paymentDetails
+                updatedResult
             })
 
     }catch(err){

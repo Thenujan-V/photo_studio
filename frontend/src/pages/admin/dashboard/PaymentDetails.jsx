@@ -9,8 +9,9 @@ import { faUserAlt, faSearch } from "@fortawesome/free-solid-svg-icons";
 import "../../../style/AdminOrderHistory.scss";
 import { triggerNotification } from "../../../Services/notificationService";
 import { fetchInvoice } from "../../../Services/invoiceService";
+import { updateStatus } from "../../../Services/paymentServices";
 
-const AdminOrderHistory = () => {
+const PaymentDetails = () => {
   const orderStatuses = [
     "All",
     "processing",
@@ -28,9 +29,11 @@ const AdminOrderHistory = () => {
   const [filteredGroupedOrders, setFilteredGroupedOrders] = useState({});
   const [searchTerm, setSearchTerm] = useState("");
   const [expanded, setExpanded] = useState({});
+  const [expandedPaymentDetails, setExpandedPaymentDetails] = useState({});
   const [filePath, setFilePath] = useState("");
   const navigate = useNavigate();
   const [selectedStatus, setSelectedStatus] = useState("All");
+  const [selectedPaymentStatus, setSelectedPaymentStatus] = useState("");
 
   const URLForPhotoPath = process.env.REACT_APP_PHOTO_PATH_URL;
 
@@ -60,6 +63,13 @@ const AdminOrderHistory = () => {
 
   const toggleDetails = (orderId) => {
     setExpanded((prev) => ({ ...prev, [orderId]: !prev[orderId] }));
+  };
+
+  const togglePaymentDetails = (orderId) => {
+    setExpandedPaymentDetails((prev) => ({
+      ...prev,
+      [orderId]: !prev[orderId],
+    }));
   };
 
   const handleKeyDown = (e) => {
@@ -133,6 +143,23 @@ const AdminOrderHistory = () => {
     }
   };
 
+  const handleChangePaymentStatus = async (paymentId, status) => {
+    try {
+      alert("Are sure want to change payment status to complete");
+      const paymentStatusChangeResult = await updateStatus(paymentId, status);
+      if (paymentStatusChangeResult.status == 200) {
+        triggerNotification("Payment complete.", "success");
+      } else {
+        console.log(
+          "error occur in payment status change.",
+          paymentStatusChangeResult
+        );
+        triggerNotification("Payment Failed.", "error");
+      }
+    } catch (err) {
+      console.log("error when change payment status.", err);
+    }
+  };
   return (
     <div className="order-history-container">
       <h2>Order History</h2>
@@ -212,6 +239,19 @@ const AdminOrderHistory = () => {
                   </button>
                 </div>
               </div>
+              <div className="buttons d-flex justify-content-between">
+                <button onClick={() => toggleDetails(orderId)}>
+                  {expanded[orderId] ? "Hide Details" : "Show Details"}
+                </button>
+                <button
+                  className="w-auto"
+                  onClick={() => togglePaymentDetails(orderId)}
+                >
+                  {expandedPaymentDetails[orderId]
+                    ? "Hide Details"
+                    : "Payment Details"}
+                </button>
+              </div>
 
               {items
                 .filter((item) => {
@@ -222,61 +262,103 @@ const AdminOrderHistory = () => {
                 .sort((a, b) => b.orderDetailsId - a.orderDetailsId)
                 .map((item, index) => (
                   <div key={item.orderDetailsId}>
-                    <div className="order-item">
-                      <div className="item-left">
-                        <img
-                          src={`${URLForPhotoPath}/${
-                            item.photosPaths[0] ||
-                            item.serviceDetails.photoPaths[0]
-                          }`}
-                          alt="Service"
-                          className="service-img"
-                        />
-                      </div>
-                      <div className="item-right">
-                        <p
-                          className={`m-0 p-0 fw-bold status-tag-${item.status}`}
-                        >
-                          {item.status}
-                        </p>
-                        <p>
-                          <strong>Service:</strong>{" "}
-                          {item.serviceDetails?.serviceName}
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="buttons">
-                      <button onClick={() => toggleDetails(orderId)}>
-                        {expanded[orderId] ? "Hide Details" : "Show Details"}
-                      </button>
-                    </div>
                     {expanded[orderId] && (
-                      <div className="details">
-                        <p>
-                          <strong>Category:</strong> {item.serviceCategory}
-                        </p>
-                        <p>
-                          <strong>Quantity:</strong> {item.quantity}
-                        </p>
-                        <p>
-                          <strong>Price:</strong> Rs.{" "}
-                          {item.serviceDetails?.servicePrice * item.quantity}
-                        </p>
-                        {item.color && (
-                          <p>
-                            <strong>Color:</strong> {item.color}
+                      <div className="details d-flex flex-row gap-4">
+                        <div className="order-item">
+                          <div className="item-left">
+                            <img
+                              src={`${URLForPhotoPath}/${
+                                item.photosPaths[0] ||
+                                item.serviceDetails.photoPaths[0]
+                              }`}
+                              alt="Service"
+                              className="service-img"
+                            />
+                            <p className="p-0 m-0 w-75">
+                              <strong>
+                                {item.serviceDetails?.serviceName}
+                              </strong>
+                            </p>
+                          </div>
+                        </div>
+                        <div>
+                          <p
+                            className={`m-0 p-0 fw-bold status-tag-${item.status}`}
+                          >
+                            {item.status}
                           </p>
-                        )}
-                        {item.size && (
-                          <p>
-                            <strong>Size:</strong> {item.size}
+                          <p className="m-0 p-0">
+                            <strong>Quantity:</strong> {item.quantity}
                           </p>
+                          <p className="m-0 p-0">
+                            <strong>Price:</strong> Rs.{" "}
+                            {item.serviceDetails?.servicePrice}
+                          </p>
+                          <p className="m-0 p-0">
+                            <strong>Total:</strong> Rs.{" "}
+                            {item.serviceDetails?.servicePrice} *{" "}
+                            {item.quantity} ={" "}
+                            {item.serviceDetails?.servicePrice * item.quantity}
+                            /=
+                          </p>
+                          {item.color && (
+                            <p className="m-0 p-0">
+                              <strong>Color:</strong> {item.color}
+                            </p>
+                          )}
+                          {item.size && (
+                            <p className="m-0 p-0">
+                              <strong>Size:</strong> {item.size}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                    {expandedPaymentDetails[orderId] && index === 0 && (
+                      <div className="d-flex gap-5">
+                        <div className="flex-1 m-0 p-0">
+                          <p className="p-0 m-0">
+                            <strong>Payment Status: </strong>
+                            <span
+                              className={`m-0 p-0 fw-bold payment-status-tag-${item.paymentStatus}`}
+                            >
+                              {item.paymentStatus}
+                            </span>
+                          </p>
+                          <p className="m-0 p-0">
+                            <strong>Total Amount:</strong> {item.totalAmount}
+                          </p>
+                          <p className="m-0 p-0">
+                            <strong>Payment Method:</strong>{" "}
+                            {item.paymentMethod}
+                          </p>
+                        </div>
+                        {item.paymentStatus !== "complete" && (
+                          <div
+                            className="flex-1 rounded borderd shadow p-2 justify-self-center align-self-center d-flex flex-column align-items-center"
+                            style={{ backgroundColor: "#f0ecec" }}
+                          >
+                            <p
+                              className="text-center fw-bold"
+                              style={{ color: "#bd2752" }}
+                            >
+                              click here to update payment status to complete
+                            </p>
+                            <button
+                              onClick={() =>
+                                handleChangePaymentStatus(
+                                  item.paymentId,
+                                  "complete"
+                                )
+                              }
+                              style={{
+                                backgroundColor: "#bd2752",
+                              }}
+                            >
+                              Complete
+                            </button>
+                          </div>
                         )}
-                        <p>
-                          <strong>Description:</strong>{" "}
-                          {item.serviceDetails?.description}
-                        </p>
                       </div>
                     )}
                   </div>
@@ -288,4 +370,4 @@ const AdminOrderHistory = () => {
   );
 };
 
-export default AdminOrderHistory;
+export default PaymentDetails;
