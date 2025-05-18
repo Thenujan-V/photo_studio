@@ -44,9 +44,11 @@ export const ServiceDetails = () => {
 
 
     const handleAddToCard = async(categoryId, serviceId) =>  {
-      console.log(categoryId, serviceId)
+      const tokenDecode = decodedToken()
+      if(!tokenDecode?.userId){
+        triggerNotification("You want to login first.")
+      }
       try{
-        const tokenDecode = decodedToken()
         const cartItem = { clientId: tokenDecode.userId, categoryId, serviceId} 
         const addToCart = await createCartItems(cartItem)
         if(addToCart.status === 201){

@@ -136,12 +136,17 @@ const fetchAllOrderDetails = () => {
                     od.quantity,
                     od.status,
                     od.created_at as createdAt,
+                    pd.id as paymentId,
+                    pd.total_amount as totalAmount,
+                    pd.payment_method as paymentMethod,
+                    pd.status as paymentStatus,
                     JSON_ARRAYAGG(p.file_path) As photosPaths
                     from orders o 
                     join order_details od on o.id = od.order_id 
                     left join client_photos_for_orders p on od.id = p.order_details_id 
                     left join client c on c.id = o.client_id
-                    group by o.id, o.client_id, od.id, od.service_category_id, od.service_id, od.quantity, od.status, od.created_at, c.username`
+                    left join payment_details pd on o.id = pd.order_id
+                    group by o.id, o.client_id, od.id, od.service_category_id, od.service_id, od.quantity, od.status, od.created_at, c.username, pd.id, pd.total_amount, pd.payment_method, pd.status`
 
     return new Promise((resolve, reject) => {
         db.query(sql,
@@ -220,7 +225,26 @@ const editStatus = (status, id) => {
     })
 }
 
+const getEditedPhoto = (orderDetailsId) => {
+    const sql = `select e.id as id,
+                        e.order_details_id as orderDetailsId,
+                        e.photo_path as photoPath,
+                        e.created_at as createdAt,
+                        o.order_id as orderId,
+                        o.service_category_id as serviceCategoryId,
+                        o.service_id as serviceId
+                        from edited_photos e join order_details o on e.order_details_id = o.id 
+                        where e.order_details_id = ? group by e.id, e.order_details_id, e.photo_path, o.order_id, o.service_category_id, o.service_id`
 
+    return new Promise((resolve, reject) => {
+        db.query(sql, [orderDetailsId],
+            (err, result) => {
+                if(err) reject(err)
+                    else resolve(result)
+            }
+        )
+    })
+}
 
 
 
@@ -236,5 +260,6 @@ module.exports = {  createOrder,
                     editStatus, 
                     fetchOrderDeailsById,
                     fetchAllOrderDetails,
-                    addEditedPhotosForOrders
+                    addEditedPhotosForOrders,
+                    getEditedPhoto
                 }

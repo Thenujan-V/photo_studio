@@ -40,7 +40,6 @@ const ChangeMail = () => {
      const handleEmailChange = async () => {
         validation()
          try {
-            // await axios.post('/api/send-otp', { email: newEmail }); // Adjust API as needed
             setOtpSent(true);
             setShowModal(true);
             triggerNotification("OTP sent to your new email", "success");

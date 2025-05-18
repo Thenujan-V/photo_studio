@@ -19,6 +19,99 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
+
+  .order-card {
+  min-width: 320px;
+  background: white;
+  display: inline-block;
+  width: 100%;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  overflow: hidden;
+  padding: 1rem;
+
+  .order-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    background-color: #f0ecec;
+    padding: .7rem;
+    border-radius: 5px;
+
+    .invoice-btn{
+      background-color: transparent;
+      border: 2px solid var(--secondary-color);
+      color: var(--secondary-color);
+
+      &:hover{
+        background-color: var(--primary-color);
+        border: 2px solid var(--secondary-color);
+      }
+    }
+  }
+
+    .order-item {
+      display: flex;
+      flex-direction: row;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--primary-color);
+
+      .item-left {
+        img.service-img {
+          width: 100px;
+          height: auto;
+          border-radius: 8px;
+        }
+      }
+
+      .item-right {
+        margin-left: 1rem;
+
+        .status{
+          strong{
+            color: var(--secondary-color);
+          }
+        }
+
+      }
+    }
+    .details {
+          margin-top: 1.5rem;
+          background-color: #f8f8f8;
+          padding: 0.5rem;
+          border-radius: 6px;
+          display: flex;
+          flex-direction: column;
+          align-items: start;
+          justify-content: start;
+        }
+    button {
+            outline: none !important;
+            width:150px;
+            height: 35px;
+            background-color: var(--primary-color);
+            color: rgb(241, 238, 238);
+            cursor: pointer;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 700;
+            letter-spacing: 1px;
+            word-spacing: 2px;
+            text-align: center;
+            border: none;
+
+          &:hover{
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+            font-weight: 700;
+        }}
+        button:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+        opacity: 0.7;
+      }
+    }
 }
 
 .notification-card {

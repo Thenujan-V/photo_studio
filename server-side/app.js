@@ -8,6 +8,7 @@ const ordersRoutes = require('./routes/orderRouter')
 const inquiryRoutes = require('./routes/inquiryRoute')
 const paymentRoutes = require('./routes/paymentRouter')
 const emailRoutes = require('./routes/emailRoute')
+const invoiceRoutes = require('./routes/invoiceRouter')
 const path = require('path')
 
 
@@ -25,6 +26,7 @@ app.use('/api/orders', ordersRoutes)
 app.use('/api/inquiry', inquiryRoutes)
 app.use('/api/payment', paymentRoutes)
 app.use('/api/email', emailRoutes);
+app.use('/api/invoice', invoiceRoutes);
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
 

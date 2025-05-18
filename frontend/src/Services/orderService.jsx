@@ -100,3 +100,17 @@ export const  createOrderDelivery = async (orderId, formData) => {
         throw err
     }
 }
+
+
+export const  fetchEditedPhotos = async (orderDetailsId) => {
+    if (!orderDetailsId) {
+        throw new Error("Missing required cart data (orderDetailsId).");
+    }
+
+    try{
+        const response = await axios.get(`${API_BASE_URL}/orders/view-edited-photo/${orderDetailsId}`)
+        return response
+    }catch(err){
+        throw err
+    }
+}

@@ -3,22 +3,28 @@ import "../../../style/AdminLiveOrders.scss";
 import { fetchAllOrders, changeOrderStatus } from '../../../Services/orderService';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserAlt, faSearch } from '@fortawesome/free-solid-svg-icons';
+import { triggerNotification } from "../../../Services/notificationService";
 
 const AdminLiveOrders = () => {
+    const orderStatuses = ['All', 'editing', 'awaiting_approval', 'reediting', 'approved', 'in_production', 'ready_for_delivery']
+
+
     const [groupedOrders, setGroupedOrders] = useState({});
     const [filteredGroupedOrders, setFilteredGroupedOrders] = useState({});
     const [searchTerm, setSearchTerm] = useState('');
     const [showDropdown, setShowDropdown] = useState({});
     const [expanded, setExpanded] = useState({});
+    const [selectedStatus, setSelectedStatus] = useState("All");
+    const URLForPhotoPath = process.env.REACT_APP_PHOTO_PATH_URL
+    
      const statusOptions = [
-    'processing',
-    'editing',
-    'awaiting_approval',
-    'in_production',
-    'ready_for_delivery',
-    'delivered',
-    'cancelled',
-  ];
+      'processing',
+      'editing',
+      'in_production',
+      'ready_for_delivery',
+      'delivered',
+      'cancelled',
+    ];
       useEffect(() => {
           fetchAllOrderHistory();
       }, []);
@@ -41,6 +47,7 @@ const AdminLiveOrders = () => {
             }, {});
     
             setGroupedOrders(grouped);
+            console.log("grouped :", grouped)
             setFilteredGroupedOrders(grouped);
           } catch (err) {
             console.error(err);
@@ -58,9 +65,14 @@ const AdminLiveOrders = () => {
 };
 
 const handleStatusChange = async (orderDetailsId, newStatus) => {
-    console.log("orderdetailsId:",orderDetailsId , newStatus);
     try {
-      await changeOrderStatus(orderDetailsId, newStatus);
+      const statusChangeResult = await changeOrderStatus(orderDetailsId, newStatus)
+      if(statusChangeResult.status === 200){
+        triggerNotification("Status change successfully", "success")
+      }
+      else{
+        triggerNotification("Status change failed", "error")
+      }
       alert(`Status changed to ${newStatus}`);
 
       setGroupedOrders((prev) => {
@@ -122,6 +134,17 @@ const handleAllOrder = () => {
   return (
     <div className="live-orders">
       <h2>Live Orders</h2>
+      <select
+        className="form-select mb-3 w-25"
+        value={selectedStatus}
+        onChange={(e) => setSelectedStatus(e.target.value)}
+      >
+        {orderStatuses.map((status) => (
+          <option key={status} value={status}>
+            {status === "All" ? "All Orders" : status.charAt(0).toUpperCase() + status.slice(1).replace("_", " ")}
+          </option>
+        ))}
+      </select>
       <div className="search-container">
               <input
                 type="text"
@@ -137,7 +160,10 @@ const handleAllOrder = () => {
                 All
               </button>
             </div>
-        {Object.entries(filteredGroupedOrders).map(([orderId, items]) => (
+        {Object.entries(filteredGroupedOrders)
+        .filter(([orderId, items]) => selectedStatus === "All" || items.some( item => item.status === selectedStatus))
+        .sort((a, b) => Number(b[0]) - Number(a[0]))
+        .map(([orderId, items]) => (
             <div key={orderId} className="order-card">
               <p ><FontAwesomeIcon icon={faUserAlt} size="x" color="#f90348" title="User Profile" style={{paddingRight:"5px"}}/>{items[0].username}</p>
               <div className="order-header">
@@ -145,9 +171,11 @@ const handleAllOrder = () => {
                 <span>{new Date(items[0].createdAt).toLocaleDateString()}</span>
               </div>
               <hr />
-              {items.map((item, index) => (
-              <div className="order-body">
-                <img src={`/uploads/${item.photosPaths[0] || item.serviceDetails.photoPaths[0]}`} alt= {item.serviceDetails?.serviceName} />
+              {items
+              .filter( item => { return selectedStatus === "All" || item.status === selectedStatus})
+              .map((item, index) => (
+              <div className="order-body mt-3">
+                <img src={`${URLForPhotoPath}/${item.photosPaths[0] || item.serviceDetails.photoPaths[0]}`} alt= {item.serviceDetails?.serviceName} />
                 <div className="order-info">
                   <h3> {item.serviceDetails?.serviceName}</h3>
                   <p> {item.serviceCategory}</p>
@@ -155,13 +183,15 @@ const handleAllOrder = () => {
                     Price x Qty: Rs. {item.serviceDetails?.servicePrice} x {item.quantity}
                   </p>
                 </div>
-                <div className="order-status">
-                  <button className="status-btn">{item.status}</button><div className="change-status-container">
-                  <select
-                    className="status-select"
-                    onChange={(e) => handleStatusChange(item.orderDetailsId, e.target.value)}
-                    defaultValue=""
-                  >
+                <div className="order-status d-flex flex-column align-items-center justify-content-center gap-3">
+                  <button className={`status-btn ${item.status}`}>{item.status}</button>
+                  <div className="change-status-container">
+                    <select
+                      className="status-btn fw-bold p-1"
+                      style={{width: '160px', fontSize:'16px', backgroundColor: '#bd2752'}}
+                      onChange={(e) => handleStatusChange(item.orderDetailsId, e.target.value)}
+                      defaultValue=""
+                    >
                     <option value="" disabled>Change status</option>
                     {statusOptions.map((status) => (
                       <option key={status} value={status}>

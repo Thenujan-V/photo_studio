@@ -76,8 +76,15 @@ const addEditedPhotos = async (req, res) => {
         const file_paths = files.map(file => file.filename)
     
         const addPhotosResult = await orderModel.addEditedPhotosForOrders({ file_paths, orderDetailsId })
-    
-        res.status(201).json({ message: "successfully photos added.", addPhotosResult})        
+        const changeOrderStatus = await axios.patch(`http://localhost:${PORT}/api/orders/change-status/${orderDetailsId}`,
+                                                    { status: 'awaiting_approval' },
+                                                    {
+                                                        headers: {
+                                                            'Content-Type': 'text/plain'
+                                                        }
+                                                    }
+                                                )
+        res.status(201).json({ message: "successfully photos added.", addPhotosResult, changeOrderStatus})        
     }catch(err){
         console.log('Error when save client.', err)
         return res.status(500).json({
@@ -216,4 +223,31 @@ const changeStatus = async (req, res) => {
     }
 } 
 
-module.exports = { createOrder, addPhotosForOrders, getOrdersByClientId, createOrderDelivery, fetchDeliveryDetails, changeStatus, fetchAllOrderDetails, addEditedPhotos }
+const viewEditedPhoto = async (req, res) => {
+    try{
+        const { orderDetailsId } = req.params
+        if(!orderDetailsId){
+            return res.status(400).json({message: 'Bad request.'})
+        }
+
+        const fetchEditedPhoto = await orderModel.getEditedPhoto(orderDetailsId)
+        res.status(200).json({message: "Succesfully fetch data.", fetchEditedPhoto})
+
+    }catch(err){
+        console.log('Error when save client.', err)
+        return res.status(500).json({
+            message: 'Internal server error. Faild to create client.'
+        })
+    }
+}
+module.exports = { createOrder, 
+                addPhotosForOrders, 
+                getOrdersByClientId, 
+                createOrderDelivery, 
+                fetchDeliveryDetails, 
+                changeStatus, 
+                fetchAllOrderDetails, 
+                addEditedPhotos,
+                viewEditedPhoto
+
+            }

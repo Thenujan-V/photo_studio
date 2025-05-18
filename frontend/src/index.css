@@ -20,3 +20,40 @@ code {
     /* --secondary-color: #f5c7d4; */
 
 }
+
+.processing{
+  width: auto !important;
+  background-color: rgb(83, 188, 153) !important;
+}
+.editing{
+  width: auto !important;
+  background-color: rgb(83, 188, 153) !important;
+}
+.awaiting_approval{
+  width: auto !important;
+  background-color: rgb(10, 190, 187) !important;
+}
+.reediting{
+  width: auto !important;
+  background-color: rgb(16, 6, 97) !important;
+}
+.approved{
+  width: auto !important;
+  background-color: rgb(200, 239, 27) !important;
+}
+.in_production{
+  width: auto !important;
+  background-color: rgb(194, 48, 148) !important;
+}
+.ready_for_delivery{
+  width: auto !important;
+  background-color: rgb(226, 220, 49) !important;
+}
+.delivered{
+  width: auto !important;
+  background-color: rgb(30, 200, 47) !important;
+}
+.cancelled{
+  width: auto !important;
+  background-color: rgb(225, 37, 37) !important;
+}
