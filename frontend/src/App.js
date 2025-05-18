@@ -29,6 +29,7 @@ import AdminLiveOrders from './pages/admin/dashboard/AdminLiveOrders';
 import AddServices from './pages/admin/dashboard/AddServices';
 import PhotosView from './pages/PhotosView';
 import DisplayInvoice from './pages/user/DisplayInvoice';
+import EditServices from './pages/admin/dashboard/EditServices';
 
 const Unauthorized = () => <div><h2>Unauthorized - You do not have permission to access this page.</h2></div>;
 
@@ -71,9 +72,7 @@ function App() {
           <Route path="order-history" element={<AdminOrderHistory title="All Orders" />} />
           <Route path='live-orders' element={<AdminLiveOrders title="All Live Orders" />} />
           <Route path='add-services' element={<AddServices title="All Live Orders" />} />
-          {/* <Route path="notifications" element={<Notifications title="Notifications" />} /> */}
-          {/* <Route path="change-mail" element={<ChangeMail title="Change E-mail" />} /> */}
-          {/* <Route path="change-password" element={<ChangePassword title="Change Password" />} /> */}
+          <Route path="edit-services" element={<EditServices title="Edit Services" />} />
           {/* <Route path="logout" element={<Logout title="Logout" />} />  */}
         </Route>
 

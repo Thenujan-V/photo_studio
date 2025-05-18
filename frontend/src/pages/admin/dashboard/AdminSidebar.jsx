@@ -26,7 +26,7 @@ const AdminSidebar = () => {
       </nav>
       <nav className="sidebar-bottom">
         <NavLink to="/adminDashboard/add-services" className= 'block' >Upload Services</NavLink>
-        <NavLink to="/adminDashboard/Edit Services" className= 'block' >Edit Service Details</NavLink>
+        <NavLink to="/adminDashboard/edit-services" className= 'block' >Edit Service Details</NavLink>
         <NavLink to="/adminDashboard/Logout" className= 'block' >Logout</NavLink>
       </nav>
     </div>

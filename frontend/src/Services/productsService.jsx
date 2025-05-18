@@ -14,8 +14,21 @@ export const fetchServicesByCategoryId = async (serviceCategoryId) => {
 
     }catch(err){
         throw err
+    }  
+}
+
+export const editServices = async (serviceCategoryId, serviceId, updateData) => {    
+    if(!serviceCategoryId && !serviceId){
+        throw new Error('category id and serviceId cannot be null.')
     }
-    
+
+    try{
+        const response = await axios.patch(`${API_BASE_URL}/services/edit-services/${serviceCategoryId}/${serviceId}`, updateData)
+        return response
+
+    }catch(err){
+        throw err
+    }  
 }
 
 export const fetchserviceCategory = async () => {    
@@ -27,8 +40,7 @@ export const fetchserviceCategory = async () => {
 
     }catch(err){
         throw err
-    }
-    
+    } 
 }
 
 export const addServices = async (data) => {
