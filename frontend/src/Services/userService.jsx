@@ -67,3 +67,13 @@ export const deleteAccount = async (id) => {
         throw error
     }
 }
+
+export const changePassword = async (id, data) => {
+    try{
+        const response = await axios.patch(`${API_BASE_URL}/client/update-password/${id}`, data)
+        return response
+    }
+    catch(error){
+        throw error
+    }
+}

@@ -22,19 +22,22 @@ const getPaymentDetails = () => {
                     p.client_id as clientId,
                     p.advance_amount as advanceAmount,
                     p.total_amount as totalAmount,
-                    p.payment_method as paymentMethod
+                    p.payment_method as paymentMethod,
                     p.status as paymentStatus,
                     p.created_at as createdAt,
                     o.service_category_id as categoryId,
                     o.service_id as serviceId,
-                    o.quantity as quantity
+                    o.quantity as quantity,
                     c.username as clientName,
-                    c.phoneNumber as clientPhoneNumber,
+                    c.phone_number as clientPhoneNumber,
                     c.mail as clientMail
-                    from payment_details p join order_details o on p.order_id = o.order_id join client c on c.id = p.client_id group by p.id`
+                    from payment_details p 
+                    join order_details o on p.order_id = o.order_id 
+                    join client c on p.client_id = c.id 
+                    group by p.id, p.client_id, p.total_amount, p.payment_method, p.status, p.created_at, o.service_category_id, o.service_id, o.quantity, c.username, c.phone_number, c.mail`
 
     return new Promise((resolve, reject) => {
-        db.query(sql, [orderId, clientId, totalAmount, paymentMethod, status],
+        db.query(sql,
             (err, result) => {
                 if(err) reject(err)
                     else resolve(result)

@@ -39,12 +39,14 @@ const createPaymentDetails = async (req, res) => {
     }
 }
 
-const fetchAllDetails = (req, res) => {
+const fetchAllDetails = async (req, res) => {
     try{
-        const paymentDetails = paymentModel.getPaymentDetails()
+        const paymentDetails = await paymentModel.getPaymentDetails()
+        console.log("payme :", paymentDetails)
         if(paymentDetails === null){
             return res.status(404).json({message: "There are no datails."})
         }
+        
         return res.status(201).json({
                 message: 'payment Details fetched successfully.',
                 paymentDetails

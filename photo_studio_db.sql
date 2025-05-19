@@ -181,6 +181,14 @@ create table if not exists payment_details(
     foreign key (order_id) references orders(id) 
 );
 
+create table if not exists invoice(
+	id int auto_increment primary key,
+    order_id int not null,
+    file_path varchar(255) not null,
+	created_at datetime default current_timestamp,
+    foreign key (order_id) references orders(id)
+);
+
 
 select * from client;
 select * from admin;

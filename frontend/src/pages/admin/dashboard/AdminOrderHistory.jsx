@@ -135,7 +135,7 @@ const AdminOrderHistory = () => {
 
   return (
     <div className="order-history-container">
-      <h2>Order History</h2>
+      <h2 className="text-center fw-bolder fs-1 mb-4 p-0 mt-0">Order History</h2>
       <div className="search-container">
         <input
           type="text"

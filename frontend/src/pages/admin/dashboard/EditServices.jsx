@@ -70,7 +70,7 @@ const EditServices = () => {
 
   return (
     <div className="container mt-4">
-      <h2 className="text-center mb-4 fw-bold">Edit Services</h2>
+      <h2 className="text-center fw-bolder fs-1 mb-4 p-0 mt-0">Edit Services</h2>
       <div className="category-buttons d-flex flex-wrap mb-4 justify-content-center">
         {categories.map((cat) => (
           <button

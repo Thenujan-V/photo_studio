@@ -63,21 +63,8 @@ const Login = () => {
     try{
       const response = await signinService(mail, password)
         if(response == false){
-          const workerResponse = await adminSignin(mail, password)
-          if(workerResponse == false){
-            alert('username or password is not valid')
-            setApiResponse('signin faild...!')
-          }
-          else{
-            localStorage.setItem('authToken', workerResponse.token);
-            setApiResponse("signin success")
-            const decoded = decodedToken()
-            if(decoded.role === 'ADMIN'){
-              setTimeout(() => {
-                navigate('/adminpanel');
-              }, 3000);
-            }
-          }
+          alert('username or password is not valid')
+          setApiResponse('signin faild...!')
 
         }
         else{
@@ -85,12 +72,17 @@ const Login = () => {
           setApiResponse("signin success")
           triggerNotification("you are login successfully", "success");
           const decoded = decodedToken()
-          console.log("id", decoded);
             if(decoded.role === 'USER'){
               setTimeout(() => {
                 navigate('/');
               }, 3000);
             }
+            if(decoded.role === 'ADMIN'){
+              setTimeout(() => {
+                navigate('/adminDashboard');
+              }, 3000);
+            }
+            
         }
 
     }

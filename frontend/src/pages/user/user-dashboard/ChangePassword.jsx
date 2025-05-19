@@ -4,7 +4,9 @@ import { decodedToken } from "../../../Services/getToken ";
 import "../../../style/ChangePassword.scss";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
-import { userDetails } from "../../../Services/userService";
+import { changePassword, userDetails } from "../../../Services/userService";
+import { generateOTP } from "../../../Services/otpService";
+import { sendMailToClient } from "../../../Services/mailService";
 
 const ChangePassword = () => {
   const [oldPassword, setOldPassword] = useState("");
@@ -14,6 +16,7 @@ const ChangePassword = () => {
   const [otp, setOtp] = useState("");
   const [userMail, setUserMail] = useState("");
   const [otpSent, setOtpSent] = useState(false);
+  const [enteredOtp, setEnteredOtp] = useState("");
 
   const decoded = decodedToken();
   const userId = decoded.userId;
@@ -48,28 +51,67 @@ const ChangePassword = () => {
     }
   };
 
-  const handlePasswordChange = () => {
+  const handlePasswordChange = async () => {
     validationsForFields();
-    setOtpSent(true);
-    setShowModal(true);
-    setOtp("");
-    console.log("fileds :", oldPassword, newPassword, confirmpassword);
-    // axios.put('/api/user/1/change-password', {
-    // oldPassword,
-    // newPassword
-    // }).then(res => alert('Password updated successfully'));
+    try {
+      const otpForSendClient = await generateOTP();
+      await sendMailToClient(otpForSendClient);
+
+      setOtpSent(true);
+      setShowModal(true);
+      triggerNotification("OTP sent to your email", "success");
+    } catch (err) {
+      triggerNotification("Failed to send OTP", "error");
+    }
   };
 
   const handleOtpSubmit = async () => {
     try {
-      // await axios.put(`/api/user/${userId}/change-email`, { email: newEmail, otp });
-      triggerNotification("Email changed successfully!", "success");
+      handleVerifyOtp();
+      const field = { oldPW: oldPassword, newPw: newPassword };
+      await changePassword(userId, field)
+        .then((res) => {
+          triggerNotification("Successfully update password", "success");
+        })
+        .catch((err) => console.log("error when update mail.", err));
+
+      triggerNotification("Password changed successfully!", "success");
       setShowModal(false);
       setOtp("");
     } catch (error) {
       triggerNotification("Invalid OTP or email change failed.", "error");
     }
   };
+
+  const handleVerifyOtp = () => {
+      const storedOtp = localStorage.getItem("otp");
+      const storedExpires = parseInt(
+        localStorage.getItem("otp_expires") || "0",
+        10
+      );
+  
+      if (Date.now() > storedExpires) {
+        triggerNotification(
+          "OTP has expired. Please request a new one.",
+          "error"
+        );
+        localStorage.removeItem("otp");
+        localStorage.removeItem("otp_expires");
+        return;
+      }
+  
+      if (enteredOtp === storedOtp) {
+        triggerNotification("OTP verified! Your password reset now.", "success");
+  
+        localStorage.removeItem("otp");
+        localStorage.removeItem("otp_expires");
+      } else {
+        triggerNotification("Incorrect OTP. Try again.", "error");
+        return;
+      }
+    };
+
+
   return (
     <>
       <div className="edit-section">

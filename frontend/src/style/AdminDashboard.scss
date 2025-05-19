@@ -1,6 +1,6 @@
 .layout{
     background-color:rgb(250, 241, 241);
-    min-height: 110vh;
+    min-height: 120vh;
     .dashboard{
         display: flex;
         flex-direction: row;
@@ -15,7 +15,7 @@
             background-color: #f2dbe2;
             border-radius: 6px;
             box-shadow: 2px 4px 8px rgb(134, 129, 129);
-            height: 85vh;
+            height: 93vh;
             overflow-y: scroll;
             overflow-x:scroll;
         }

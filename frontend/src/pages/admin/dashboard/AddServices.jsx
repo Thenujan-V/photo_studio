@@ -73,7 +73,7 @@ const AddServices = () => {
 
   return (
     <>
-      <h2>Add New Service</h2>
+      <h2 className="text-center fw-bolder fs-1 mb-4">Add New Service</h2>
       <form className="add-service-form" onSubmit={handleSubmit}>
         <label>Service Category</label>
         <select

@@ -23,7 +23,7 @@ function AppNavbar() {
     <Navbar expand="lg" className="custom-navbar fixed-top">
       <Container>
         <Navbar.Brand as={NavLink} to="/" className="logo">
-          Logo
+          JUNIOPIX
         </Navbar.Brand>
 
         <Navbar.Toggle aria-controls="navbar-content" />

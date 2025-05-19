@@ -25,13 +25,7 @@ export const createPayment = async (formData) => {
 
 export const getAllPayments = async () => {
     try{
-        const response = await axios.post(`${API_BASE_URL}/payment/get-all-payments`,
-            {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            }
-        )
+        const response = await axios.get(`${API_BASE_URL}/payment/get-all-payments`)
         return response
     }catch(err){
         throw err

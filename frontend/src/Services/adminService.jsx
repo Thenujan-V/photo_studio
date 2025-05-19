@@ -13,56 +13,18 @@
 //         throw err
 //     }
 // }
-// export const adminSignin = async (phone_no, password) => {
+// export const adminSignin = async (mail, password) => {
 //     try{
 //         const requestData = {
-//             phone_no : phone_no,
+//             mail : mail,
 //             password : password
 //         }
        
-//         const response = await axios.post(`${API_BASE_URL}/admin/workersignin`, requestData)
+//         const response = await axios.post(`${API_BASE_URL}/client/admin-signin`, requestData)
 //         return response.data
 //     }
 //     catch(error){
 //         throw error
         
-//     }
-// }
-// export const showAllAdmins = async () => {
-//     try{
-//         const response = await axios.get(`${API_BASE_URL}/admin/getadmins`)
-//         return response.data
-//     }
-//     catch(error){
-//         throw error
-//     }
-// }
-// export const showAllInstructers = async () => {
-//     try{
-//         const response = await axios.get(`${API_BASE_URL}/admin/getinstructers`)
-//         return response.data
-//     }
-//     catch(error){
-//         throw error
-//     }
-// }
-
-// export const workersDetails = async (id) => {
-//     try{
-//         const response = await axios.get(`${API_BASE_URL}/admin/getworkersdetails/${id}`)
-//         return response.data[0]
-//     }
-//     catch(error){
-//         throw(error)
-//     }
-// }
-
-// export const deleteAdmin = async (id) => {
-//     try{
-//         const response = await axios.delete(`${API_BASE_URL}/admin/deleteAdmin/${id}`)
-//         return response.data[0]
-//     }
-//     catch(error){
-//         throw(error)
 //     }
 // }

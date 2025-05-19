@@ -1,6 +1,7 @@
 .review-carousel {
   padding: 2rem;
   background: #f9f9f9;
+  
 
   h2 {
         color: rgb(0, 0, 0);
@@ -30,7 +31,7 @@
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     margin: 10px;
     transition: transform 0.3s ease;
-    height: 35vh;
+    height: 30vh;
     display: flex;
     flex-direction: column;
     justify-content: space-between;

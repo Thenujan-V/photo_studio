@@ -147,7 +147,7 @@ const AdminLiveOrders = () => {
 
   return (
     <div className="live-orders">
-      <h2>Live Orders</h2>
+      <h2 className="text-center fw-bolder fs-1 mb-4 mt-0 p-0">Live Orders</h2>
       <select
         className="form-select mb-3 w-25"
         value={selectedStatus}
