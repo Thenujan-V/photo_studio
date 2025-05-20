@@ -236,7 +236,7 @@ const ConfirmOrder = () => {
           if (placeOrder.status === 201) {
             triggerNotification("Sccessfully Place Order.", "Success");
             navigate("/display-invoice", {
-              state: { orderDetails, paymentMethod: "Card", deliveryDetails },
+              state: { orderDetails, paymentMethod: "Cash", deliveryDetails },
             });
           }
         }

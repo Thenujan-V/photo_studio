@@ -11,7 +11,7 @@ const Invoice = ({ details }) => {
     const { orderDetails, paymentMethod, deliveryDetails} = details
 
     const studioDetails = {
-        name: "Studio Edge",
+        name: "JUNIORPIX",
         phone: "011-2345678",
         address: "123 Main Street, Colombo 07"
       }

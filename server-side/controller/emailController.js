@@ -1,6 +1,7 @@
 const sendMailToClient = require('../utils/emailSender');
 
 const sendEmail = async (req, res) => {
+  console.log("req : ", req.body)
   const { to, subject, message } = req.body;
 
   try {

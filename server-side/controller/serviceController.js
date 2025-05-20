@@ -162,7 +162,7 @@ const fetchServiceDetails = async(req, res) => {
         const categoryName = await serviceModel.findNameById(serviceCategoryId)
 
         if(categoryName?.length > 0 && categoryName[0]?.category_name === 'photosoot' ){
-            const services = await serviceModel.fetchPhotoShootDetails()
+            const services = await serviceModel.fetchPhotoShootDetails(serviceCategoryId)
             if(services.length === 0){
                 return res.status(204).json({message: "there is no services."})
             }
@@ -174,7 +174,7 @@ const fetchServiceDetails = async(req, res) => {
             res.status(200).json({message: "successfully fetched.", servicesDetails})
         }
         if(categoryName?.length > 0 && categoryName[0]?.category_name === 'printings' ){
-            const services = await serviceModel.fetchPrintingDetails()
+            const services = await serviceModel.fetchPrintingDetails(serviceCategoryId)
             if(services.length === 0){
                 return res.status(204).json({message: "there is no services."})
             }
@@ -186,7 +186,7 @@ const fetchServiceDetails = async(req, res) => {
             res.status(200).json({message: "successfully fetched.", servicesDetails})
         }
         if(categoryName?.length > 0 && categoryName[0]?.category_name === 'frame making' ){
-            const services = await serviceModel.fetchFramesDetails()
+            const services = await serviceModel.fetchFramesDetails(serviceCategoryId)
             if(services.length === 0){
                 return res.status(204).json({message: "there is no services."})
             }
@@ -260,14 +260,13 @@ const editServiceDetails = async(req, res) => {
         const { id, serviceId } = req.params
 
         const categoryName = await serviceModel.findNameById(id)
-
         if(categoryName?.length > 0 && categoryName[0]?.category_name === 'photosoot' ){
 
             const { photoshoot_name, price, duration, description} = req.body
-            // const files = req.files
+            
 
             const updatedFields = {}
-            // const updatedFiles = []
+            
 
             const services = await serviceModel.fetchPhotoShootDetails()
 
@@ -275,7 +274,7 @@ const editServiceDetails = async(req, res) => {
                 return res.status(204).json({message: "there is no services in this category."})
             }
 
-            const updateableService = services.find(service => service.id === Number(serviceId))
+            const updateableService = services.find(service => service.serviceId === Number(serviceId))
 
             if(updateableService === undefined){
                 return res.status(204).json({message: "there is no services in this service id."})
@@ -293,9 +292,7 @@ const editServiceDetails = async(req, res) => {
             if(price) updatedFields.price = price
             if(duration) updatedFields.durarion = duration
             if(description) updatedFields.description = description
-            // if(files) {
-            //     updatedFiles = files.map(file => file.filename)
-            // }
+        
 
             if(Object.keys(updatedFields).length === 0){
                 return res.status(400).json({message: 'No fields provide.'})
@@ -321,7 +318,7 @@ const editServiceDetails = async(req, res) => {
                 return res.status(204).json({message: "there is no services in this category."})
             }
 
-            const updateableService = services.find(service => service.id === Number(serviceId))
+            const updateableService = services.find(service => service.serviceId === Number(serviceId))
 
             if(updateableService === undefined){
                 return res.status(204).json({message: "there is no services in this service id."})
@@ -366,7 +363,7 @@ const editServiceDetails = async(req, res) => {
                 return res.status(204).json({message: "there is no services in this category."})
             }
 
-            const updateableService = services.find(service => service.service_id === Number(serviceId))
+            const updateableService = services.find(service => service.serviceId === Number(serviceId))
 
             if(updateableService === undefined){
                 return res.status(204).json({message: "there is no services in this service id."})

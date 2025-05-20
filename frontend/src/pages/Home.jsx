@@ -91,19 +91,19 @@ const Home = () => {
             need under one creative roof.
           </p>
           <div className="service-container">
-            <Link to="/services/photography" className="service-item large shadow">
+            <Link to="/services/1" className="service-item large shadow">
               Photography
             </Link>
-            <Link to="/services/videography" className="service-item tall">
+            <Link to="/services/4" className="service-item tall">
               Videography
             </Link>
-            <Link to="/services/frames" className="service-item wide">
+            <Link to="/services/3" className="service-item wide">
               Frame Making
             </Link>
-            <Link to="/services/printing" className="service-item small">
+            <Link to="/services/2" className="service-item small">
               Printing
             </Link>
-            <Link to="/services/in-studio" className="service-item medium">
+            <Link to="/services/5" className="service-item medium">
               In-Studio Shots
             </Link>
           </div>

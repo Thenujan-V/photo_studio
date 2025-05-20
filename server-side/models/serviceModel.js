@@ -203,6 +203,7 @@ const createFramesDetails = (framesData) => {
 }
 
 const fetchPhotoShootDetails = () => {
+    const serviceCategoryId = 1
     const sql = `select 
         p.id as serviceId, 
         p.photoshoot_name as serviceName, 
@@ -213,10 +214,10 @@ const fetchPhotoShootDetails = () => {
         p.service_category_id as serviceCategoryId, 
         s.service_id as serviceId, 
         JSON_ARRAYAGG(s.file_path) As photoPaths  
-        from photoshoot p join sample_photos s on p.id = s.service_id group by p.id`
+        from photoshoot p join sample_photos s on p.id = s.service_id where s.service_category_id = ? group by p.id`
 
     return new Promise((resolve, reject) => {
-        db.query(sql,  
+        db.query(sql, [serviceCategoryId],
             (err, result) => {
                 if(err) reject(err)
                     else resolve(result)
@@ -226,6 +227,7 @@ const fetchPhotoShootDetails = () => {
 }
 
 const fetchPrintingDetails = () => {
+    const serviceCategoryId = 2
     const sql = `select 
             p.id as serviceId,
             p.printing_name as serviceName,
@@ -235,10 +237,10 @@ const fetchPrintingDetails = () => {
             p.service_category_id as serviceCategoryId,
             s.service_id as serviceId, 
             JSON_ARRAYAGG(s.file_path) As photoPaths 
-            from printings p join sample_photos s on p.id = s.service_id group by p.id`
+            from printings p join sample_photos s on p.id = s.service_id where s.service_category_id = ? group by p.id `
 
     return new Promise((resolve, reject) => {
-        db.query(sql, 
+        db.query(sql, [serviceCategoryId], 
             (err, result) => {
                 if(err) reject(err)
                     else resolve(result)
@@ -248,6 +250,7 @@ const fetchPrintingDetails = () => {
 }
 
 const fetchFramesDetails = () => {
+    const serviceCategoryId = 3
     const sql = `select 
             f.id as serviceId,
             f.material_name as serviceName,
@@ -258,10 +261,10 @@ const fetchFramesDetails = () => {
             f.description as description,
             f.created_at as createdAt, 
             JSON_ARRAYAGG(s.file_path) As photoPaths 
-            from frames f join sample_photos s on f.id = s.service_id group by f.id`
+            from frames f join sample_photos s on f.id = s.service_id where s.service_category_id = ? group by f.id`
 
     return new Promise((resolve, reject) => {
-        db.query(sql, 
+        db.query(sql, [serviceCategoryId],
             (err, result) => {
                 if(err) reject(err)
                     else resolve(result)
@@ -341,7 +344,7 @@ const fetchFramesDetailsByServiceId = (serviceId) => {
 const photoShootDetailsEditing = (id, updatedFields) => {
     const setClauses = [];
     const values = [];
-
+console.log(id, updatedFields)
     for(const [key, value] of Object.entries(updatedFields)){
         setClauses.push(`${key} = ?`)
         values.push(value)

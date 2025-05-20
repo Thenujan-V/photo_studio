@@ -63,6 +63,7 @@ const replyFeedback = async(req, res) => {
     try{
         const { id } = req.params
         const { replyMsg } = req.body
+        console.log("feed :", id, replyMsg)
 
         const feedbackResult = await feedbackModel.fetchFeedBacks()
 

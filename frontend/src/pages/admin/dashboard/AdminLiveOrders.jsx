@@ -28,9 +28,6 @@ const AdminLiveOrders = () => {
   const URLForPhotoPath = process.env.REACT_APP_PHOTO_PATH_URL;
 
   const statusOptions = [
-    "processing",
-    "editing",
-    "in_production",
     "ready_for_delivery",
     "delivered",
     "cancelled",
@@ -248,6 +245,7 @@ const AdminLiveOrders = () => {
                           )
                         }
                         defaultValue=""
+                        disabled={!["in_production", "ready_for_delivery", "delivered", "cancelled"].includes(item.status)}
                       >
                         <option value="" disabled>
                           Change status

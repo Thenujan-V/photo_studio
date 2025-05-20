@@ -47,6 +47,7 @@ const Feedbacks = () => {
 
   const handleSendEmail = async (to, subject, msg) => {
     const mailData = { to: to, subject: subject, message: msg };
+    console.log("maildata: ", mailData )
 
     alert(`Email sent to ${to}:\n${msg}`);
     const sendMail = await sendMailToClient(mailData);
@@ -59,8 +60,18 @@ const Feedbacks = () => {
 
   const handleSendReply = async (to, subject, msg, id) => {
     const addReplyForReview = await sendReplyForFeedback(id, msg);
-    if (addReplyForReview === 200) {
-      await handleSendEmail(to, subject, msg);
+    if (addReplyForReview.status === 200) {
+      await handleSendEmail(to, subject, msg)
+        .then((res) => {
+          console.log(res);
+          if(res.status === 200){
+            triggerNotification("Successfully send reply", "success")
+          }
+          else{
+            triggerNotification("Reply send failed", "error")
+          }
+        })
+        .catch((err) => console.log("Error when send mail to feedback: ", err));
     } else {
       triggerNotification("feedback reply failed.", "error");
     }

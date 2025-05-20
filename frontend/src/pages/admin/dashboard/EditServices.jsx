@@ -53,7 +53,6 @@ const EditServices = () => {
   const handleEdit = async (service) => {
     const updateData = editing[service.serviceId];
     if (updateData) {
-      console.log("updated data:", updateData);
       await editServices(
         service.serviceCategoryId,
         service.serviceId,
