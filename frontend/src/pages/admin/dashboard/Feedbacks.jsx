@@ -87,8 +87,8 @@ const Feedbacks = () => {
               <td>{user.feedback}</td>
               <td>{user.rating}</td>
               <td>{user.reply_msg}</td>
-              <td>{user.created_at}</td>
-              <td>
+              <td>{new Date(user.created_at).toDateString()}</td>
+              <td className="d-flex">
                 <Button
                   variant="danger"
                   size="sm"

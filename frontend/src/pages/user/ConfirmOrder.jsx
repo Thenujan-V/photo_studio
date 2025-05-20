@@ -20,6 +20,7 @@ const ConfirmOrder = () => {
   const [orderDetails, setOrderDetails] = useState([]);
   const [isPayment, setIsPayment] = useState(false);
   const [uploadedPhotos, setUploadedPhotos] = useState([]);
+  const [clientMessage, setClientMessage] = useState('')
   const [deliveryInfo, setDeliveryInfo] = useState({
     sender_phone_number: "",
     receiver_phone_number: "",
@@ -30,7 +31,7 @@ const ConfirmOrder = () => {
   });
   const [paymentMethod, setPaymentMethod] = useState("cash");
   const [paymentData, setPaymentData] = useState("");
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [submittedIndexes, setSubmittedIndexes] = useState([]);
   const navigate = useNavigate();
   const REACT_APP_PHOTO_PATH_URL = process.env.REACT_APP_PHOTO_PATH_URL;
 
@@ -105,12 +106,12 @@ const ConfirmOrder = () => {
       formData.append("photos", file);
     });
 
+    formData.append("clientMessage", clientMessage)
     try {
       const response = await clientsUploadPhotos(orderDetailsId, formData);
-      console.log("responnn :", response);
       if (response.status !== 201) throw new Error("Upload failed.");
       triggerNotification("Images uploaded successfully!", "success");
-      setIsSubmitted(true);
+      setSubmittedIndexes((prev) => [...prev, index]);
     } catch (error) {
       console.error("Error uploading images:", error);
       triggerNotification("Image upload failed.");
@@ -317,6 +318,7 @@ const ConfirmOrder = () => {
                             setUploadedPhotos(updatedPhotos);
                           }}
                         />
+                        <textArea className="mt-2" name="clientMessage" onChange={(e) => setClientMessage(e.target.value)} rows="3" cols="30" placeholder="Enter your message here..."></textArea>
                         <p>
                           {uploadedPhotos[index]?.length || 0} file(s) selected
                         </p>
@@ -325,7 +327,7 @@ const ConfirmOrder = () => {
                           onClick={() =>
                             handleUpload(item.orderDetailsId, index)
                           }
-                          disabled={isSubmitted}
+                          disabled={submittedIndexes && submittedIndexes.includes(index)}
                         >
                           Upload
                         </button>

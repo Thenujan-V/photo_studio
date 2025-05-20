@@ -218,9 +218,7 @@ const AdminLiveOrders = () => {
               .map((item, index) => (
                 <div className="order-body mt-3">
                   <img
-                    src={`${URLForPhotoPath}/${
-                      item.photosPaths[0] || item.serviceDetails.photoPaths[0]
-                    }`}
+                    src={`${URLForPhotoPath}/${item.serviceDetails.photoPaths[0]}`}
                     alt={item.serviceDetails?.serviceName}
                   />
                   <div className="order-info">

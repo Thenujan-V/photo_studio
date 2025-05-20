@@ -212,7 +212,7 @@ const fetchServiceDetailsByServiceId = async(req, res) => {
         const categoryName = await serviceModel.findNameById(serviceCategoryId)
 
         if(categoryName?.length > 0 && categoryName[0]?.category_name === 'photosoot' ){
-            const services = await serviceModel.fetchPhotoShootDetailsByServiceId(serviceId)
+            const services = await serviceModel.fetchPhotoShootDetailsById(serviceId)
             if(services.length === 0){
                 return res.status(204).json({message: "there is no services."})
             }

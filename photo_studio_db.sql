@@ -156,6 +156,7 @@ create table if not exists client_photos_for_orders(
 	id int auto_increment primary key,
     order_details_id int not null,
     file_path varchar(255) not null,
+    client_message text default null,
 	created_at datetime default current_timestamp,
     foreign key (order_details_id) references order_details(id)
 );

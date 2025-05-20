@@ -29,13 +29,13 @@ const createOrderDetails = (orderDetails) => {
 }
 
 const addClientsPhotosForOrders = (photosData) => {
-    const { file_paths, orderDetailsId } = photosData
+    const { file_paths, clientMessage, orderDetailsId } = photosData
 
-    const values = file_paths.map(file => [orderDetailsId, file])
+    const values = file_paths.map(file => [orderDetailsId, file, clientMessage])
 
-    const placeHolder = values.map(() => '(?, ?)').join(', ')
+    const placeHolder = values.map(() => '(?, ?, ?)').join(', ')
 
-    const sql = `insert into client_photos_for_orders ( order_details_id, file_path ) values ${placeHolder}`
+    const sql = `insert into client_photos_for_orders ( order_details_id, file_path, client_message ) values ${placeHolder}`
 
     const flattenedValues = values.flat();
 
@@ -56,7 +56,7 @@ const addEditedPhotosForOrders = (photosData) => {
 
     const placeHolder = values.map(() => '(?, ?)').join(', ')
 
-    const sql = `insert into edited_photos ( order_details_id, photo_path ) values ${placeHolder}`
+    const sql = `insert into edited_photos ( order_details_id, photo_path) values ${placeHolder}`
 
     const flattenedValues = values.flat();
 
@@ -70,32 +70,55 @@ const addEditedPhotosForOrders = (photosData) => {
     })
 }
 
-const getEditedPhotos = (orderDetailsId) => {
-    const sql = `select 
-                    o.id as orderId,
-                    o.client_id as clientId,
-                    od.id as orderDetailsId,
-                    od.service_category_id as serviceCategoryId,
-                    od.service_id as serviceId,
-                    od.quantity,
-                    od.status,
-                    od.created_at as createdAt,
-                    JSON_ARRAYAGG(p.file_path) As photosPaths
-                    from orders o 
-                    join order_details od on o.id = od.order_id 
-                    left join client_photos_for_orders p on od.id = p.order_details_id 
-                    where o.client_id = ?
-                    group by o.id, o.client_id, od.id, od.service_category_id, od.service_id, od.quantity, od.status, od.created_at`
+const updateEditedPhotosForOrders = (photosData) => {
+    const { file_paths, orderDetailsId } = photosData;
+
+    const values = file_paths.map(file => [orderDetailsId, file]);
+    const placeholders = values.map(() => '(?, ?)').join(', ');
+    const flattenedValues = values.flat();
 
     return new Promise((resolve, reject) => {
-        db.query(sql, [clientId],
-            (err, result) => {
-                if(err) reject(err)
-                    else resolve(result)
-            }
-        )
-    })
-}
+        db.query('DELETE FROM edited_photos WHERE order_details_id = ?', [orderDetailsId], (deleteErr) => {
+            if (deleteErr) return reject(deleteErr);
+
+            if (file_paths.length === 0) return resolve({ message: 'All photos deleted' });
+
+            const sql = `INSERT INTO edited_photos (order_details_id, photo_path) VALUES ${placeholders}`;
+            db.query(sql, flattenedValues, (insertErr, result) => {
+                if (insertErr) return reject(insertErr);
+                resolve(result);
+            });
+        });
+    });
+};
+
+
+// const getEditedPhotos = (orderDetailsId) => {
+//     const sql = `select 
+//                     o.id as orderId,
+//                     o.client_id as clientId,
+//                     od.id as orderDetailsId,
+//                     od.service_category_id as serviceCategoryId,
+//                     od.service_id as serviceId,
+//                     od.quantity,
+//                     od.status,
+//                     od.created_at as createdAt,
+//                     JSON_ARRAYAGG(p.file_path) As photosPaths
+//                     from orders o 
+//                     join order_details od on o.id = od.order_id 
+//                     left join client_photos_for_orders p on od.id = p.order_details_id 
+//                     where o.client_id = ?
+//                     group by o.id, o.client_id, od.id, od.service_category_id, od.service_id, od.quantity, od.status, od.created_at`
+
+//     return new Promise((resolve, reject) => {
+//         db.query(sql, [clientId],
+//             (err, result) => {
+//                 if(err) reject(err)
+//                     else resolve(result)
+//             }
+//         )
+//     })
+// }
 
 
 const orderFetchByClientId = (clientId) => {
@@ -108,12 +131,13 @@ const orderFetchByClientId = (clientId) => {
                     od.quantity,
                     od.status,
                     od.created_at as createdAt,
-                    JSON_ARRAYAGG(p.file_path) As photosPaths
+                    JSON_ARRAYAGG(p.file_path) As photosPaths,
+                    p.client_message as clientMessage
                     from orders o 
                     join order_details od on o.id = od.order_id 
                     left join client_photos_for_orders p on od.id = p.order_details_id 
                     where o.client_id = ?
-                    group by o.id, o.client_id, od.id, od.service_category_id, od.service_id, od.quantity, od.status, od.created_at`
+                    group by o.id, o.client_id, od.id, od.service_category_id, od.service_id, od.quantity, od.status, od.created_at, p.client_message`
 
     return new Promise((resolve, reject) => {
         db.query(sql, [clientId],
@@ -140,13 +164,14 @@ const fetchAllOrderDetails = () => {
                     pd.total_amount as totalAmount,
                     pd.payment_method as paymentMethod,
                     pd.status as paymentStatus,
-                    JSON_ARRAYAGG(p.file_path) As photosPaths
+                    JSON_ARRAYAGG(p.file_path) As photosPaths,
+                    p.client_message as clientMessage
                     from orders o 
                     join order_details od on o.id = od.order_id 
                     left join client_photos_for_orders p on od.id = p.order_details_id 
                     left join client c on c.id = o.client_id
                     left join payment_details pd on o.id = pd.order_id
-                    group by o.id, o.client_id, od.id, od.service_category_id, od.service_id, od.quantity, od.status, od.created_at, c.username, pd.id, pd.total_amount, pd.payment_method, pd.status`
+                    group by o.id, o.client_id, od.id, od.service_category_id, od.service_id, od.quantity, od.status, od.created_at, c.username, pd.id, pd.total_amount, pd.payment_method, pd.status, p.client_message`
 
     return new Promise((resolve, reject) => {
         db.query(sql,
@@ -233,7 +258,8 @@ const getEditedPhoto = (orderDetailsId) => {
                         o.order_id as orderId,
                         o.service_category_id as serviceCategoryId,
                         o.service_id as serviceId
-                        from edited_photos e join order_details o on e.order_details_id = o.id 
+                        from edited_photos e 
+                        join order_details o on e.order_details_id = o.id 
                         where e.order_details_id = ? group by e.id, e.order_details_id, e.photo_path, o.order_id, o.service_category_id, o.service_id`
 
     return new Promise((resolve, reject) => {
@@ -261,5 +287,6 @@ module.exports = {  createOrder,
                     fetchOrderDeailsById,
                     fetchAllOrderDetails,
                     addEditedPhotosForOrders,
-                    getEditedPhoto
+                    getEditedPhoto,
+                    updateEditedPhotosForOrders
                 }

@@ -141,10 +141,7 @@ const OrderHistory = () => {
                   <div key={item.orderDetailsId} className="order-item">
                     <div className="item-left">
                       <img
-                        src={`${URLForPhotoPath}/${
-                          item.photosPaths[0] ||
-                          item.serviceDetails.photoPaths[0]
-                        }`}
+                        src={`${URLForPhotoPath}/${item.serviceDetails.photoPaths[0]}`}
                         alt="Service"
                         className="service-img"
                       />

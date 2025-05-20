@@ -23,7 +23,8 @@ const fetchFeedBacks = () => {
                     f.feedback,
                     f.rating,
                     f.reply_msg,
-                    f.id
+                    f.id,
+                    f.created_at
                     from feedback f join client c on f.client_id = c.id`
 
     return new Promise((resolve, reject) => {

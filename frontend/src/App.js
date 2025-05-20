@@ -39,6 +39,7 @@ import EditServices from "./pages/admin/dashboard/EditServices";
 import PaymentDetails from "./pages/admin/dashboard/PaymentDetails";
 import DashBoardGraphs from "./pages/admin/dashboard/DashBoardGraphs";
 import Unauthorized from "./components/Unauthorized";
+import CustomizedPhotos from "./pages/admin/dashboard/CustomizedPhotos";
 
 function App() {
   return (
@@ -113,6 +114,10 @@ function App() {
               <Route
                 path="inquiry"
                 element={<Inquiry title="View Inquiry" />}
+              />
+               <Route
+                path="customized-photos"
+                element={<CustomizedPhotos title="Customized Photos" />}
               />
               <Route
                 path="feedbacks"

@@ -135,10 +135,7 @@ const Notifications = () => {
                                 {item.orderDetailsId}
                               </p>
                               <img
-                                src={`${URLForPhotoPath}/${
-                                  item.photosPaths[0] ||
-                                  item.serviceDetails.photoPaths[0]
-                                }`}
+                                src={`${URLForPhotoPath}/${item.serviceDetails.photoPaths[0]}`}
                                 alt="Service"
                                 className="service-img"
                               />
@@ -240,41 +237,6 @@ const Notifications = () => {
                     )
                 )
             )}
-            {/* {Object.entries(groupedOrders)
-              .filter(status => status !== 'awaiting_approval' || 'reediting' || 'approved' || 'in_production' )
-              .map((notif) => (
-                <div className="notification-card" key={notif.orderId}>
-                  <div className="order-header">
-                    <div className="d-flex flex-column">
-                      <span><strong>Order ID:</strong> {notif.orderId}</span>
-                      <span><strong>Order Date:</strong> {new Date(items[0].createdAt).toLocaleDateString()}</span>
-                    </div>
-                    <div>
-                      <button className="invoice-btn" onClick={() => handleInvoice(orderId)}>Invoice</button>
-                    </div>
-                  </div>
-                  <div className="left-noti">
-                    <div className="dot" />
-                    <img
-                      src={notif.image}
-                      alt="Notification"
-                      className="notification-img"
-                    />
-                    <div className="notification-details">
-                      <span className="service-name">{notif.serviceDetails.serviceName}</span>
-                      {notif.serviceDetails.framneColor && <span className="category">Color: {notif.serviceDetails.framneColor}</span>}
-                      {notif.serviceDetails.frameSize && <span className="category">Size: {notif.serviceDetails.frameSize}</span>}
-                      <button onClick={() => handleDownload(notif.image)} style={{marginTop:'10px', width:'150px'}}>
-                        Download Img
-                      </button>
-                    </div>
-                  </div>
-                  <div className="btn-group">
-                    <button >ReEdit</button>
-                    <button >Confirm</button>
-                  </div>
-                </div>
-            ))} */}
           </div>
         )}
       </div>
