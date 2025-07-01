@@ -33,6 +33,7 @@ const OrderHistory = () => {
       try {
         const response = await fetchOrdersByClientId(clientId);
         const data = response.data.enrichedOrderDetails || [];
+console.log("da :", data)
 
         const grouped = data.reduce((acc, order) => {
           if (!acc[order.orderId]) {
@@ -46,7 +47,6 @@ const OrderHistory = () => {
         console.error(err);
       }
     };
-
     if (clientId) {
       fetchOrders();
     }

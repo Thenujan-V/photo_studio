@@ -36,7 +36,7 @@ export const footer = () => {
               <div className="col-md-4 col-lg-3 col-xl-3 mx-auto mt-3">
                 <h6 className="text-uppercase mb-4 font-weight-bold">Contact</h6>
                 <p><FontAwesomeIcon icon={faHome} className="me-2" /> Colombo, 2nd Street 10012, Srilanka.</p>
-                <p><FontAwesomeIcon icon={faEnvelope} className="me-2" /> inquiry@photoStudio.com</p>
+                <p><FontAwesomeIcon icon={faEnvelope} className="me-2" /> inquiry@juniopix.com</p>
                 <p><FontAwesomeIcon icon={faPhone} className="me-2" /> +94 77 678 7678</p>
                 <p><FontAwesomeIcon icon={faPrint} className="me-2" /> +94 70 609 7678</p>
               </div>
